@@ -1,0 +1,53 @@
+---
+title: AGENTS
+date created: YYYY-MM-DD
+date modified: YYYY-MM-DD
+---
+
+This document provides AI agents with the necessary knowledge and rules for understanding and editing this document repository.
+
+## Directory Structure
+
+- **Root Directory**: Contains daily work documents.
+- **`docs/`**: Contains final output documents that may be synced online.
+- **`prompts/`**: Contains prompts and workflow definitions for agents.
+
+## File Naming Convention
+
+- Standard documents: `YYYY-MM-DD-{short-description}.md`
+- Daily summaries: `YYYY-MM-DD 📅️ 摘要.md`
+- Weekly summaries: `YYYY-MM-DD 📅️ 本周摘要.md`
+
+## Special Symbol Definition
+
+- `🟥`: Represents a TODO, an unfinished item, or information that needs to be added.
+- `🟩`: Represents a DONE item or completed information.
+- `🟨`: Represents an item in progress.
+- `⬜️`: Represents a shelved or postponed item.
+- `💡`: Represents a new idea.
+- `📅️`: Represents a periodic summary.
+
+## Workflows
+
+This section defines abstract workflows.
+
+### Weekly Summary Workflow
+
+#### When to call
+At the end of the work week.
+
+#### Input
+- The previous weekly summary document.
+- All documents created between the last summary and today.
+- A project background document.
+
+#### Process
+1.  Read all input documents.
+2.  Synthesize the progress on ongoing projects from the last summary.
+3.  Identify newly completed tasks, new ongoing tasks, and new ideas from the new documents.
+4.  Structure the new summary following the standard template.
+5.  Pay special attention to items marked with `🟥` (TODOs).
+
+#### Output Document
+- **Title**: `{YYYY-MM-DD} 📅️ 本周摘要.md`
+- **Content**: A summary of the week's progress, structured according to the template.

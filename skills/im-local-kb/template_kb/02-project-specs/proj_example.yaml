@@ -1,0 +1,23 @@
+meta:
+  id: "{{PROJECT_ID}}"
+  name: "{{PROJECT_NAME}}"
+  description: "{{DESCRIPTION}}"
+  strategy: "incremental" # "incremental" only extracts new content, or "full"
+
+scope:
+  time_range:
+    start: "{{YYYY-MM-DD}}"
+    end: "{{YYYY-MM-DD}}"
+
+  sources:
+    - name: "{{GROUP_NAME_1}}"
+      time_sensitivity: "high" # Options: high (strict timelines), low (knowledge base)
+    - name: "{{GROUP_NAME_2}}"
+      time_sensitivity: "low"
+
+extraction_goals:
+  - title: "{{GOAL_TITLE}}"
+    prompt: "{{GOAL_PROMPT}}"
+
+  - title: "{{GOAL_TITLE}}"
+    prompt: "{{GOAL_PROMPT}}"

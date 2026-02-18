@@ -1,0 +1,352 @@
+import hashlib
+import argparse
+from SCRIPT_util import *
+from typing import Callable, Any, List
+
+def seq_match(list_s: List[Any], list_l: List[Any], item_getter: Callable[[Any], Any]) -> int:
+    """
+    在 list_l 中寻找 list_s 的连续匹配项，返回匹配的起始索引，如果没有找到返回 -1
+    虽然 KMP 更好，但我们先无视
+    long_l = [
+        {'id': 10, 'name': 'A'},
+        {'id': 20, 'name': 'B'},
+        {'id': 30, 'name': 'C'},
+        {'id': 40, 'name': 'D'},
+        {'id': 50, 'name': 'E'}
+    ]
+
+    short_l_1 = [{'id': 30}, {'id': 40}]
+    short_l_2 = [{'id': 20}, {'id': 99}]
+
+    getter = lambda x: x['id']
+
+    print(seq_match(short_l_1, long_l, getter))  # 输出: 2
+    print(seq_match(short_l_2, long_l, getter))  # 输出: -1
+    """
+    n = len(list_s)
+    m = len(list_l)
+
+    if n == 0:
+        return 0
+    if n > m:
+        return -1
+
+    # 预先提取短列表的特征值，避免在双重循环中重复计算
+    target_s = [item_getter(item) for item in list_s]
+
+    for i in range(m - n + 1):
+        match = True
+        for j in range(n):
+            # 逐个比对，一旦发现不匹配立即终止当前窗口的比对
+            if item_getter(list_l[i + j]) != target_s[j]:
+                match = False
+                break
+
+        if match:
+            return i
+
+    return -1
+
+
+class MatchPoint:
+    """
+    描述单一匹配点的详细信息。
+    """
+    def __init__(self):
+        self.desc: str = "匹配点详情，包含是否找到匹配、在待合并块中的索引、在目标文件中的原始行号及内容预览。"
+        self.found: bool = False
+        self.match_index_in_new_block: int = -1  # 匹配窗口在 new_block 中的起始/结束索引
+        self.line_no_in_target: int = -1         # 匹配行在目标文件中的物理行号
+        self.content_preview: str = ""           # 匹配行的内容预览
+
+
+class MergeResult:
+    """
+    包含 magic_merge 执行后的完整审计信息。
+    """
+    def __init__(self, target_file: str, chat_name: str, block_date: str):
+        # 基础元数据
+        self.meta = {
+            "desc": "基础元数据，包含目标文件路径、聊天名称、块日期及任务执行时间。",
+            "target_file": target_file,
+            "chat_name": chat_name,
+            "block_date": block_date,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        # 统计信息
+        self.block_stats = {
+            "desc": "待合并块的统计信息，包含总行数、有效哈希行数及被过滤的噪音行数。",
+            "total_lines": 0,
+            "hashable_lines": 0,
+            "ignored_lines": 0
+        }
+        self.target_stats = {
+            "desc": "目标文件的状态，包含是否存在及初始总行数。",
+            "exists": False,
+            "initial_total_lines": 0
+        }
+        # 匹配详情
+        self.start_anchor = MatchPoint()
+        self.end_anchor = MatchPoint()
+        # 差异分析
+        self.overlap_analysis = {
+            "desc": "重叠区域分析，对比待合并块与目标文件在起始/结束锚点之间的哈希行数差异。",
+            "new_block_hashes_between": 0,
+            "target_file_hashes_between": 0,
+            "diff_count": 0
+        }
+        # 执行结果
+        self.action_taken = {
+            "desc": "最终执行动作，包含合并策略、最终行数、净增行数及任务状态。",
+            "strategy": "UNKNOWN",
+            "final_total_lines": 0,
+            "added_lines": 0,
+            "status": "pending"
+        }
+
+    def to_dict(self):
+        """
+        转换为可序列化的字典，用于 YAML 输出。
+        """
+        from collections import OrderedDict
+        return OrderedDict([
+            ("01_meta", self.meta),
+            ("02_target_stats", self.target_stats),
+            ("03_block_stats", self.block_stats),
+            ("04_match_details", {
+                "start_anchor": vars(self.start_anchor),
+                "end_anchor": vars(self.end_anchor)
+            }),
+            ("05_overlap_analysis", self.overlap_analysis),
+            ("06_action_taken", self.action_taken)
+        ])
+
+
+def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
+    """
+    使用 new_block 和 target_filename 定位的目标文件进行合并，返回 MergeResult
+
+    这个方法会
+    1. 处理 new_block 的每一行，留下 hash 部分和非 hash 部分(保留和 new_block 的映射关系)
+    2. 处理目标文件的每一行，留下 hash 部分和非 hash 部分(保留和目标文件原始行的映射关系)
+    3. 用 new_block 的前 N 行（仅 hash 行）去目标文件中匹配，找到最后一个完全匹配的行（match_start）
+    4. 用 new_block 的后 N 行（仅 hash 行）去目标文件中匹配，找到第一个完全匹配的行（match_end）
+
+    如果 match_start 和 match_end 都存在，且 match_start 行号 < match_end 行号，则认为 new_block 在目标文件中间找到匹配，可以进行拼接合并
+
+        写出顺序：
+        1. 目标文件中 match_start 行（映射回原始行号）之前的内容
+        2. new_block 中 match_start 行（映射回原始行号）到 match_end 行（映射回原始行号）的内容
+        3. 目标文件中 match_end 行（映射回原始行号）之后的内容
+
+    如果只有 match_start 存在，认为 new_block 的前半部分在目标文件中找到匹配，可以进行拼接合并
+
+        写出顺序：
+        1. 目标文件中 match_start 行（映射回原始行号）之前的内容
+        2. new_block 中 match_start 行（映射回原始行号）到结尾的内容
+
+    如果只有 match_end 存在，认为 new_block 的后半部分在目标文件中找到匹配，可以进行拼接合并
+
+        写出顺序：
+        1. 目标文件的 yaml header 部分（如果有的话）
+        1. new_block 中 从开始到 match_end 行（映射回原始行号）的内容
+        2. 目标文件中 match_end 行（映射回原始行号）之后的内容
+
+    如果都没找到，认为 new_block 没有在目标文件中找到匹配，直接按时间顺序插入到目标文件中合适的位置。
+
+        构建一个 ChatOrgFile,
+        然后添加 new_block，
+        按照时间顺序排序，
+        写出覆盖目标文件即可。
+
+    """
+    # 1. 初始化结果对象与参数
+    RESULT = MergeResult(target_filename, new_block.chat_name, new_block.time_tag)
+    opt_search_lines = 5  # 可配置：匹配时考虑的行数范围
+
+    # 2. 构建 hash function
+    def hash_line(s: str) -> str:
+        return hashlib.sha256(s.encode('utf-8')).hexdigest()
+
+    # 我们需要用一个数据结构表达 chat_block -> {hashable_line, hash, original_content_line_idx}[]
+    RESULT.block_stats["total_lines"] = len(new_block.content)
+    new_block_hash_list = []
+    for idx, line in enumerate(new_block.content):
+        hashing = RegexPatterns.extract_hashing_line(line)
+        if hashing:
+            new_block_hash_list.append({
+                "hash": hash_line(hashing),
+                "original_content_line_idx": idx,
+                "content": line
+            })
+    RESULT.block_stats["hashable_lines"] = len(new_block_hash_list)
+    RESULT.block_stats["ignored_lines"] = RESULT.block_stats["total_lines"] - RESULT.block_stats["hashable_lines"]
+
+    # 我们用另一个数据结构表达 target_file -> {hashable_line, hash, original_content_line_idx}[]
+    target_lines = []
+    target_file_hash_list = []
+    if os.path.exists(target_filename):
+        RESULT.target_stats["exists"] = True
+        with open(target_filename, 'r', encoding='utf-8') as f:
+            target_lines = f.readlines()
+        RESULT.target_stats["initial_total_lines"] = len(target_lines)
+        for idx, line in enumerate(target_lines):
+            hashing = RegexPatterns.extract_hashing_line(line)
+            if hashing:
+                target_file_hash_list.append({
+                    "hash": hash_line(hashing),
+                    "original_content_line_idx": idx,
+                    "content": line
+                })
+
+    # 3. 用 new_block 的前 N 行（仅 hash 行）去目标文件中匹配
+    begin_match = seq_match(new_block_hash_list[:opt_search_lines], target_file_hash_list, lambda x: x['hash'])
+    # 如果 begin_match != -1，说明找到了匹配的起点行，我们记录这个行号（在目标文件中的行号）和内容
+    if begin_match != -1:
+
+        RESULT.start_anchor.found = True
+        RESULT.start_anchor.match_index_in_new_block = new_block_hash_list[0]['original_content_line_idx']
+        RESULT.start_anchor.line_no_in_target = target_file_hash_list[begin_match]['original_content_line_idx']
+        RESULT.start_anchor.content_preview = target_file_hash_list[begin_match]['content'].strip()
+
+    # 4. 用 new_block 的后 N 行（仅 hash 行）去目标文件中匹配
+    end_match = seq_match(new_block_hash_list[-opt_search_lines:], target_file_hash_list, lambda x: x['hash'])
+
+    # 如果 end_match != -1，说明找到了匹配的结尾行，我们记录这个行号（在目标文件中的行号）和内容
+    if end_match != -1:
+        RESULT.end_anchor.found = True
+        # 记录窗口中最后一个匹配行的信息
+        last_match_idx_in_window = opt_search_lines - 1
+        last_match_idx_in_target = end_match + last_match_idx_in_window
+
+        RESULT.end_anchor.match_index_in_new_block = new_block_hash_list[-1]['original_content_line_idx']
+        RESULT.end_anchor.line_no_in_target = target_file_hash_list[last_match_idx_in_target]['original_content_line_idx']
+        RESULT.end_anchor.content_preview = target_file_hash_list[last_match_idx_in_target]['content'].strip()
+
+    # 5. 根据匹配结果进行合并
+    final_lines = []
+
+    if RESULT.start_anchor.found and RESULT.end_anchor.found and RESULT.start_anchor.line_no_in_target <= RESULT.end_anchor.line_no_in_target:
+        # 如果两边都存在匹配，且 match_start 行号 < match_end 行号，则认为 new_block 在目标文件中间找到匹配，可以进行拼接合并
+
+        RESULT.action_taken["strategy"] = "both_match"
+        final_lines.extend(target_lines[:RESULT.start_anchor.line_no_in_target])
+        final_lines.extend(new_block.content[RESULT.start_anchor.match_index_in_new_block:RESULT.end_anchor.match_index_in_new_block + 1])
+        final_lines.extend(target_lines[RESULT.end_anchor.line_no_in_target + 1:])
+    elif RESULT.start_anchor.found:
+        # 如果只有 match_start 存在，认为 new_block 的前半部分在目标文件中找到匹配，可以进行拼接合并
+
+        RESULT.action_taken["strategy"] = "begin_match"
+        final_lines.extend(target_lines[:RESULT.start_anchor.line_no_in_target])
+        final_lines.extend(new_block.content[RESULT.start_anchor.match_index_in_new_block:])
+    elif RESULT.end_anchor.found:
+        RESULT.action_taken["strategy"] = "end_match"
+        final_lines.extend(new_block.content[:RESULT.end_anchor.match_index_in_new_block + 1])
+        final_lines.extend(target_lines[RESULT.end_anchor.line_no_in_target + 1:])
+    else:
+        # 如果都没找到，认为 new_block 没有在目标文件中找到匹配，直接按时间顺序插入到目标文件中合适的位置。
+
+        RESULT.action_taken["strategy"] = "no_match"
+        if RESULT.target_stats["exists"]:
+            # 注意：此处 target_org 解析通常不需要 fallback_year，因为整理后的文件应该已有年份
+            target_org = FileParser.parse_org_file(target_filename)
+        else:
+            target_org = ChatOrgFile(target_filename)
+        target_org.chat_blocks.append(new_block)
+        final_lines = target_org.convert_to_md_lines()
+
+    # 6. 持久化写入并记录最终状态
+    os.makedirs(os.path.dirname(target_filename), exist_ok=True)
+    with open(target_filename, 'w', encoding='utf-8') as f:
+        f.writelines(final_lines)
+
+    RESULT.action_taken["final_total_lines"] = len(final_lines)
+    RESULT.action_taken["added_lines"] = RESULT.action_taken["final_total_lines"] - RESULT.target_stats["initial_total_lines"]
+    RESULT.action_taken["status"] = "success"
+
+    return RESULT
+
+
+# ==========================================
+# 主流程 (Main Controller)
+# ==========================================
+
+def parse_args():
+    """
+    解析命令行参数:
+    --input_dir: 原始文件目录
+    --output_dir: 归档输出目录
+    --tasks_dir: 任务状态目录
+    --fallback_year: 缺少年份时的兜底年份
+    """
+    parser = argparse.ArgumentParser(description="高可靠性聊天记录归档脚本")
+    parser.add_argument("--input_dir", required=True, type=str, help="原始文件目录")
+    parser.add_argument("--output_dir", required=True, type=str, help="归档输出目录")
+    parser.add_argument("--knowledge_base_dir", required=True, type=str, help="知识库目录")
+    parser.add_argument("--fallback_year", type=int, help="缺少年份时的兜底年份 (例如 2026)")
+    return parser.parse_args()
+
+
+def main():
+
+    # 1. 初始化
+    args = parse_args()
+
+    # 2. 任务信息目录准备
+    norm_task_run_dir = KnowledgeBasePaths.get_task_run_dir('normalize', args.knowledge_base_dir)
+    os.makedirs(norm_task_run_dir,  exist_ok=True)
+
+    # 3. 解析阶段目录准备 - 仅获取根目录下的 .md 文件，不递归
+    files = [f for f in os.listdir(args.input_dir) if os.path.isfile(os.path.join(args.input_dir, f)) and f.endswith('.md')]
+    if not files:
+        print(f"No .md files found in {args.input_dir}")
+        return
+
+    # 4. 解析原始文件，获取所有 ChatRawFile
+    raw_files: List[ChatRawFile] = []
+    for filename in files:
+        file_path = os.path.join(args.input_dir, filename)
+        chat_raw_file = FileParser.parse_raw_file(file_path, fallback_year=args.fallback_year)
+        raw_files.append(chat_raw_file)
+
+    # --- debug: dump raw blocks to filename-idx_chunk.yaml ---
+    for raw_file in raw_files:
+        for idx, block in enumerate(raw_file.chat_blocks):
+            # dump_{orig_filename}_{block_idx}_raw_chunk.yaml
+            dump_filename = f"{os.path.splitext(os.path.basename(raw_file.file_path))[0]}_{idx}_raw_chunk"
+            dump_path = KnowledgeBasePaths.get_task_orig_chunk_path(norm_task_run_dir, dump_filename)
+            with open(dump_path, 'w', encoding='utf-8') as f:
+                f.write(block.dump_yaml())
+
+    # 5. for each file 的 each block, 合并到已有的目标文件中
+    for raw_file in raw_files:
+        for idx, block in enumerate(raw_file.chat_blocks):
+
+            # 先在 args.output_dir 中定位目标群的目标月份文件（不检查，仅定位）
+            # 目标文件命名规范: {group_id}_{YYYYMM}.md
+            target_filename = KnowledgeBasePaths.get_org_file_path(args.knowledge_base_dir, chat_name=block.chat_name, dt=block.time_tag)
+
+            # 合并
+            merge_result = magic_merge(block, target_filename);
+            # 写出合并日志 dump_{orig_filename}_{block_idx}_merge_chunk.yaml
+            dump_filename = f"{os.path.splitext(os.path.basename(raw_file.file_path))[0]}_{idx}_merge_chunk"
+            dump_path = KnowledgeBasePaths.get_task_merged_chunk_path(norm_task_run_dir, dump_filename)
+            with open(dump_path, 'w', encoding='utf-8') as f:
+                # 合并 merge_result 和 block 的信息，生成 dump 内容
+                yaml.dump({
+                    "block_info": yaml.safe_load(block.dump_yaml_without_content()),
+                    "merge_result": merge_result.to_dict()
+                }, f, allow_unicode=True)
+
+    # 6. 归档原始文件到 processed 目录
+    processed_dir = os.path.join(args.input_dir, 'processed')
+    os.makedirs(processed_dir, exist_ok=True)
+    for filename in files:
+        src_path = os.path.join(args.input_dir, filename)
+        dst_path = os.path.join(processed_dir, filename)
+        os.rename(src_path, dst_path)
+        print(f"Archived: {filename} -> processed/")
+
+
+if __name__ == "__main__":
+    main()
