@@ -395,6 +395,14 @@ class KnowledgeBasePaths:
         return os.path.join(knowledge_base_dir, "01-chats-input-organized", chat_name, f"{date_str}.md")
 
     @staticmethod
+    def get_used_raw_file_path(knowledge_base_dir: str, rel_path: str) -> str:
+        """
+        根据相对路径生成已使用的原始文件路径。
+        例如： kb/10-chats-input-raw-used/{rel_path}
+        """
+        return os.path.join(knowledge_base_dir, "10-chats-input-raw-used", rel_path)
+
+    @staticmethod
     def get_task_prompt_path(task_run_dir: str, task_idx: int) -> str:
         """
         根据任务运行目录、索引和提示名称生成提示文件路径。

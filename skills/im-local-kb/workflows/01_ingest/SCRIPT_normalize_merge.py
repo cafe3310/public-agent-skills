@@ -296,30 +296,40 @@ def main():
     norm_task_run_dir = KnowledgeBasePaths.get_task_run_dir('normalize', args.knowledge_base_dir)
     os.makedirs(norm_task_run_dir,  exist_ok=True)
 
-    # 3. 解析阶段目录准备 - 仅获取根目录下的 .md 文件，不递归
-    files = [f for f in os.listdir(args.input_dir) if os.path.isfile(os.path.join(args.input_dir, f)) and f.endswith('.md')]
-    if not files:
+    # 3. 递归查找所有 .md 文件
+    file_tasks = []  # (full_path, rel_path)
+    for root, dirs, files in os.walk(args.input_dir):
+        # 排除 10-chats-input-raw-used, processed 目录 (防御性)
+        dirs[:] = [d for d in dirs if d not in ['processed', '10-chats-input-raw-used']]
+        for file in files:
+            if file.endswith('.md'):
+                full_path = os.path.join(root, file)
+                rel_path = os.path.relpath(full_path, args.input_dir)
+                file_tasks.append((full_path, rel_path))
+
+    if not file_tasks:
         print(f"No .md files found in {args.input_dir}")
         return
 
-    # 4. 解析原始文件，获取所有 ChatRawFile
-    raw_files: List[ChatRawFile] = []
-    for filename in files:
-        file_path = os.path.join(args.input_dir, filename)
-        chat_raw_file = FileParser.parse_raw_file(file_path, fallback_year=args.fallback_year)
-        raw_files.append(chat_raw_file)
+    # 4. 解析原始文件，获取所有 (ChatRawFile, rel_path)
+    raw_files_with_rel: List[Tuple[ChatRawFile, str]] = []
+    for full_path, rel_path in file_tasks:
+        chat_raw_file = FileParser.parse_raw_file(full_path, fallback_year=args.fallback_year)
+        raw_files_with_rel.append((chat_raw_file, rel_path))
 
     # --- debug: dump raw blocks to filename-idx_chunk.yaml ---
-    for raw_file in raw_files:
+    for raw_file, rel_path in raw_files_with_rel:
+        # 使用相对路径生成 dump 文件名，避免重名冲突
+        safe_rel_name = rel_path.replace(os.sep, '_').replace('.', '_')
         for idx, block in enumerate(raw_file.chat_blocks):
-            # dump_{orig_filename}_{block_idx}_raw_chunk.yaml
-            dump_filename = f"{os.path.splitext(os.path.basename(raw_file.file_path))[0]}_{idx}_raw_chunk"
+            dump_filename = f"{safe_rel_name}_{idx}_raw_chunk"
             dump_path = KnowledgeBasePaths.get_task_orig_chunk_path(norm_task_run_dir, dump_filename)
             with open(dump_path, 'w', encoding='utf-8') as f:
                 f.write(block.dump_yaml())
 
     # 5. for each file 的 each block, 合并到已有的目标文件中
-    for raw_file in raw_files:
+    for raw_file, rel_path in raw_files_with_rel:
+        safe_rel_name = rel_path.replace(os.sep, '_').replace('.', '_')
         for idx, block in enumerate(raw_file.chat_blocks):
 
             # 先在 args.output_dir 中定位目标群的目标月份文件（不检查，仅定位）
@@ -329,7 +339,7 @@ def main():
             # 合并
             merge_result = magic_merge(block, target_filename);
             # 写出合并日志 dump_{orig_filename}_{block_idx}_merge_chunk.yaml
-            dump_filename = f"{os.path.splitext(os.path.basename(raw_file.file_path))[0]}_{idx}_merge_chunk"
+            dump_filename = f"{safe_rel_name}_{idx}_merge_chunk"
             dump_path = KnowledgeBasePaths.get_task_merged_chunk_path(norm_task_run_dir, dump_filename)
             with open(dump_path, 'w', encoding='utf-8') as f:
                 # 合并 merge_result 和 block 的信息，生成 dump 内容
@@ -338,14 +348,12 @@ def main():
                     "merge_result": merge_result.to_dict()
                 }, f, allow_unicode=True)
 
-    # 6. 归档原始文件到 processed 目录
-    processed_dir = os.path.join(args.input_dir, 'processed')
-    os.makedirs(processed_dir, exist_ok=True)
-    for filename in files:
-        src_path = os.path.join(args.input_dir, filename)
-        dst_path = os.path.join(processed_dir, filename)
-        os.rename(src_path, dst_path)
-        print(f"Archived: {filename} -> processed/")
+    # 6. 归档原始文件到 10-chats-input-raw-used 目录
+    for full_path, rel_path in file_tasks:
+        dst_path = KnowledgeBasePaths.get_used_raw_file_path(args.knowledge_base_dir, rel_path)
+        os.makedirs(os.path.dirname(dst_path), exist_ok=True)
+        os.rename(full_path, dst_path)
+        print(f"Archived: {rel_path} -> 10-chats-input-raw-used/")
 
 
 if __name__ == "__main__":
