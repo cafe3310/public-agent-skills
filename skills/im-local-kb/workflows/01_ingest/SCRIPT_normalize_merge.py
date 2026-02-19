@@ -296,7 +296,14 @@ def main():
     norm_task_run_dir = KnowledgeBasePaths.get_task_run_dir('normalize', args.knowledge_base_dir)
     os.makedirs(norm_task_run_dir,  exist_ok=True)
 
-    # 3. 递归查找所有 .md 文件
+    # 3. 校验并获取相对路径
+    # 确保输入目录在 00-chats-input-raw 目录下，以保留归档时的子目录结构
+    raw_input_root = os.path.abspath(os.path.join(args.knowledge_base_dir, "00-chats-input-raw"))
+    abs_input_dir = os.path.abspath(args.input_dir)
+
+    if os.path.commonpath([abs_input_dir, raw_input_root]) != raw_input_root:
+        raise ValueError(f"输入目录 {args.input_dir} (解析为 {abs_input_dir}) 必须位于知识库的 00 根目录 {raw_input_root} 之下")
+
     file_tasks = []  # (full_path, rel_path)
     for root, dirs, files in os.walk(args.input_dir):
         # 排除 10-chats-input-raw-used, processed 目录 (防御性)
@@ -304,7 +311,8 @@ def main():
         for file in files:
             if file.endswith('.md'):
                 full_path = os.path.join(root, file)
-                rel_path = os.path.relpath(full_path, args.input_dir)
+                # 计算相对于 00 根目录的路径，以确保归档到 10 时复刻完整的目录结构
+                rel_path = os.path.relpath(os.path.abspath(full_path), raw_input_root)
                 file_tasks.append((full_path, rel_path))
 
     if not file_tasks:

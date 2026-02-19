@@ -6,6 +6,10 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
+# Add the workflows/01_ingest directory to sys.path to import SCRIPT_util
+sys.path.append(str(Path(__file__).parent.parent / "01_ingest"))
+from SCRIPT_util import RegexPatterns
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Analyze data gaps in chat logs.")
     parser.add_argument("--spec-file", required=True, help="Path to project spec YAML")
@@ -144,10 +148,9 @@ def main():
 
         print(f"Scanning source: {src_name}...")
 
-        # Sanitize name for path (replace special chars usually handled in normalize)
-        # Assuming simple names for now or matching normalize logic
-        safe_name = re.sub(r'[\\/*?:"<>|]', '_', src_name).strip()
-        source_path = Path(args.data_dir) / safe_name
+        # Sanitize name for path
+        src_name = RegexPatterns.chat_name_sanitize(src_name)
+        source_path = Path(args.data_dir) / src_name
 
         dates = extract_dates_from_source(source_path, start_date, end_date)
 

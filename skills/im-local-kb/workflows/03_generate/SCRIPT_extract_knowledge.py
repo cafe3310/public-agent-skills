@@ -7,6 +7,10 @@ import difflib
 from datetime import datetime
 from pathlib import Path
 
+# Add the workflows/01_ingest directory to sys.path to import SCRIPT_util
+sys.path.append(str(Path(__file__).parent.parent / "01_ingest"))
+from SCRIPT_util import RegexPatterns
+
 def parse_args():
     parser = argparse.ArgumentParser(description="[知识生成] 组装上下文与提示词，输出到 stdout 供 LLM Agent 读取。")
     parser.add_argument("--spec-file", required=True, help="项目定义文件路径 (02-project-specs)")
@@ -84,8 +88,8 @@ def main():
     all_context = []
     for src in spec['scope']['sources']:
         src_name = src['name'] if isinstance(src, dict) else src
-        safe_name = re.sub(r'[\\/*?:"<>|]', '_', src_name).strip()
-        source_path = Path(args.data_dir) / safe_name
+        src_name = RegexPatterns.chat_name_sanitize(src_name)
+        source_path = Path(args.data_dir) / src_name
 
         logs = get_chat_logs(source_path, start_date, end_date)
         for fname, content in logs:

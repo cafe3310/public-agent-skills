@@ -153,6 +153,25 @@ class RegexPatterns:
             return None
         return text
 
+    @staticmethod
+    def chat_name_sanitize(name: str) -> str:
+        """
+        将聊天名称中的歧义符号和空格替换为下划线，并将连续的下划线替换为单个下划线。
+        替换符号包括： / \ : * ? " < > | [ ] ( ) 以及空白字符。
+
+        >>> RegexPatterns.chat_name_sanitize("【theta内部】Ring/Ling-max-2.0")
+        'theta内部_Ring_Ling-max-2.0'
+        >>> RegexPatterns.chat_name_sanitize("A / B  C")
+        'A_B_C'
+        """
+        # 1. 替换非法字符和空格为下划线
+        # 包括路径分隔符、控制字符等
+        sanitized = re.sub(r'[\\/:*?"<>|\[\]\(\)\s]+', '_', name)
+        # 2. 处理连续下划线
+        sanitized = re.sub(r'_+', '_', sanitized)
+        # 3. 去除首尾下划线
+        return sanitized.strip('_')
+
 
 class ChatBlock:
     """
@@ -306,6 +325,8 @@ class FileParser:
         for line in lines[start_idx:]:
             is_chat, chat_name = RegexPatterns.extract_chat_name(line)
             if is_chat:
+                # 立即进行转义处理
+                chat_name = RegexPatterns.chat_name_sanitize(chat_name)
                 # 保存之前的块
                 if last_chat_name is not None and last_time_tag is not None:
                     raw_file.chat_blocks.append(ChatBlock(last_chat_name, last_time_tag, current_content, file_path))
@@ -386,13 +407,14 @@ class KnowledgeBasePaths:
         根据聊天名称和日期时间生成整理后文件路径。
         例如： kb/01-chats-input-organized/{chat_name}/{YYYY-MM}.md
         """
+        sanitized_chat_name = RegexPatterns.chat_name_sanitize(chat_name)
         try:
             dt_obj = datetime.strptime(dt, "%Y-%m-%d %H:%M")
         except ValueError:
             dt_obj = datetime.strptime(dt, "%Y-%m-%d")
 
         date_str = dt_obj.strftime("%Y-%m")
-        return os.path.join(knowledge_base_dir, "01-chats-input-organized", chat_name, f"{date_str}.md")
+        return os.path.join(knowledge_base_dir, "01-chats-input-organized", sanitized_chat_name, f"{date_str}.md")
 
     @staticmethod
     def get_used_raw_file_path(knowledge_base_dir: str, rel_path: str) -> str:
