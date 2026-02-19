@@ -24,7 +24,8 @@ kb/
 ├── 10-chats-input-raw-used/      # [归档层] 已消费的原始日志 (结构化归档)
 │   └── {raw_input_name}.md
 ├── 02-project-specs/             # [配置层] 项目定义
-│   └── proj_{project_id}.yaml    # 定义提取范围与目标
+│   ├── proj_{project_id}.yaml    # 定义提取范围与目标
+│   └── notes.yaml                # 各群聊/单聊的零散备注记录
 ├── 03-missing-periods/           # [诊断层] 缺失报告
 │   └── gap_{project_id}.md       # 数据断档分析结果
 ├── 04-output-documents/          # [产出层] 最终成果
@@ -52,6 +53,7 @@ kb/
 - **摄入模式 (Ingest)**: 当用户上传了新聊天记录 -> 执行 `workflows/01_ingest/WORKFLOW_ingest.md`
 - **诊断模式 (Diagnose)**: 当用户定义了新项目或询问数据完整性 -> 执行 `workflows/02_gap_check/WORKFLOW_gap_check.md`
 - **生成模式 (Generate)**: 当用户需要复盘报告或回答问题 -> 执行 `workflows/03_generate/WORKFLOW_generate.md`
+- **备注模式 (Note)**: 当用户想要记录个人关系、群聊备注或身份背景 -> 执行 `workflows/util_notes/WORKFLOW_notes.md`
 
 ## 5. 技能内容布局 (Skill Layout)
 
@@ -65,8 +67,9 @@ kb/
 ├── workflows/                  # [执行层] 按功能阶段划分的逻辑
 │   ├── 01_ingest/              # 数据清洗与归档模块
 │   ├── 02_gap_check/           # 完整性校验模块
-│   ├── 03_generate/            # 知识提取与报告生成模块
-│   ├── util_backup/            # 实用工具：备份
-│   └── util_validate/          # 实用工具：校验
+    ├── 03_generate/              # 知识提取与报告生成模块
+    ├── util_backup/            # 实用工具：备份
+    ├── util_notes/             # 实用工具：备注管理
+    └── util_validate/          # 实用工具：校验
 └── tobewritten.md              # 待整理的技术细节与进阶文档
 ```

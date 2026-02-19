@@ -151,6 +151,21 @@ class RegexPatterns:
         # 4. 去除整体过短的内容 (少于 5 字)
         if len(text) < 5:
             return None
+        
+        # 特殊规则的过滤（避免一些明显不适合进行 Hashing 的行被误认为是有效内容）：
+        
+        # 1. 如果是 Markdown 标题行，返回 None
+        if re.match(r"^#+\s+", text):
+            return None
+        
+        # 2. 如果是人工加入的 tab 日期行（-- 开头，后面只有数字，横线，空白，冒号），返回 None
+        if re.match(r"^--[\d\s\-:]+$", text):
+            return None
+        
+        # 3. 如果是 ``` 开头的代码块标记行，返回 None
+        if text.startswith("```"):
+            return None
+        
         return text
 
     @staticmethod

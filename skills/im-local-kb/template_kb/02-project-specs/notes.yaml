@@ -1,0 +1,9 @@
+meta:
+  id: "notes"
+  description: "本文件非项目，作为对各群聊的零散信息记录"
+chats:
+  - name: "示例群聊"
+    notes:
+      - "别名：XX讨论组"
+      - "关系：核心协作方"
+      - "归类：项目 A"

@@ -47,6 +47,61 @@ def seq_match(list_s: List[Any], list_l: List[Any], item_getter: Callable[[Any],
 
     return -1
 
+def seq_longest_common_prefix_length(list_s: List[Any], list_l: List[Any], item_getter: Callable[[Any], Any]) -> int:
+    """
+    寻找两个 list 的公共最长前缀长度，返回匹配的长度。
+    如果没有，返回 0。
+    例如：
+    long_l = [
+        {'id': 10, 'name': 'A'},
+        {'id': 20, 'name': 'B'},
+        {'id': 30, 'name': 'C'},
+        {'id': 40, 'name': 'D'},
+        {'id': 50, 'name': 'E'}
+    ]
+
+    short_l_1 = [{'id': 10}, {'id': 20}, {'id': 99}]
+    short_l_2 = [{'id': 30}, {'id': 40}]
+    short_l_3 = [{'id': 99}, {'id': 100}]
+
+    getter = lambda x: x['id']
+    
+    print(seq_longest_prefix_match(short_l_1, long_l, getter))  # 输出: 2
+    print(seq_longest_prefix_match(short_l_2, long_l, getter))  # 输出: 0
+    print(seq_longest_prefix_match(short_l_3, long_l, getter))  # 输出: 0
+    """
+    i = 0
+    j = 0
+    max_match_length = 0
+
+    while i < len(list_s) and j < len(list_l):
+        if item_getter(list_s[i]) == item_getter(list_l[j]):
+            max_match_length += 1
+            i += 1
+            j += 1
+        else:
+            break
+
+    return max_match_length
+
+def seq_longest_common_suffix_length(list_s: List[Any], list_l: List[Any], item_getter: Callable[[Any], Any]) -> int:
+    """
+    寻找两个 list 的公共最长后缀长度，返回匹配的长度。
+    如果没有，返回 0。
+    """
+    i = len(list_s) - 1
+    j = len(list_l) - 1
+    max_match_length = 0
+
+    while i >= 0 and j >= 0:
+        if item_getter(list_s[i]) == item_getter(list_l[j]):
+            max_match_length += 1
+            i -= 1
+            j -= 1
+        else:
+            break
+
+    return max_match_length
 
 class MatchPoint:
     """
@@ -58,6 +113,8 @@ class MatchPoint:
         self.match_index_in_new_block: int = -1  # 匹配窗口在 new_block 中的起始/结束索引
         self.line_no_in_target: int = -1         # 匹配行在目标文件中的物理行号
         self.content_preview: str = ""           # 匹配行的内容预览
+        self.matching_max_line_count_in_target: int = -1    # 目标文件中，匹配窗口内的最大覆盖长度（物理行数）
+        self.matching_max_line_count_in_new_block: int = -1 # 待合并块中，匹配窗口内的最大覆盖长度（物理行数）
 
 
 class MergeResult:
@@ -208,7 +265,18 @@ def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
         RESULT.start_anchor.match_index_in_new_block = new_block_hash_list[0]['original_content_line_idx']
         RESULT.start_anchor.line_no_in_target = target_file_hash_list[begin_match]['original_content_line_idx']
         RESULT.start_anchor.content_preview = target_file_hash_list[begin_match]['content'].strip()
-
+        
+        # 我们用 prefix match 的方式分析，new_block 从 match_start 行开始，能匹配的最长 hash 连续行数
+        common_prefix_hashable_length = seq_longest_common_prefix_length(new_block_hash_list, target_file_hash_list[begin_match:], lambda x: x['hash'])
+        
+        # 转换回物理行数，记录在结果中
+        if common_prefix_hashable_length > 0:
+            last_matching_idx_in_target = target_file_hash_list[begin_match + common_prefix_hashable_length - 1]['original_content_line_idx']  # 需要找到 target_file_hash_list 中第 common_prefix_hashable_length 个匹配行的原始行号
+            RESULT.start_anchor.matching_max_line_count_in_target = last_matching_idx_in_target - RESULT.start_anchor.line_no_in_target + 1
+            
+            last_matching_idx_in_new_block = new_block_hash_list[0 + common_prefix_hashable_length - 1]['original_content_line_idx']  # 需要找到 new_block_hash_list 中第 common_prefix_hashable_length 个匹配行的原始行号
+            RESULT.start_anchor.matching_max_line_count_in_new_block = last_matching_idx_in_new_block - RESULT.start_anchor.match_index_in_new_block + 1
+            
     # 4. 用 new_block 的后 N 行（仅 hash 行）去目标文件中匹配
     end_match = seq_match(new_block_hash_list[-opt_search_lines:], target_file_hash_list, lambda x: x['hash'])
 
@@ -218,6 +286,17 @@ def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
         # 记录窗口中最后一个匹配行的信息
         last_match_idx_in_window = opt_search_lines - 1
         last_match_idx_in_target = end_match + last_match_idx_in_window
+        
+        # 我们用 suffix match 的方式分析，new_block 从 match_end 行开始往前，能匹配的最长 hash 连续行数
+        common_suffix_hashable_length = seq_longest_common_suffix_length(new_block_hash_list, target_file_hash_list[:end_match + opt_search_lines], lambda x: x['hash'])
+        
+        # 转换回物理行数，记录在结果中
+        if common_suffix_hashable_length > 0:
+            first_matching_idx_in_target = target_file_hash_list[end_match + last_match_idx_in_window - common_suffix_hashable_length + 1]['original_content_line_idx']  # 需要找到 target_file_hash_list 中第 common_suffix_hashable_length 个匹配行的原始行号
+            RESULT.end_anchor.matching_max_line_count_in_target = last_match_idx_in_target - first_matching_idx_in_target + 1
+            
+            first_matching_idx_in_new_block = new_block_hash_list[-opt_search_lines + last_match_idx_in_window - common_suffix_hashable_length + 1]['original_content_line_idx']  # 需要找到 new_block_hash_list 中第 common_suffix_hashable_length 个匹配行的原始行号
+            RESULT.end_anchor.matching_max_line_count_in_new_block = new_block_hash_list[-1]['original_content_line_idx'] - first_matching_idx_in_new_block + 1
 
         RESULT.end_anchor.match_index_in_new_block = new_block_hash_list[-1]['original_content_line_idx']
         RESULT.end_anchor.line_no_in_target = target_file_hash_list[last_match_idx_in_target]['original_content_line_idx']
@@ -228,21 +307,41 @@ def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
 
     if RESULT.start_anchor.found and RESULT.end_anchor.found and RESULT.start_anchor.line_no_in_target <= RESULT.end_anchor.line_no_in_target:
         # 如果两边都存在匹配，且 match_start 行号 < match_end 行号，则认为 new_block 在目标文件中间找到匹配，可以进行拼接合并
-
         RESULT.action_taken["strategy"] = "both_match"
+        
+        # 写出顺序：
+        # 1. 目标文件中 match_start 行（映射回原始行号）之前的内容
         final_lines.extend(target_lines[:RESULT.start_anchor.line_no_in_target])
+        # 2. new_block 中 match_start 行（映射回原始行号）到 match_end 行（映射回原始行号）的内容
         final_lines.extend(new_block.content[RESULT.start_anchor.match_index_in_new_block:RESULT.end_anchor.match_index_in_new_block + 1])
+        # 3. 目标文件中 match_end 行（映射回原始行号）之后的内容
         final_lines.extend(target_lines[RESULT.end_anchor.line_no_in_target + 1:])
+        
     elif RESULT.start_anchor.found:
         # 如果只有 match_start 存在，认为 new_block 的前半部分在目标文件中找到匹配，可以进行拼接合并
 
         RESULT.action_taken["strategy"] = "begin_match"
-        final_lines.extend(target_lines[:RESULT.start_anchor.line_no_in_target])
-        final_lines.extend(new_block.content[RESULT.start_anchor.match_index_in_new_block:])
+  
+        # 写出顺序：
+        # 1. 目标文件中直到最末匹配行的内容（以保留目标文件中匹配部分的后续内容，避免丢失） -- line_no_in_target 和 matching_max_line_count_in_target
+        final_lines.extend(target_lines[:RESULT.start_anchor.line_no_in_target + RESULT.start_anchor.matching_max_line_count_in_target])
+        # 2. new_block 中最末匹配行（映射回原始行号）到结尾的内容
+        final_lines.extend(new_block.content[RESULT.start_anchor.match_index_in_new_block + RESULT.start_anchor.matching_max_line_count_in_new_block:])
+        # 3. 目标文件中最末匹配行之后的内容
+        final_lines.extend(target_lines[RESULT.start_anchor.line_no_in_target + RESULT.start_anchor.matching_max_line_count_in_target:])
+        
     elif RESULT.end_anchor.found:
+        # 如果只有 match_end 存在，认为 new_block 的后半部分在目标文件中找到匹配，可以进行拼接合并
         RESULT.action_taken["strategy"] = "end_match"
-        final_lines.extend(new_block.content[:RESULT.end_anchor.match_index_in_new_block + 1])
-        final_lines.extend(target_lines[RESULT.end_anchor.line_no_in_target + 1:])
+        
+        # 写出顺序：
+        # 1. 目标文件直到最早匹配行的内容（以保留目标文件中匹配部分的前续内容，避免丢失） -- line_no_in_target 和 matching_max_line_count_in_target
+        final_lines.extend(target_lines[:RESULT.end_anchor.line_no_in_target - RESULT.end_anchor.matching_max_line_count_in_target + 1])
+        # 2. new_block 中 从开始到最早匹配行（映射回原始行号）的内容
+        final_lines.extend(new_block.content[:RESULT.end_anchor.match_index_in_new_block - RESULT.end_anchor.matching_max_line_count_in_new_block + 1])
+        # 3. 目标文件中最早匹配行之后的内容
+        final_lines.extend(target_lines[RESULT.end_anchor.line_no_in_target - RESULT.end_anchor.matching_max_line_count_in_target + 1:])
+        
     else:
         # 如果都没找到，认为 new_block 没有在目标文件中找到匹配，直接按时间顺序插入到目标文件中合适的位置。
 
