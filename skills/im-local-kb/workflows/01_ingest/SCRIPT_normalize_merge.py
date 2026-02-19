@@ -273,6 +273,11 @@ def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
         
         # 我们用 prefix match 的方式分析，new_block 从 match_start 行开始，能匹配的最长 hash 连续行数
         common_prefix_hashable_length = seq_longest_common_prefix_length(new_block_hash_list, target_file_hash_list[begin_match:], lambda x: x['hash'])
+
+        # 如果 prefix 匹配长度等于 new_block 的 hashable 长度，说明该 block 已经全部存在
+        if common_prefix_hashable_length == len(new_block_hash_list):
+            RESULT.action_taken["strategy"] = "already_exists"
+            return RESULT
         
         # 转换回物理行数，记录在结果中
         if common_prefix_hashable_length > 0:
