@@ -242,6 +242,11 @@ def magic_merge(new_block: ChatBlock, target_filename: str) -> MergeResult:
     # 我们用另一个数据结构表达 target_file -> {hashable_line, hash, original_content_line_idx}[]
     target_lines = []
     target_file_hash_list = []
+
+    if not new_block_hash_list:
+        print(f"[WARNING] No hashable lines found in block for {target_filename}. Skipping merge for this block.")
+        return RESULT
+
     if os.path.exists(target_filename):
         RESULT.target_stats["exists"] = True
         with open(target_filename, 'r', encoding='utf-8') as f:
