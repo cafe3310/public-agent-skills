@@ -293,12 +293,12 @@ class ChatOrgFile:
         md_lines = []
         if self.chat_blocks:
             chat_name = self.chat_blocks[0].chat_name
-            md_lines.append(f"## -- {chat_name}\n\n")
-
+            md_lines.append(f"## -- {chat_name}\n")
             for block in self.chat_blocks:
-                md_lines.append(f"-- {block.time_tag}\n\n")
-                md_lines.extend(block.content)
-                md_lines.append("\n\n")
+                md_lines.append(f"-- {block.time_tag}\n")
+                for line in block.content:
+                    md_lines.append(line.rstrip("\r\n") + "\n")
+
         return md_lines
 
 class FileParser:
