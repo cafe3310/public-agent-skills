@@ -9,14 +9,14 @@ from pathlib import Path
 
 # Add the workflows/01_ingest directory to sys.path to import SCRIPT_util
 sys.path.append(str(Path(__file__).parent.parent / "01_ingest"))
-from SCRIPT_util import RegexPatterns
+from SCRIPT_util import RegexPatterns, KnowledgeBasePaths
 
 def parse_args():
     parser = argparse.ArgumentParser(description="[知识生成] 组装上下文与提示词，输出到 stdout 供 LLM Agent 读取。")
+    parser.add_argument("--base-dir", default="vault", help="知识库根目录 (例如 vault 或 kb)")
     parser.add_argument("--spec-file", required=True, help="项目定义文件路径 (02-project-specs)")
-    parser.add_argument("--data-dir", default="kb/01-chats-input-organized", help="数据源目录")
-    # --output-dir 参数保留以兼容已有调用，但主要输出为 stdout
-    parser.add_argument("--output-dir", default="kb/04-output-documents", help="输出目录 (可选)")
+    parser.add_argument("--data-dir", help="数据源目录 (默认: {base_dir}/01-chats-input-organized)")
+    parser.add_argument("--output-dir", help="输出目录 (默认: {base_dir}/04-output-documents)")
     parser.add_argument("--force-full", action="store_true", help="强制执行全量提取，即使 strategy 为 incremental")
     return parser.parse_args()
 
@@ -66,6 +66,9 @@ def get_chat_logs(source_dir, start_date, end_date):
 
 def main():
     args = parse_args()
+    base_dir = args.base_dir
+    data_dir = args.data_dir if args.data_dir else os.path.join(base_dir, "01-chats-input-organized")
+    output_base_dir = args.output_dir if args.output_dir else os.path.join(base_dir, "04-output-documents")
 
     # 1. 加载项目定义
     spec = load_yaml(args.spec_file)
@@ -88,7 +91,7 @@ def main():
     for src in spec['scope']['sources']:
         src_name = src['name'] if isinstance(src, dict) else src
         src_name = RegexPatterns.chat_name_sanitize(src_name)
-        source_path = Path(args.data_dir) / src_name
+        source_path = Path(data_dir) / src_name
 
         logs = get_chat_logs(source_path, start_date, end_date)
         for fname, content in logs:
@@ -100,7 +103,7 @@ def main():
 
     # 3. 准备输出目录
     timestamp = datetime.now().strftime("%Y-%m-%d_%H%M")
-    run_parent_dir = Path(args.output_dir) / project_id
+    run_parent_dir = Path(output_base_dir) / project_id
     run_dir = run_parent_dir / f"run_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -162,9 +165,8 @@ def main():
     generated_prompts = []
     previous_outputs = []
 
-    # 同步任务目录结构
-    tasks_run_dir = Path("kb/tasks") / project_id / f"run_{timestamp}"
-    tasks_run_dir.mkdir(parents=True, exist_ok=True)
+    # 同步任务目录结构 - 使用 KnowledgeBasePaths
+    tasks_run_dir = Path(KnowledgeBasePaths.get_task_run_dir(project_id, base_dir))
 
     for idx, goal in enumerate(goals, 1):
         goal_title = goal['title']
