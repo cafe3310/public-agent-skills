@@ -4,6 +4,8 @@
 
 ## 快速开始 (Quick Start)
 
+你需要先安装这个 Skill，确保 python 可用，然后安装这个 Skill 内 Agents 目录的 Sub-agent。不同的 Coding Agent 也许有不同的安装方式。
+
 ### 第一步：准备数据 (00-chats-input-raw)
 
 1.  打开 IM，找到目标群聊或单聊。

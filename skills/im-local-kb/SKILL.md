@@ -63,13 +63,14 @@ kb/
 .gemini/skills/im-local-kb/
 ├── SKILL.md                    # 核心定义与路由概览
 ├── USER_GUIDE.md               # 面向用户的操作指南
+├── agents/                     # 这个 Skill 所需的 Sub-Agent。你需要用合理方法安装到你的主 Agent。
 ├── template_kb/                # [范例] 真实的知识库结构模板
 ├── workflows/                  # [执行层] 按功能阶段划分的逻辑
 │   ├── 01_ingest/              # 数据清洗与归档模块
 │   ├── 02_gap_check/           # 完整性校验模块
-    ├── 03_generate/              # 知识提取与报告生成模块
-    ├── util_backup/            # 实用工具：备份
-    ├── util_notes/             # 实用工具：备注管理
-    └── util_validate/          # 实用工具：校验
+│   ├── 03_generate/              # 知识提取与报告生成模块
+│   ├── util_backup/            # 实用工具：备份
+│   ├── util_notes/             # 实用工具：备注管理
+│   └── util_validate/          # 实用工具：校验
 └── tobewritten.md              # 待整理的技术细节与进阶文档
 ```
