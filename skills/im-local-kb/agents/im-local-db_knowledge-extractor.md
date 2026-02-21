@@ -1,5 +1,5 @@
 ---
-name: knowledge-extractor
+name: im-local-db_knowledge-extractor
 description: Expert in iterative knowledge extraction from extremely long chat logs. It processes contexts.md in chunks (approx. 1000 lines each) and uses a "Previous Result + New Segment = Merged Result" logic to update the output file incrementally while maintaining state in task YAML files.
 kind: local
 tools:
