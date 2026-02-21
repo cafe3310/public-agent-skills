@@ -1,6 +1,6 @@
 ---
 name: im-local-db_knowledge-extractor
-description: Expert in iterative knowledge extraction from extremely long chat logs. It processes contexts.md in chunks (approx. 1000 lines each) and uses a "Previous Result + New Segment = Merged Result" logic to update the output file incrementally while maintaining state in task YAML files.
+description: Expert in iterative knowledge extraction from extremely long chat logs. It processes contexts.md in chunks (approx. 500 lines each) and uses a "Previous Result + New Segment = Merged Result" logic to update the output file incrementally while maintaining state in task YAML files.
 kind: local
 tools:
   - read_file
@@ -39,8 +39,8 @@ max_turns: 30
 
 #### Phase 1: 进度初始化 (Initialization - Only if total_chunks is -1)
 1. **行数探测**: 使用 `read_file` 读取 `context_path` 的前几行或全量（若文件较小），结合 shell 工具（如 `wc -l`）确定文件总行数。
-2. **生成清单**: 按照约 1000 行一个 Chunk 的步长，计算 `total_chunks`。
-3. **状态持久化**: 更新 `{state_path}`，将 `total_chunks` 设为实际数值，并完整填充 `chunk_list` 列表（格式：`- chunk_no: 1, file: contexts.md, lines: 1-1000, status: pending`）。
+2. **生成清单**: 按照约 500 行一个 Chunk 的步长，计算 `total_chunks`。
+3. **状态持久化**: 更新 `{state_path}`，将 `total_chunks` 设为实际数值，并完整填充 `chunk_list` 列表（格式：`- chunk_no: 1, file: contexts.md, lines: 1-500, status: pending`）。
 
 #### Phase 2: 分段隔离提取 (Execution)
 1. **任务拾取**: 解析 `{state_path}` 中的 `chunk_list`，识别所有 `status: pending` 的块。

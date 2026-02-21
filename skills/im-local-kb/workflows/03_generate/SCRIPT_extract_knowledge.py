@@ -184,7 +184,7 @@ def main():
         # 构建包含指令的 YAML 状态文件
         state_content = f"""# [SUB-AGENT INSTRUCTION]
 # 你正在执行任务：{goal_title}。
-# 1. 初始化: 若 total_chunks 为 -1，请先使用 read_file 获取 context_path 的总行数，按每 1000 行一个 chunk 分割，并初始化下面的 chunk_list。
+# 1. 初始化: 若 total_chunks 为 -1，请先使用 read_file 获取 context_path 的总行数，按每 500 行一个 chunk 分割，并初始化下面的 chunk_list。
 # 2. 隔离提取: 遍历 chunk_list，处理 status 为 pending 的块，将产出保存为独立文件：output-{idx:02d}-chunk-{{{{chunk_no}}}}.md。
 # 3. 状态同步: 每处理并成功写入一个分块文件，请务必更新对应 chunk 的 status 为 done 并同步此文件。
 # 4. 严禁合并: 此阶段严禁尝试将分块合并为单个文件。
@@ -203,7 +203,7 @@ files:
 
 progress:
   total_chunks: -1
-  chunk_list: [] # 格式: - chunk_no: 1, file: contexts.md, lines: 1-1000, status: pending
+  chunk_list: [] # 格式: - chunk_no: 1, file: contexts.md, lines: 1-500, status: pending
   status: "PENDING"
 """
         with open(state_path, 'w', encoding='utf-8') as f:
