@@ -8,9 +8,9 @@ tools:
   - replace
   - grep_search
   - glob
-model: gemini-2.5-pro
-temperature: 0.1
-max_turns: 20
+model: gemini-3-pro-preview
+temperature: 1.0
+max_turns: 30
 ---
 
 你是一个专门负责“分段知识提取”的专家 Agent。你的核心职责是处理超长上下文（Contexts.md），通过分段读取（Chunks）的方式，生成独立的提取结果分块（Map Phase），由主 Agent 后续进行物理合并。

@@ -17,7 +17,6 @@ def parse_args():
     parser.add_argument("--data-dir", default="kb/01-chats-input-organized", help="数据源目录")
     # --output-dir 参数保留以兼容已有调用，但主要输出为 stdout
     parser.add_argument("--output-dir", default="kb/04-output-documents", help="输出目录 (可选)")
-    parser.add_argument("--prompt-template", default="skills/im-local-kb/prompts/prompt_report.md", help="提示词模板路径")
     parser.add_argument("--force-full", action="store_true", help="强制执行全量提取，即使 strategy 为 incremental")
     return parser.parse_args()
 
@@ -182,7 +181,7 @@ def main():
 
         # 构建包含指令的 YAML 状态文件
         state_content = f"""# [SUB-AGENT INSTRUCTION]
-# 你正在执行阶段 {idx} 的提取任务。
+# 你正在执行任务：{goal_title}。
 # 1. 初始化: 若 total_chunks 为 -1，请先使用 read_file 获取 context_path 的总行数，按每 1000 行一个 chunk 分割，并初始化下面的 chunk_list。
 # 2. 隔离提取: 遍历 chunk_list，处理 status 为 pending 的块，将产出保存为独立文件：output-{idx:02d}-chunk-{{{{chunk_no}}}}.md。
 # 3. 状态同步: 每处理并成功写入一个分块文件，请务必更新对应 chunk 的 status 为 done 并同步此文件。
@@ -191,7 +190,6 @@ def main():
 meta:
   project_id: "{project_id}"
   run_id: "run_{timestamp}"
-  stage_idx: {idx}
   stage_title: "{goal_title}"
   strategy: "{strategy}"
 
@@ -241,21 +239,25 @@ progress:
     # 5. 输出 Sub-agent 启动提示词列表
     print(f"DEBUG: 任务目录已就绪: {run_dir}")
     print("\n" + "="*40)
-    print("ACTION REQUIRED: 请按顺序通过 knowledge-extractor 子代理启动任务")
+    print("ACTION REQUIRED: 请按顺序通过 im-local-db_knowledge-extractor 子代理启动任务")
 
     for item in generated_prompts:
         print(f"\n>>> 阶段 {item['idx']}: {item['title']} <<<")
-        print(f"请读取模板 `skills/im-local-kb/prompts/prompt_extract.md` 并使用以下参数值启动 `knowledge-extractor` 子代理：")
-        print(f"  - PROJECT_ID: {project_id}")
-        print(f"  - STAGE_IDX: {item['idx']}")
-        print(f"  - STAGE_TITLE: {item['title']}")
-        print(f"  - CONTEXT_PATH: {item['active_context']}")
-        print(f"  - PROMPT_PATH: {item['prompt_path']}")
-        print(f"  - RUN_DIR: {run_dir}")
-        print(f"  - STATE_PATH: {item['state_path']}")
-        print(f"  - DEP_PATH: {item['dep_path'] if item['dep_path'] else '(None)'}")
+        print(f"请启动 `im-local-db_knowledge-extractor` 子代理执行以下指令：")
+        print(f"  prompt_path: \"{item['prompt_path']}\"")
+        print(f"  context_path: \"{item['active_context']}\"")
+        print(f"  state_path: \"{item['state_path']}\"")
+        print(f"  output_dir: \"{run_dir}\"")
+        if item['dep_path']:
+            print(f"  dependency_path: \"{item['dep_path']}\"")
 
-    print("\n所有子任务完成后，请读取 output-XX.md 生成最终报告。")
+    print("\n" + "="*40)
+    print("DONE: 提取任务准备就绪。")
+    print("QUESTION: 提取完成后，您希望如何生成最终报告？")
+    print("  1. [标准总结] 按照 (时间轴/关键决策/遗留事项) 结构生成报告。")
+    print("  2. [自定义结构] 我将提供特定的报告框架或关注点。")
+    print("  3. [纯提取] 仅保留分阶段提取结果，无需汇总报告。")
+    print("请在所有子代理任务状态为 COMPLETED 后告知我您的选择。")
     print("="*40)
 
 if __name__ == "__main__":
