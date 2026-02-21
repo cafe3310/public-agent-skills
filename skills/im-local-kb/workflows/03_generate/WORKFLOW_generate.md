@@ -24,7 +24,7 @@
 
 ## Phase 2: Sub-agent 调度与任务隔离 (Strict Task Isolation)
 
-此阶段由主 Agent 按照 YAML 定义的任务顺序，**串行**调度位于 `agents/knowledge-extractor.md` 的子代理。
+此阶段由主 Agent 按照 YAML 定义的任务顺序，**串行**调度位于 `agents/im-local-db_knowledge-extractor.md` 的子代理。
 
 ### 1. 任务隔离规约 (Task Isolation Rules)
 - **串行原则**: 必须先完整处理并合并 Goal 1，才能启动 Goal 2。严禁在一次 Chunk 循环中合并处理多个 Prompt。
