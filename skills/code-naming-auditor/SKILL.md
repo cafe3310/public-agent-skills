@@ -1,6 +1,8 @@
 ---
 name: code-naming-auditor
 description: 用于审计代码库，确保其命名符合既定的术语和规范。当需要强制执行项目的“通用语言”、识别方法/变量/参数命名中的偏差并提出修改建议时，应使用此 Skill。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 代码命名审计 Skill (Code Naming Auditor)

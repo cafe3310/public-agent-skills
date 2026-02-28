@@ -1,6 +1,8 @@
 ---
 name: wx-emoji-maker
 description: 此技能处理 PNG 图片目录，通过一个注重质量的四阶段工作流，将其转换为适合微信使用的表情包。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 技能：wx-emoji-maker

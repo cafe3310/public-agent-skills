@@ -1,6 +1,8 @@
 ---
 name: long-audio-transcript-processor
 description: 当用户需要对大量语音转写稿进行校对、整理、分段处理，并希望保持上下文一致性和工作状态可追踪时使用此技能。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 语音转写处理工作流 (Long Audio Transcript Processor)

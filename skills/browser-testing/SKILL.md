@@ -1,6 +1,8 @@
 ---
 name: browser-testing
 description: 定义了使用浏览器开发者工具进行端到端（E2E）测试的工作流，测试用例以 Markdown 文件形式记录。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 技能: 基于浏览器的端到端测试

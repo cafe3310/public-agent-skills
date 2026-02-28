@@ -1,6 +1,8 @@
 ---
 name: remove-model-cliche
 description: This skill guides the agent in identifying and replacing AI model-specific cliches and formulaic expressions with more natural, human-like language, grounded in external search for better alternatives.
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # remove-model-cliche Skill

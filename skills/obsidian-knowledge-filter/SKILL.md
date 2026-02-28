@@ -1,6 +1,8 @@
 ---
 name: obsidian-knowledge-filter
 description: 此技能通过一个分阶段的工作流，从知识库目录中检索、筛选和提取相关知识。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 技能: Obsidian 知识筛选器 (Obsidian Knowledge Filter)

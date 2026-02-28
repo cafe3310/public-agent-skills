@@ -1,7 +1,8 @@
 ---
 name: pmp-dev-process
 description: PMP 风格的结构化迭代开发流程，确保清晰、高效且有据可查。
-license: MIT
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # PMP 式迭代开发流程

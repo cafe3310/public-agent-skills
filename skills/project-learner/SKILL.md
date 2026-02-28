@@ -1,6 +1,8 @@
 ---
 name: project-learner
 description: 结构化交互式学习助手，当用户希望学习项目相关知识、特定代码文件或底层技术时使用此技能，它会将学习过程记录为持久化的 Markdown 日志。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # Project Learner (项目学习助手)

@@ -1,6 +1,8 @@
 ---
 name: doc-todo-log-loop
 description: 基于日志记录驱动的轻量级项目开发和管理方案。如果用户在项目章程提及，应使用此技能。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # Skill: doc-todo-log-loop

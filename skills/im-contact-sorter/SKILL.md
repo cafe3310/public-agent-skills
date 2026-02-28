@@ -1,6 +1,8 @@
 ---
 name: im-contact-sorter
 description: 一个用于批量整理、分类和清洗即时通讯 (IM) 软件联系人与群组的结构化工作流工具。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # IM Contact Sorter

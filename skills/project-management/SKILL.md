@@ -1,6 +1,8 @@
 ---
 name: project_management
 description: 对项目结构和工作流进行管理
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # Skill - 项目管理

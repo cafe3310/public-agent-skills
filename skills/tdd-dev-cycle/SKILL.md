@@ -1,7 +1,8 @@
 ---
 name: tdd-dev-cycle
 description: 测试驱动开发 (TDD) 主干工作循环，包含分析、测试编写、开发、验证及带熔断的修复机制。
-license: MIT
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # TDD (测试驱动开发) 主干工作循环

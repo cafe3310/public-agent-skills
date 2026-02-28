@@ -1,6 +1,8 @@
 ---
 name: media-organizer
 description: 与用户协作，根据项目约定，将媒体文件目录组织成结构化、分类化和文档化的格式。
+author: github/cafe3310
+license: Apache-2.0
 ---
 
 # 媒体文件整理工作流
