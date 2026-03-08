@@ -10,7 +10,7 @@ def pre_check(files, n_lines):
 
     for file_path in files:
         if not os.path.exists(file_path):
-            print(f"Error: File not found: {file_path}")
+            print(f"Error: File not found / 文件未找到: {file_path}")
             continue
         
         file_name = os.path.basename(file_path)
@@ -21,8 +21,9 @@ def pre_check(files, n_lines):
             total_lines = len(lines)
             preview_content = "".join(lines[:n_lines])
         
-        print(f"==={file_name} - 文件大小:{file_size_kb}KB - 总行数:{total_lines}行 - 以下是前{n_lines}行，用 read-file 查看全文===")
+        print(f"===FILE_START {file_name} - 文件大小:{file_size_kb}KB - 总行数:{total_lines}行 - 以下是前{n_lines}行，用 read-file 查看全文===")
         print(preview_content)
+        print(f"===FILE_END {file_name}===")
         print("\n")
 
 if __name__ == "__main__":
