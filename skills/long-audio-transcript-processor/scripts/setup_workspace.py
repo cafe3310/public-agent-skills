@@ -121,7 +121,7 @@ def main():
 if __name__ == "__main__":
     main()
     
-    print(f"Initialized work log: {log_path}")
+    print(f"Initialized work log")
     print("\nNext steps:")
-    print(f"1. Add background info to {dir_2}")
-    print(f"2. Begin processing loop using {log_path}")
+    print(f"1. Add background info")
+    print(f"2. Begin processing loop using work log")
