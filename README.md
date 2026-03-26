@@ -126,6 +126,10 @@ chmod +x link_skills.sh
 
 微信表情包批量生成工具。自动添加透明边框、调整至 240×240 像素、生成预览图包。虽属边缘功能，但在团队文化构建（如节日表情、梗图传播）中有不可替代的实用价值。
 
+#### 使用本地 Claude 插件 / [use-claude-plugin](skills/use-claude-plugin)
+
+检索并使用本地目录中的 Claude 插件完成特定任务。它能定位插件库（如 Knowledge Work Plugins）中的专业技能（Skills），读取并遵循其 `SKILL.md` 指令，并模拟该插件的身份来执行任务，极大扩展了 Agent 的能力边界。
+
 #### 代码库术语审计 / [code-naming-auditor](skills/code-naming-auditor)
 
 代码库术语一致性检查器。基于项目 Glossary 文件扫描变量/函数名，识别如 `getUserInfo()` 与 `fetchUserDetails()` 的命名冲突，输出重构建议。适合长期维护项目或微服务架构中保持领域语言统一。
