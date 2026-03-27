@@ -1,8 +1,75 @@
 #!/bin/bash
 
-# 目标基础目录
-TARGET_SKILLS="$HOME/.gemini/skills"
-TARGET_AGENTS="$HOME/.gemini/agents"
+# 辅助函数：让用户从存在的目录中选择，优先非空
+choose_base_dir() {
+    local label=$1
+    shift
+    local candidates=("$@")
+    
+    local existing_non_empty=()
+    local existing_empty=()
+
+    # 分类存在的目录
+    for dir in "${candidates[@]}"; do
+        local expanded_dir="${dir/#\~/$HOME}"
+        if [ -d "$expanded_dir" ]; then
+            if [ "$(ls -A "$expanded_dir" 2>/dev/null)" ]; then
+                existing_non_empty+=("$dir")
+            else
+                existing_empty+=("$dir")
+            fi
+        fi
+    done
+
+    # 合并后的有效选项（非空在前，空在后）
+    local valid_options=("${existing_non_empty[@]}" "${existing_empty[@]}")
+
+    # 检查是否有可用选项
+    if [ ${#valid_options[@]} -eq 0 ]; then
+        echo "错误：未找到任何有效的候选目录 (${candidates[*]})" >&2
+        exit 1
+    fi
+
+    # 如果只有一个选项且非空，或者只有一个选项，则直接返回（或者视情况仍让用户确认）
+    # 这里我们始终显示选择，但把最优选作为默认值
+    
+    echo -e "\033[1;36m请选择 $label 的基础安装目录 (推荐使用非空目录)：\033[0m" >&2
+    for i in "${!valid_options[@]}"; do
+        local suffix=""
+        # 标记非空目录
+        for ne in "${existing_non_empty[@]}"; do
+            if [ "$ne" == "${valid_options[$i]}" ]; then
+                suffix=" (当前非空，优先推荐)"
+                break
+            fi
+        done
+        echo "$((i+1))) ${valid_options[$i]}$suffix" >&2
+    done
+
+    local default_choice=1
+    while true; do
+        read -p "选择 (1-${#valid_options[@]}, 默认为 $default_choice): " choice <&2
+        [ -z "$choice" ] && choice=$default_choice
+        
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#valid_options[@]}" ]; then
+            local selected="${valid_options[$((choice-1))]}"
+            echo "${selected/#\~/$HOME}"
+            return 0
+        fi
+        echo "无效选择，请重试。" >&2
+    done
+}
+
+# 目标基础目录选择
+echo "--- 配置安装路径 ---"
+# subagents 优先顺序: ~/.claude ~/.gemini ~/.agents
+AGENT_BASE=$(choose_base_dir "Sub-agents" "~/.claude" "~/.gemini" "~/.agents")
+TARGET_AGENTS="$AGENT_BASE/agents"
+
+# skills 优先顺序: ~/.agents ~/.claude ~/.gemini
+SKILLS_BASE=$(choose_base_dir "Skills" "~/.agents" "~/.claude" "~/.gemini")
+TARGET_SKILLS="$SKILLS_BASE/skills"
+
 # 当前目录下的 skills 路径
 SOURCE_BASE="$(pwd)/skills"
 
