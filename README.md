@@ -56,6 +56,10 @@ chmod +x link_skills.sh
 
 结合深度调研（Deep Research）与人工洞察（Human-in-the-loop），为生态合作生成商业落地规划与颗粒度的宣发物料。通过严谨的两阶段调研（前期探索与深度研究）、引入人工战略判断，最终生成包含商业合作规划、早期预热方案及执行清单在内的全套 GTM 方案。强调「无调研不规划」，避免凭空编造，是进行深度业务合作的战略级工具。
 
+#### 产研宣发物料生成 / [tech-to-marketing-brief](skills/tech-to-marketing-brief)
+
+充当产研侧与运营侧的「翻译官」。将冷冰冰的技术特性、算法指标通过痛点关联与风格重塑，转化为高颗粒度的运营 Brief、跨平台社媒宣发案例（小红书/公众号/X）以及配套的研发 Jira Ticket。确保技术卖点能精准转化为用户感知的心智，实现产研与营销的丝滑对接。
+
 #### 笔记库查资料 / [obsidian-knowledge-filter](skills/obsidian-knowledge-filter)
 
 面对庞大 Obsidian 知识库时，通过关键词定位相关笔记，自动提取上下文并综合生成专题报告。支持人工筛选介入，防止误关联。适合周期性复盘、跨笔记主题研究。
