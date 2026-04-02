@@ -13,6 +13,8 @@ Agent Skill 可能非常个性化，很多都是用户个人最佳实践的提�
 
 ### 安装
 
+#### 手动安装
+
 可以 clone 项目仓库并运行以下脚本：
 
 ```bash
@@ -21,6 +23,16 @@ chmod +x link_skills.sh
 ```
 
 该脚本会将 `skills/` 目录下的所有子目录符号链接到 `$HOME/.gemini/skills/`。
+
+#### 自动安装
+
+向你的 Agent 发以下指令：
+
+```plain
+请先读取并按此文件的指示进行操作： https://raw.githubusercontent.com/cafe3310/public-agent-skills/main/skills/cafe3310-skill-installer/SKILL.md
+```
+
+记得审核脚本做了什么。
 
 ### 一、创作与知识管理
 
