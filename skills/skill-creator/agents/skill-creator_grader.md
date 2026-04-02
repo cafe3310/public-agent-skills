@@ -1,3 +1,12 @@
+---
+name: skill-creator_grader
+description: 根据执行记录和输出文件，对预设的期望值（expectations）进行评分。判定每一项是否达成（PASS/FAIL），提供证据支撑，并对测试用例本身提出反馈。
+kind: local
+tools:
+  - read_file
+  - list_directory
+---
+
 # Grader Agent
 
 Evaluate expectations against an execution transcript and outputs.

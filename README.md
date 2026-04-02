@@ -38,10 +38,6 @@ chmod +x link_skills.sh
 
 专门用于将语音转写项目的复杂文件结构（原始录音、分段脚本、说明文档）整理并合并。它采用「Agent 规划排序 + 脚本机械执行」的模式，产出适合在 Obsidian 归档的 Markdown。
 
-#### 聊天记录项目化 / [long-chat-task-processor](skills/long-chat-task-processor)
-
-把以 Markdown 标题组织的超长聊天记录转为待办、决策和里程碑文档。它严格基于文档目录结构（TOC）分段处理，确保对话上下文不丢，能自动积累人名和黑话术语。
-
 #### IM 知识库整理 / [im-local-kb](skills/im-local-kb)
 
 重型 IM 知识整理和分析技能，专注于从聊天记录中提取高价值的知识。它维护一个基于 Markdown 的本地文件系统，支持数据摄入、断档诊断和知识生成。可以处理上万行的大量群聊信息。
@@ -56,21 +52,39 @@ chmod +x link_skills.sh
 
 用于撰写深度文章、技术文档或博客时。助手协助梳理大纲、交叉验证资料、管理引用链路，并在保持作者原始语气的基础上优化段落逻辑。与简单生成文本的工具不同，它强调协作式写作，避免“AI腔”泛滥。
 
+#### 深度调研生态合作规划 / [deep-research-partnership-planner](skills/deep-research-partnership-planner)
+
+结合深度调研（Deep Research）与人工洞察（Human-in-the-loop），为生态合作生成商业落地规划与颗粒度的宣发物料。通过严谨的两阶段调研（前期探索与深度研究）、引入人工战略判断，最终生成包含商业合作规划、早期预热方案及执行清单在内的全套 GTM 方案。强调「无调研不规划」，避免凭空编造，是进行深度业务合作的战略级工具。
+
 #### 笔记库查资料 / [obsidian-knowledge-filter](skills/obsidian-knowledge-filter)
 
-面对庞大 Obsidian 知识库时，通过关键词定位相关笔记，自动提取上下文并综合生成专题报告。支持人工筛选介入，防止误关联。适合周期性复盘、跨笔记主题研究（如「过去半年关于用户关于 LLM 的所有暴论」）。
+面对庞大 Obsidian 知识库时，通过关键词定位相关笔记，自动提取上下文并综合生成专题报告。支持人工筛选介入，防止误关联。适合周期性复盘、跨笔记主题研究。
 
-#### 去模型味儿 / [remove-model-cliche](skills/remove-model-cliche)
+#### 待办事项整理 / [obsidian-todo-collector](skills/obsidian-todo-collector)
 
-识别并替换文本中高频出现的模型化表达（如「不仅…而且…」、「核心价值」等），基于公开语料库提供自然替代表达。适用于需要提升文案真诚度的场景，如内部沟通邮件、个人博客或用户访谈摘要。
+专门用于从 Obsidian 知识库中定期（如每周/每月）提取所有以 `🟥` 标记的未完成事件和规划性事项。它会自动生成一份结构化的汇总文档，追踪事项来源，并支持在后续处理中自动更新状态。
+
+#### 标准化笔记编写 / [cafe3310-obsidian-writer](skills/cafe3310-obsidian-writer)
+
+指导 Agent 编写符合个人知识库风格的文档。强制要求包含 YAML 元数据、标准化标签（`#Type-`）、溯源说明（`[[双向引用]]`）以及特定的 Emoji 语意规范，确保知识库的长期整洁与可检索性。
+
+#### 内容语气调整 / [content-tone-adjuster](skills/content-tone-adjuster)
+
+深度调整文本风格。内置「去模型味儿」模式（消除 AI 刻板表达）和「平实务实化」模式（去除浮夸大词与宏大叙事）。适用于需要将 AI 初稿转化为更自然、更务实的沟通文案或博客。
 
 #### 写周报 / [weekly-report-writer](skills/weekly-report-writer)
+
+自动化起草周报。通过综合指定日期范围内的每日日志、项目文档和上一份周报，自动识别进展、待办继承（未完成事项自动滚动到下周）和风险卡点，生成兼顾个人存档与团队汇报的分层报告。
 
 ### 二、在线平台 Agent 化
 
 #### 部署到 ModelScope / [deploy-folder-to-modelscope](skills/deploy-folder-to-modelscope)
 
 自动化 ModelScope 仓库发布流程：克隆目标仓库 → 复制指定子目录 → 提交带语义化信息的 commit → 推送远程。支持环境变量配置访问令牌。显著降低从实验到社区共享的摩擦成本。
+
+#### Hugging Face 数据查询 / [hugging-face-stat](skills/hugging-face-stat)
+
+专门用于获取 Hugging Face 上的模型、数据集和 Space 的详细统计信息。最核心的功能是能查询到网页端不直接展示的**历史总下载量**，并能分析 Space 的运行硬件规格，辅助进行竞品调研或热度评估。
 
 ### 三、项目管理与开发协作范式
 
@@ -100,7 +114,11 @@ chmod +x link_skills.sh
 
 #### TDD 驱动的工作流 / [tdd-dev-cycle](skills/tdd-dev-cycle)
 
-对代码质量有明确要求的场景启用。强制要求测试先行：输入/输出定义 → 编写测试用例 → 实现逻辑 → 验证覆盖率 → 修复边界条件。该流程虽增加初期成本，但显著减少后期 Debug 时间，尤其适用于复杂 SQL 或算法模块。
+对代码质量有明确要求的场景启用。强制要求测试先行：输入/输出 definition → 编写测试用例 → 实现逻辑 → 验证覆盖率 → 修复边界条件。该流程虽增加初期成本，但显著减少后期 Debug 时间，尤其适用于复杂 SQL 或算法模块。
+
+#### 技能创造者 / [skill-creator](skills/skill-creator)
+
+用于自动化地创建、测试和优化 Agent Skill 本身。它涵盖了从意图捕捉、SKILL.md 编写到并行测试、自动评分和描述优化（提升触发准确率）的全生命周期。当你发现自己在重复某种复杂的指令流时，用它将其「固化」为技能。
 
 #### 基于浏览器的测试 / [browser-testing](skills/browser-testing)
 
@@ -133,3 +151,7 @@ chmod +x link_skills.sh
 #### 代码库术语审计 / [code-naming-auditor](skills/code-naming-auditor)
 
 代码库术语一致性检查器。基于项目 Glossary 文件扫描变量/函数名，识别如 `getUserInfo()` 与 `fetchUserDetails()` 的命名冲突，输出重构建议。适合长期维护项目或微服务架构中保持领域语言统一。
+
+#### 技能快速安装器 / [cafe3310-skill-installer](skills/cafe3310-skill-installer)
+
+自动化安装和更新本仓库中所有技能的专用工具。支持安全检测（防止覆盖用户自定义的同名技能）和安装后的状态预览。

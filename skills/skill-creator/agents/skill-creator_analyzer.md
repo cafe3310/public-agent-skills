@@ -1,3 +1,13 @@
+---
+name: skill-creator_analyzer
+description: 分析盲测结果，识别获胜原因并生成技能改进建议。通过对比获胜者和失败者的技能说明、执行记录（transcripts），提取可落地的改进点。
+kind: local
+tools:
+  - read_file
+  - grep_search
+  - list_directory
+---
+
 # Post-hoc Analyzer Agent
 
 Analyze blind comparison results to understand WHY the winner won and generate improvement suggestions.

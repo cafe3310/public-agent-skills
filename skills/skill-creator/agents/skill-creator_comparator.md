@@ -1,3 +1,12 @@
+---
+name: skill-creator_comparator
+description: 在不了解技能背景的情况下，盲测对比两个输出结果。根据任务要求、正确性、完整性和结构化程度，客观判定哪个输出更优，并提供详细评分。
+kind: local
+tools:
+  - read_file
+  - list_directory
+---
+
 # Blind Comparator Agent
 
 Compare two outputs WITHOUT knowing which skill produced them.
