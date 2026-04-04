@@ -11,18 +11,28 @@ Agent Skill 可能非常个性化，很多都是用户个人最佳实践的提�
 
 任何 LLM 相关的问题基本都是公开知识，学习如何使用 LLM 或让它协同你工作的方法里，最好的就是问 LLM 自己，最智障的是花钱买课。可以先问问 Gemini / GPT「这是我看到的文档，我希望学习关于 x 的知识。交互式地教教我」。
 
+### 后续计划
+
+工作和生活中自己不想做的麻烦事情基本会做成 Agent Skill 放在这里。
+
+有计划认真给我猫制作 [咩咩和啾啾相册](https://github.com/cafe3310/miemie-jiujiu-album) ...
+
 ### 安装
 
 #### 手动安装
 
-可以 clone 项目仓库并运行以下脚本：
+可以 clone 项目仓库，并运行以下脚本：
 
 ```bash
 chmod +x link_skills.sh
 ./link_skills.sh
 ```
 
-该脚本会将 `skills/` 目录下的所有子目录符号链接到 `$HOME/.gemini/skills/`。
+该脚本会
+- 将 `skills/` 目录下的所有子目录符号链接到 `$HOME/.agents/skills/` （这个目录会被多数 Coding Agent 使用）
+- 将 Skill 中的 Sub-agent 文件复制到 `$HOME/.gemini/agents` 目录下（Gemini 的安全策略要求 subagent 必须以非软链接形式存在于该目录）
+
+如果不符合你的要求，稍微改一下就好。
 
 #### 自动安装
 
@@ -32,7 +42,7 @@ chmod +x link_skills.sh
 请先读取并按此文件的指示进行操作： https://raw.githubusercontent.com/cafe3310/public-agent-skills/main/skills/cafe3310-skill-installer/SKILL.md
 ```
 
-记得审核脚本做了什么。
+记得先审核一下脚本做了什么。
 
 ### 一、创作与知识管理
 
