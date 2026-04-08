@@ -9,11 +9,15 @@ license: Apache-2.0
 
 ## 1. 概述 (Overview)
 
-本技能旨在将非结构化的聊天记录（如群聊历史）转化为存储在 `memories-off` 库中的结构化知识图谱。它强调「逐渐增量」的处理方式，通过 100 行一个的「滑动窗口」来处理超长日志，从而规避模型上下文限制。该技能通过动态注入工具的 `help` 信息来确保子代理生成 100% 正确的 CLI 指令。
+本技能旨在将非结构化的聊天记录（如群聊历史）转化为存储在 `memories-off` Agent Skill 生成的仓库中的结构化知识图谱。
+它强调「逐渐增量」的处理方式，通过 100 行一个的「滑动窗口」来处理超长日志，从而规避模型上下文限制。
+该技能通过动态注入工具的 `help` 信息来确保子代理生成 100% 正确的 CLI 指令。
 
 ## 2. 提取定义 (Schema)
 
-提取任务应遵循用户给出的实体和关系规范。`templates/meta.md` 中包含了一个示例定义，定义了实体的类型（Member, Opinion, Info 等）及其关系谓语（Propose, Discuss 等）。用户可以根据实际需求进行调整。
+提取任务应遵循用户给出的实体和关系规范。
+在 `templates/meta.md` 中包含了一个示例定义，定义了实体的类型（Member, Opinion, Info 等）及其关系谓语（Propose, Discuss 等）。
+用户可以根据实际需求进行调整。
 
 ## 3. 工作流阶段 (Workflow Phases)
 
@@ -23,7 +27,7 @@ license: Apache-2.0
 3. **目标定义**: 确认 `templates/prompt_template.md`。
 
 ### 第二阶段：空间初始化
-1. **初始化 `memories-off`**: 在用户指定的地方创建知识目录并执行 `memocli init`。
+1. **初始化 `memories-off` 仓库**: 在用户指定的地方创建知识目录并执行 `memocli init`。
 2. **配置元数据**: 用 cp 命令将 `templates/meta.md` 的内容写入知识库的 `meta.md`；或根据用户之前的输入动态生成 `meta.md`。
 3. **复制语料**: 在 `memocli init` 创建的知识库中创建 `chat_res` 子目录，用于存储规范化后的原始语料；然后将原始日志复制到 `chat_res`，按顺序重命名为 `YYYY-MM-DD_NNN_orig_name.md`。
 5. **任务分解与状态追踪**: 运行 `python scripts/setup_workspace.py path_to_chat_res TASK_YYYY-MM-DD.md`。该脚本会扫描语料并生成带有行号分片（100行）和前序上下文（50行）的 `TASK` 文件。

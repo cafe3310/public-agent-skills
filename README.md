@@ -66,6 +66,10 @@ chmod +x link_skills.sh
 
 方便你蒸馏别人。
 
+#### IM Wiki 提取 / [im-wiki-extractor](skills/im-wiki-extractor)
+
+用于从超长 IM 对话中增量提取结构化知识，并沉淀为可持续更新的 Wiki。通过滑动窗口处理、断点续传和来源追踪，避免一次性处理大体量聊天记录时的信息遗漏与上下文漂移。适合做长期群聊沉淀、项目复盘与事实查证。
+
 #### 项目交互式学习 / [project-learner](skills/project-learner)
 
 让 Agent 充当导师，在讲解项目代码或底层技术时，自动将过程记录到持久化的学习日志中。支持断点续学，让学习过程像项目开发一样有据可查。
