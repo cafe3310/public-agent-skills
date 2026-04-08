@@ -48,7 +48,7 @@ license: Apache-2.0
 
 ## 4. 执行原则 (Execution Principles)
 
-- **命名规范 (Identity)**: 严格遵守「实体名即文件名」的约定。在 `append-update` 和 `manage-relations` 中，直接使用实体名称作为标识。
+- **命名规范 (Identity)**: 严格遵守「实体名即文件名」的约定。在 `append-update` 和 `manage-relations` 中，直接使用实体的原始名称作为标识，**严禁添加任何类型前缀**（如不再使用 `Member-张三`，仅使用 `张三`）。
 - **动态语法核验**: 所有的提示词生成必须依赖 `generate_prompt.py`，它会通过实时调用 `memocli --help` 来消除指令版本偏差。
 - **强制上下文连贯**: 处理分片时必须传入上一分片的结尾（作为 `此前的讨论`），以保持实体识别的连续性。
 - **最小化探测**: 

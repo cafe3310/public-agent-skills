@@ -5,7 +5,7 @@
 
 - 要利用 `此前的讨论` 作为参考，以保持上下文的连贯性；
 - 要严格参考 `<工具操作指南>` 中的详细语法来执行提取操作；
-- **关键点**: `memocli` 会为实体自动补全 `类型-名称` 前缀（例如：`Member-张三`）。在追加（Append）和建立关系（Relations）时，引用实体名必须包含这个前缀。
+- **关键点 (命名规范)**: 引用实体名时直接使用其原始名称（例如：`张三`）。**严禁**在实体名前添加 `类型-` 前缀（如 `Member-`）。实体名即文件名。
 - 如果在执行中遇到无法解析的内容或工具报错，必须返回 "ERROR: [原因]"，严禁盲目继续。
 - 根据 `最终输出` 的要求，确保在完成所有提取和更新操作后，正确给主 Agent 返回结果状态。
 </你的任务>
@@ -22,12 +22,12 @@
    *(注意：如果实体已存在，命令会报错，请在脚本中通过 `|| true` 或直接忽略错误继续)*
 
 2. **追加内容 (步骤2)**: 
-   `cd {{kg_path}} && memocli append-update --path . --entity "类型-名称" --content "内容摘要 (包含溯源: {{filename}}:{{line_range}})" --reason "提取自 {{chunk_id}}"`
-   *(注意：--entity 必须包含类型前缀，不要包含 .md 后缀)*
+   `cd {{kg_path}} && memocli append-update --path . --entity "名称" --content "内容摘要 (包含溯源: {{filename}}:{{line_range}})" --reason "提取自 {{chunk_id}}"`
+   *(注意：--entity 仅包含名称，不要包含类型前缀，也不要包含 .md 后缀)*
 
 3. **管理关系 (步骤3)**: 
-   `cd {{kg_path}} && memocli manage-relations --path . --source "类型-主实体" --add "谓语:类型-目标实体" --reason "提取自 {{chunk_id}}"`
-   *(注意：主实体和目标实体都必须包含类型前缀)*
+   `cd {{kg_path}} && memocli manage-relations --path . --source "主实体名称" --add "谓语:目标实体名称" --reason "提取自 {{chunk_id}}"`
+   *(注意：源实体和目标实体都仅包含名称，不要包含类型前缀)*
 
 确保脚本中仅包含 memocli 命令。
 然后，执行该脚本并使用 tee 将输出同步记录到 `{{kg_path}}/debug_log/process_{{chunk_id}}.log` 文件中。
