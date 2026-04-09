@@ -18,14 +18,14 @@ def get_memocli_tools_help(chunk_id):
     """
     return {
         "help_search": f"```\n{get_memocli_help('search')}\n```\n**按需使用**：仅在非常必要（如报错）时使用。禁止对每个显而易见的成员名字进行重复搜索。",
-        "help_create": f"```\n{get_memocli_help('create-entity')}\n```\n用于创建新实体。支持在创建时通过 `--add-rel-out` (或 `-rel`) 和 `--add-rel-in` 一并建立关系。",
-        "help_append": f"```\n{get_memocli_help('append-update')}\n```\n用于向已有实体追加信息。支持通过 `--add-rel-out` 和 `--add-rel-in` 在追加内容的同时建立关系，无需单独调用 manage-relations。",
-        "help_relations": f"```\n{get_memocli_help('manage-relations')}\n```\n用于管理关系。支持 `--add-rel-out` (出站)、`--add-rel-in` (入站) 和 `--remove-rel-out`。",
+        "help_create": f"```\n{get_memocli_help('create-entity')}\n```\n用于创建新实体。支持通过多次调用 `--add-rel-out` 和 `--add-rel-in` 一并建立复杂的多重关联。",
+        "help_append": f"```\n{get_memocli_help('append-update')}\n```\n用于向已有实体追加信息。支持通过多次调用 `--add-rel-out` 和 `--add-rel-in` 在追加内容的同时建立/更新多重关联。",
+        "help_relations": f"```\n{get_memocli_help('manage-relations')}\n```\n用于管理关系。支持通过多次调用 `--add-rel-out`、`--add-rel-in` 或 `--remove-rel-out` 来实现精准的关系调整。",
         "help_merge": f"```\n{get_memocli_help('merge-entities')}\n```\n仅在发现明确的重复项时使用。",
         "global_rules": """
 **效率与安全规则：**
-- **注意仓库路径参数**: 注意 -p 这个指代知识库路径的参数，需要指向包含 meta.md 的目录。
-- **最小化调用**：优先使用 `append-update` 的关系参数来合并操作。禁止执行冗余的 search。
+- **组合指令优先**：优先使用 `append-update` 或 `create-entity` 的关系参数来合并操作，支持单行指令中多次使用同一个参数名。
+- **路径简化**：如果在知识库根目录运行，可以省略 `--path` 参数。
 - **原子化操作**：所有的追加操作必须包含来源溯源（文件名:行号）。
 - **错误处理**：若遇到逻辑冲突或无法解决的工具报错，立即返回 "ERROR: [原因]"。
 """

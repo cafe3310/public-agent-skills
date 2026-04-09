@@ -18,14 +18,24 @@
 首先，在 debug_log 目录下创建一个 shell 脚本 `{{kg_path}}/debug_log/process_{{chunk_id}}.sh`，并在其中编写以下命令：
 
 1. **高效提取 (推荐模式)**: 
-   - **创建并关联**: `cd {{kg_path}} && memocli create-entity -n "名称" -t "类型" -rel "谓语:目标1,目标2" -r "提取自 {{chunk_id}}"`
-   - **追加并关联**: `cd {{kg_path}} && memocli append-update -e "名称" -c "内容摘要 (包含溯源: {{filename}}:{{line_range}})" --add-rel-out "谓语:目标" -r "提取自 {{chunk_id}}"`
+   - **创建并关联**: `cd {{kg_path}} && memocli create-entity -n "名称" -t "类型" [关系参数] -r "提取自 {{chunk_id}}"`
+   - **追加并关联**: `cd {{kg_path}} && memocli append-update -e "名称" -c "内容摘要 (包含溯源: {{filename}}:{{line_range}})" [关系参数] -r "提取自 {{chunk_id}}"`
 
-2. **注意事项**:
-   - 如果实体已存在，`create-entity` 会报错，请在脚本中通过 `|| true` 忽略。
-   - `append-update` 现在是首选的关联方式，因为它能同时记录内容和语义联系。
-   - 所有的 `-e` 或 `-n` 参数仅包含实体名称，**严禁**包含类型前缀（如 `Member-`）。
-   - 每个对话相关的实体，至少要有一个提出或参与人与之关联。
+2. **关系参数选择指南 (关键)**:
+   - **场景 A：处理概念/观点/话题 (Opinion, Info, Chat等)**
+     - 优先使用 `--add-rel-in`。
+     - **逻辑**: 将参与讨论的人「拉入」此话题。
+     - **示例**: `memocli create-entity -n "观点A" -t "Opinion" --add-rel-in "Propose:张三" --add-rel-in "Support:李四" --add-rel-in "Discuss:王五,赵六"` (表示张三提出、李四支持、王五和赵六也参与了该观点讨论)。
+   - **场景 B：处理成员 (Member)**
+     - 优先使用 `--add-rel-out`。
+     - **逻辑**: 记录该成员「发出」的动作。
+     - **示例**: `memocli append-update -e "张三" -c "展现了...素养" --add-rel-out "Manifest:领域-知识" --add-rel-out "Support:观点B" -r "..."`。
+
+3. **注意事项**:
+   - 如果实体已存在，`create-entity` 会报错，请通过 `|| true` 忽略。
+   - 所有的 `-e` 或 `-n` 参数仅包含实体名称，**严禁**包含类型前缀。
+   - 关系参数支持**多次调用**（用于不同谓语或目标集）以及**逗号分隔**（用于同一谓语的多个目标）。
+   - 每个提取出的实体，必须至少通过一个关系参数（通常是 `Propose` 或 `Repost`）与发言人关联。
 
 确保脚本中仅包含 memocli 命令。
 然后，执行该脚本并使用 tee 将输出同步记录到 `{{kg_path}}/debug_log/process_{{chunk_id}}.log` 文件中。
