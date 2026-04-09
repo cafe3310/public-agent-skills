@@ -17,23 +17,21 @@
 <参考处理步骤>
 首先，在 debug_log 目录下创建一个 shell 脚本 `{{kg_path}}/debug_log/process_{{chunk_id}}.sh`，并在其中编写以下命令：
 
-1. **创建实体 (步骤1)**: 
-   `cd {{kg_path}} && memocli create-entity --path . --name "名称" --type "类型" --reason "提取自 {{chunk_id}}"`
-   *(注意：如果实体已存在，命令会报错，请在脚本中通过 `|| true` 或直接忽略错误继续)*
+1. **高效提取 (推荐模式)**: 
+   - **创建并关联**: `cd {{kg_path}} && memocli create-entity -n "名称" -t "类型" -rel "谓语:目标1,目标2" -r "提取自 {{chunk_id}}"`
+   - **追加并关联**: `cd {{kg_path}} && memocli append-update -e "名称" -c "内容摘要 (包含溯源: {{filename}}:{{line_range}})" --add-rel-out "谓语:目标" -r "提取自 {{chunk_id}}"`
 
-2. **追加内容 (步骤2)**: 
-   `cd {{kg_path}} && memocli append-update --path . --entity "名称" --content "内容摘要 (包含溯源: {{filename}}:{{line_range}})" --reason "提取自 {{chunk_id}}"`
-   *(注意：--entity 仅包含名称，不要包含类型前缀，也不要包含 .md 后缀)*
-
-3. **管理关系 (步骤3)**: 
-   `cd {{kg_path}} && memocli manage-relations --path . --source "主实体名称" --add "谓语:目标实体名称" --reason "提取自 {{chunk_id}}"`
-   *(注意：源实体和目标实体都仅包含名称，不要包含类型前缀)*
+2. **注意事项**:
+   - 如果实体已存在，`create-entity` 会报错，请在脚本中通过 `|| true` 忽略。
+   - `append-update` 现在是首选的关联方式，因为它能同时记录内容和语义联系。
+   - 所有的 `-e` 或 `-n` 参数仅包含实体名称，**严禁**包含类型前缀（如 `Member-`）。
+   - 每个对话相关的实体，至少要有一个提出或参与人与之关联。
 
 确保脚本中仅包含 memocli 命令。
 然后，执行该脚本并使用 tee 将输出同步记录到 `{{kg_path}}/debug_log/process_{{chunk_id}}.log` 文件中。
 然后检查命令执行结果，如果有任何严重错误（非实体已存在错误），记录并返回 "ERROR: [错误信息]"。
 
-4. **编辑 Task (步骤4)**: 
+3. **标记进度**: 
    `sed -i '' 's/\[ \] .*ID: {{chunk_id}}/\[x\] /' {{task_file_path}}` (MacOS 环境)
 </参考处理步骤>
 

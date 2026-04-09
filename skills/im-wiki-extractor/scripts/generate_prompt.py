@@ -18,14 +18,15 @@ def get_memocli_tools_help(chunk_id):
     """
     return {
         "help_search": f"```\n{get_memocli_help('search')}\n```\n**按需使用**：仅在非常必要（如报错）时使用。禁止对每个显而易见的成员名字进行重复搜索。",
-        "help_create": f"```\n{get_memocli_help('create-entity')}\n```\n用于创建新实体。如果工具返回实体已存在，可忽略该错误，继续执行后续的关系建立或内容追加即可。",
-        "help_append": f"```\n{get_memocli_help('append-update')}\n```\n用于向已有实体追加信息。",
-        "help_relations": f"```\n{get_memocli_help('manage-relations')}\n```\n用于管理关系。如果关系已存在，可忽略并继续执行后续操作。",
-        "help_merge": f"```\n{get_memocli_help('merge-entities')}\n```\n仅在发现明确的重复项时使用。无需特别为发现可合并的实体进行其他工具调用。",
+        "help_create": f"```\n{get_memocli_help('create-entity')}\n```\n用于创建新实体。支持在创建时通过 `--add-rel-out` (或 `-rel`) 和 `--add-rel-in` 一并建立关系。",
+        "help_append": f"```\n{get_memocli_help('append-update')}\n```\n用于向已有实体追加信息。支持通过 `--add-rel-out` 和 `--add-rel-in` 在追加内容的同时建立关系，无需单独调用 manage-relations。",
+        "help_relations": f"```\n{get_memocli_help('manage-relations')}\n```\n用于管理关系。支持 `--add-rel-out` (出站)、`--add-rel-in` (入站) 和 `--remove-rel-out`。",
+        "help_merge": f"```\n{get_memocli_help('merge-entities')}\n```\n仅在发现明确的重复项时使用。",
         "global_rules": """
 **效率与安全规则：**
-- **最小化调用**：禁止执行冗余的 search。对于已知的或显而易见的 Member，直接进行关联操作。
-- **禁止直接写操作**：严禁 write_file/replace 知识库文件。
+- **注意仓库路径参数**: 注意 -p 这个指代知识库路径的参数，需要指向包含 meta.md 的目录。
+- **最小化调用**：优先使用 `append-update` 的关系参数来合并操作。禁止执行冗余的 search。
+- **原子化操作**：所有的追加操作必须包含来源溯源（文件名:行号）。
 - **错误处理**：若遇到逻辑冲突或无法解决的工具报错，立即返回 "ERROR: [原因]"。
 """
     }
@@ -36,10 +37,10 @@ def get_lines(file_path, start, end):
     """
     if not os.path.exists(file_path):
         return f"文件不存在: {file_path}"
-    
+
     with open(file_path, 'r', encoding='utf-8') as f:
         all_lines = f.readlines()
-        
+
     # start 和 end 是 1-based 的
     return "".join(all_lines[max(0, start-1):min(len(all_lines), end)])
 
@@ -54,30 +55,30 @@ def generate_prompt(template_path, source_dir, kg_path, task_file_path, task_lin
         filename = parts[0].replace('- [ ]', '').strip()
         ctx_range = parts[1].replace('前序行', '').strip(' []')
         cur_range = parts[2].replace('当前处理行', '').strip(' []')
-        
+
         chunk_id = ""
         if len(parts) > 3 and "ID:" in parts[3]:
             chunk_id = parts[3].replace('ID:', '').strip(' []')
         else:
             chunk_id = f"{filename}_{cur_range.replace('~', '-')}"
-        
+
         file_path = os.path.join(source_dir, filename)
-        
+
         # 2. 读取语料内容
         ctx_content = ""
         if "无前序背景" not in ctx_range:
             c_start, c_end = map(int, ctx_range.split('~'))
             ctx_content = get_lines(file_path, c_start, c_end)
-        
+
         cur_start, cur_end = map(int, cur_range.split('~'))
         cur_content = get_lines(file_path, cur_start, cur_end)
-        
+
         # 3. 读取并填充模板
         with open(template_path, 'r', encoding='utf-8') as tf:
             template = tf.read()
-            
+
         tools_help = get_memocli_tools_help(chunk_id)
-        
+
         prompt = template.replace('{{chunk_id}}', chunk_id)
         prompt = prompt.replace('{{context_content}}', ctx_content or "（无前序背景）")
         prompt = prompt.replace('{{current_content}}', cur_content)
@@ -85,26 +86,26 @@ def generate_prompt(template_path, source_dir, kg_path, task_file_path, task_lin
         prompt = prompt.replace('{{task_file_path}}', task_file_path)
         prompt = prompt.replace('{{filename}}', filename)
         prompt = prompt.replace('{{line_range}}', f"{cur_start}-{cur_end}")
-        
+
         # 4. 注入独立的工具帮助
         for key, value in tools_help.items():
             prompt = prompt.replace('{{' + key + '}}', value)
-        
+
         if os.path.exists(meta_path):
             with open(meta_path, 'r', encoding='utf-8') as mf:
                 meta_content = mf.read()
                 prompt = prompt.replace('{{meta_content}}', meta_content)
-        
+
         # 5. 保存调试日志
         debug_dir = os.path.join(kg_path, "debug_log")
         if not os.path.exists(debug_dir):
             os.makedirs(debug_dir)
-            
+
         safe_chunk_id = chunk_id.replace('/', '_').replace(' ', '_')
         debug_path = os.path.join(debug_dir, f"subagent_prompt_{safe_chunk_id}.md")
         with open(debug_path, 'w', encoding='utf-8') as f:
             f.write(prompt)
-        
+
         return f"--- PROMPT SAVED TO: {debug_path} ---\n\n{prompt}"
 
     except Exception as e:
