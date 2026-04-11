@@ -112,7 +112,11 @@ for skill_dir in "$SOURCE_BASE"/*; do
         target_link="$TARGET_SKILLS/$skill_name"
 
         # 检查技能目录链接
-        if [ -e "$target_link" ] || [ -L "$target_link" ]; then
+        if [ -L "$target_link" ] && [ ! -e "$target_link" ]; then
+            # 如果是损坏的软链接，则直接覆盖
+            ln -sf "$skill_dir" "$target_link"
+            echo " [覆盖无效链接] $skill_name -> $target_link"
+        elif [ -e "$target_link" ] || [ -L "$target_link" ]; then
             echo " [跳过技能] $skill_name (目标已存在)"
         else
             ln -s "$skill_dir" "$target_link"
@@ -139,7 +143,11 @@ for skill_dir in "$SOURCE_BASE"/*; do
                     agent_name=$(basename "$agent_file")
                     agent_target="$TARGET_AGENTS/$agent_name"
 
-                    if [ -e "$agent_target" ]; then
+                    if [ -L "$agent_target" ] && [ ! -e "$agent_target" ]; then
+                        # 如果是损坏的软链接，则直接物理复制并覆盖
+                        cp -f "$agent_file" "$agent_target"
+                        echo " [覆盖无效链接 Agent] $agent_name -> $agent_target"
+                    elif [ -e "$agent_target" ]; then
                         read -p " [确认] Agent $agent_name 已存在，是否覆盖？(y/N) " confirm
                         if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
                             cp -f "$agent_file" "$agent_target"
