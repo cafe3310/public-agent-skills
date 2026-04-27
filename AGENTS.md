@@ -1,0 +1,4 @@
+- 在创建 agent skill 时，在 yaml 的 frontmatter 中将 cafe3310 写成 author；否则引用来源。
+- 技能目录使用 kebab-case；脚本统一存放在 `scripts/`。
+- `SKILL.md` 必须包含完整的 frontmatter (name, description, author, license)。
+- 维护技能时，优先保持其原有的目录结构和文档风格。
