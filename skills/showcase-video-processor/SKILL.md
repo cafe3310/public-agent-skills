@@ -30,12 +30,14 @@ status: wip
 *   **智能变速 (Time Warp)**: 加速推理过程，保持结果展示正常语速。
 *   **缩放与定格 (Zoom & Freeze)**: 关键帧特写与视觉停留。
 *   **质量保障**: 最大程度保持原始分辨率与码率，避免二次编码导致的模糊。
+*   **[实战案例参考]**: 参见 `concepts/raw_assets_processing.md` 中的 `FFmpeg 综合滤镜处理 (Crop + Partial Speedup)`。
 
 ### 3. 多粒度分镜策划 (Storyboard Planning)
 根据 `concepts/` 目录下的设计语言，撰写不同层级的文档：
 *   **微观分镜**: 针对 `Single Case` 的 4 步走细节。
 *   **中观分镜**: 针对 `Collage` 或 `Split Screen` 的布局与节奏。
 *   **宏观分镜**: 针对 `Showcase Set` 的完整叙事结构（核心宣告 -> 能力 -> 指标 -> 商业）。
+*   **[实战分镜范例]**: 参见 `references/example_releasing_model_max_storyboard.md` 以获取一个完整的、高度执行化（精确到秒与动作）的多模块发布视频分镜参考。
 
 ---
 

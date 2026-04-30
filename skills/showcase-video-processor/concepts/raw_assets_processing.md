@@ -56,3 +56,29 @@
 *   **非破坏性:** 尽可能保留原始素材的高分辨率，以便在 Zoom In 时不失真。
 *   **节奏感:** 变速操作应平滑，避免突兀的跳帧感。
 *   **纯净度:** 最终初稿素材中不应包含任何与演示无关的系统 UI 元素。
+
+---
+
+## 实践案例：FFmpeg 综合滤镜处理 (Crop + Partial Speedup)
+在处理长段演示视频时，通常需要在**同一条命令**中完成空间坐标裁剪 (Crop) 和特定时间段的变速 (Speedup)，以保证画质无损且不产生多次重编码损失。
+
+以下是一个典型的高质量处理命令示例。该命令执行了：
+1. **精确裁切**：提取原视频的 `00:00:29` 到 `00:00:56` 这一段。
+2. **空间裁剪 (Crop)**：将画面裁剪为宽 `2823`，高 `2060`，起始坐标 `X=512, Y=52`。
+3. **分段变速 (Partial Speedup)**：将截取后视频的**前 17 秒**进行 **8x** 极速快进（模拟模型快速生成），而 17 秒之后的内容保持原速播放。
+4. **高质量输出**：使用 `libx264` 编码器，`CRF 18` 视觉无损参数，及 `slow` 预设。
+
+```bash
+ffmpeg -ss 00:00:29 -to 00:00:56 -i original_video.mov -filter_complex \
+"[0:v]crop=2823:2060:512:52,setpts=PTS-STARTPTS,split=2[in1][in2]; \
+ [in1]trim=start=0:end=17,setpts=(PTS-STARTPTS)/8[v1]; \
+ [in2]trim=start=17,setpts=PTS-STARTPTS[v2]; \
+ [v1][v2]concat=n=2:v=1:a=0[outv]" \
+-map "[outv]" -c:v libx264 -crf 18 -preset slow processed_output.mov -y
+```
+
+**滤镜原理解析：**
+- `split=2[in1][in2]`：将经过 Crop 后的视频流复制为两份，分别用于处理加速段和原速段。
+- `trim=start=0:end=17,setpts=(PTS-STARTPTS)/8`：提取前 17 秒，并通过除以 8 来加速时间戳。
+- `trim=start=17,setpts=PTS-STARTPTS`：提取 17 秒之后的部分，重置时间戳以防卡顿。
+- `concat=n=2:v=1:a=0`：将处理好的加速段 `[v1]` 和原速段 `[v2]` 无缝拼接回一个单一视频流。
