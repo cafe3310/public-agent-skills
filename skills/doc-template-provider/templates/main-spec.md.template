@@ -1,0 +1,24 @@
+# 主产品规格: {{PROJECT_NAME}}
+
+## 1. 概述
+
+本文档提供了 {{PROJECT_NAME}} 项目产品规格的高级概述。该项目的目标是 {{在此处简要描述项目目标}}。
+
+## 2. 规格文档
+
+本主规格文档将链接到每个主要功能或组件的详细分文档。
+
+- **[{{FEATURE_NAME_1}}](./{{YYYY-MM-DD-HH-mm}}-{{FEATURE_NAME_1_FILENAME}}-spec.md)**: [在此处简要描述功能1]。
+- **[{{FEATURE_NAME_2}}](./{{YYYY-MM-DD-HH-mm}}-{{FEATURE_NAME_2_FILENAME}}-spec.md)**: [在此处简要描述功能2]。
+- *更多功能规格将在此处添加。*
+
+## 3. 设计图与截图
+
+与本文档相关的图片（如架构图、高层设计图）应存放在与本文档同名的目录中。
+
+- **目录**: `./{{YYYY-MM-DD-HH-mm}}-main-spec/`
+- **示例图片**: `[架构图](./{{YYYY-MM-DD-HH-mm}}-main-spec/architecture.png)`
+
+## 4. 相关文档
+
+本项目的待办事项列表 {{在 AGENTS.md 中维护 / 在项目管理相关 Skill 中维护}}。

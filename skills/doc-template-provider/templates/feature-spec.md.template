@@ -1,0 +1,40 @@
+# 产品规格: {{FEATURE_NAME}}
+
+## 1. 概述
+
+本文档详细描述了 {{PROJECT_NAME}} 项目中 {{FEATURE_NAME}} 功能的规格。该功能旨在 {{在此处简要描述功能的目标和范围}}。
+
+## 2. 功能需求 (产生此规格或功能的一系列需求文档)
+
+本规格基于以下需求文档，详细信息请参阅原始文档。
+
+- **[{{REQUIREMENT_DOC_NAME}}](./../requirements/{{YYYY-MM-DD-HH-mm}}-{{REQUIREMENT_FILENAME}}.md)**
+...
+
+### 本部分功能点列表
+
+- **[F-XX]**: [在此处简要描述功能点1], 参见 [需求文档](./../requirements/{{YYYY-MM-DD-HH-mm}}-{{REQUIREMENT_FILENAME}}.md#section-id)
+- **[F-XX]**: [在此处简要描述功能点2], 参见 [需求文档](./../requirements/{{YYYY-MM-DD-HH-mm}}-{{REQUIREMENT_FILENAME}}.md#section-id)
+- *更多需求点...*
+
+## 3. 设计图与截图
+
+与本规格文档相关的图片（如设计稿、开发过程截图）应存放在与本文档同名的目录中。
+
+- **目录**: `./{{YYYY-MM-DD-HH-mm}}-{{FEATURE_NAME_FILENAME}}-spec/`
+- **设计图**: `[设计图](./{{YYYY-MM-DD-HH-mm}}-{{FEATURE_NAME_FILENAME}}-spec/design.png)`
+- **开发过程截图**:
+    - `[截图1描述](./{{YYYY-MM-DD-HH-mm}}-{{FEATURE_NAME_FILENAME}}-spec/{{YYYY-MM-DD-HH-mm-ss}}-screenshot-1.png)`
+    - *更多截图...*
+
+## 4. 测试用例
+
+本项目采用 {{测试思路和方案}} 进行测试。以下是与此功能相关的测试用例文档和场景：
+
+- **[{{TEST_CASE_NAME_1}}]({{PATH_TO_TEST_CASE_1}})**: [简要描述测试场景1]。
+- **[{{TEST_CASE_NAME_2}}]({{PATH_TO_TEST_CASE_2}})**: [简要描述测试场景2]。
+- *更多测试用例...*
+
+## 5. 待办事项
+
+本项目的待办事项列表 {{在 AGENTS.md 中维护 / 在项目管理相关 Skill 中维护}}。

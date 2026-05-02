@@ -3,7 +3,7 @@
 ---
 title: 2026-04-23-15 工作信息 - 模型 Brief - Releasing-Model-Max v3
 date created: 2026-04-23 Thursday 17:50:07
-target: https://yuque.company-internal.com/model-map/playground/example-path
+target: https://docs.example-ai-studio.org/showcase/eval-report-001
 ---
 
 ## 核心价值与能力表述

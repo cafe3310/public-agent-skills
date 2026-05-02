@@ -70,6 +70,10 @@ chmod +x link_skills.sh
 
 用于从超长 IM 对话中增量提取结构化知识，并沉淀为可持续更新的 Wiki。通过滑动窗口处理、断点续传和来源追踪，避免一次性处理大体量聊天记录时的信息遗漏与上下文漂移。适合做长期群聊沉淀、项目复盘与事实查证。这个 Agent Skill 需要配合 [memories-off](https://github.com/cafe3310/agent-skill-memories-off) 工具使用。
 
+#### 聊天记录项目化处理 / [long-chat-task-processor](skills/long-chat-task-processor)
+
+专门用于处理按 Markdown 标题组织的超长聊天记录。它基于文档目录结构 (TOC) 进行分段分析，能够精准提取任务、决策和里程碑，并自动积累实体映射表（人名/概念），将其转化为结构化的项目管理资产，支持断点续传。
+
 #### 网页/视频本地化剪藏 / [online-content-collector](skills/online-content-collector)
 
 扫描 Obsidian 中带有 `#Marker-待下载` 的链接，用工具下载素材内容，并按 `[YYYY-MM-DD-HH] {分类} {描述}` 规范整理，实现自动化素材本地化。
@@ -129,6 +133,10 @@ chmod +x link_skills.sh
 #### 设计理念整理 / [project-design-concept-organizer](skills/project-design-concept-organizer)
 
 专门用来提炼项目中的隐性知识。把分散的代码变更抽象为设计模式或协议规范，确保项目在复杂化过程中保持设计的一致性。
+
+#### 文档模板提供 / [doc-template-provider](skills/doc-template-provider)
+
+提供一系列标准化文档模板，涵盖项目基础规范 (`GEMINI.md`)、需求文档、缺陷跟踪、待办列表以及 Jira/Dima 需求单等，确保项目文档从起步阶段就具备专业且一致的结构。
 
 #### Git 安全回退 / [git-snapshot-rollback](skills/git-snapshot-rollback)
 
@@ -201,6 +209,10 @@ chmod +x link_skills.sh
 #### 研究报告编写 / [content-research-writer](skills_parked/content-research-writer)
 
 用于撰写深度文章、技术文档或博客时。助手协助梳理大纲、交叉验证资料、管理引用链路，并在保持作者原始语气的基础上优化段落逻辑。与简单生成文本的工具不同，它强调协作式写作，避免“AI腔”泛滥。
+
+#### PRD 撰写助手 / [prd-writer](skills_parked/prd-writer)
+
+指导 Agent 以商业分析师和产品经理的角色，通过 7 步结构化工作流引导对话，将模糊的产品想法转化为详尽、可执行的产品需求文档 (PRD)。包含标准模板与现状分析流程。
 
 #### 看看剪贴板图片 / [paste-image](skills_parked/paste-image)
 
