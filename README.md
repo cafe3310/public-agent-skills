@@ -70,13 +70,17 @@ chmod +x link_skills.sh
 
 用于从超长 IM 对话中增量提取结构化知识，并沉淀为可持续更新的 Wiki。通过滑动窗口处理、断点续传和来源追踪，避免一次性处理大体量聊天记录时的信息遗漏与上下文漂移。适合做长期群聊沉淀、项目复盘与事实查证。这个 Agent Skill 需要配合 [memories-off](https://github.com/cafe3310/agent-skill-memories-off) 工具使用。
 
+#### 网页/视频本地化剪藏 / [online-content-collector](skills/online-content-collector)
+
+扫描 Obsidian 中带有 `#Marker-待下载` 的链接，用工具下载素材内容，并按 `[YYYY-MM-DD-HH] {分类} {描述}` 规范整理，实现自动化素材本地化。
+
 #### 项目交互式学习 / [project-learner](skills/project-learner)
 
 让 Agent 充当导师，在讲解项目代码或底层技术时，自动将过程记录到持久化的学习日志中。支持断点续学，让学习过程像项目开发一样有据可查。
 
-#### 研究报告编写 / [content-research-writer](skills/content-research-writer)
+#### 单文件沉浸式网页生成 / [oneshot-website](skills/oneshot-website)
 
-用于撰写深度文章、技术文档或博客时。助手协助梳理大纲、交叉验证资料、管理引用链路，并在保持作者原始语气的基础上优化段落逻辑。与简单生成文本的工具不同，它强调协作式写作，避免“AI腔”泛滥。
+一键生成高审美、全交互的单文件 HTML 网页。无需外部图片或构建步骤，仅通过 CSS 渐变、SVG 艺术和 Canvas API 打造顶级品牌感体验。适用于成果展示、AI 能力演示或创建令人惊叹的 CodePen 作品。
 
 #### 深度调研生态合作规划 / [deep-research-partnership-planner](skills/deep-research-partnership-planner)
 
@@ -122,14 +126,6 @@ chmod +x link_skills.sh
 
 可以按不同项目选择不同的范式。
 
-#### 完整版项目管理范式 / [project-management](skills/project-management)
-
-确立项目级基础规则：Monorepo 目录结构、文档命名规范（`YYYYMMDD-type-topic.md`）、Git 分支策略（feature/hotfix/release）、任务追踪机制（TODO 标签与状态流转），给项目仓库一个限定完全的开发范式。
-
-#### PMP 式迭代流程 / [pmp-dev-process](skills/pmp-dev-process)
-
-引入结构化的迭代流程：修订章程 → 规划确认 → 执行 → 验证。适用于开启新功能、进行重大变更或需要严谨记录的场景。
-
 #### 设计理念整理 / [project-design-concept-organizer](skills/project-design-concept-organizer)
 
 专门用来提炼项目中的隐性知识。把分散的代码变更抽象为设计模式或协议规范，确保项目在复杂化过程中保持设计的一致性。
@@ -142,17 +138,13 @@ chmod +x link_skills.sh
 
 作为轻量级默认开发循环，适用于无复杂流程的中小型项目。要求每项任务始于文档分析 → 生成 TODO 清单 → 开发后附加执行日志 → 提交前验证闭环。强调人的确认，最小化「想到哪做到哪」的不可控性，也防止自己忘掉。
 
-#### TDD 驱动的工作流 / [tdd-dev-cycle](skills/tdd-dev-cycle)
+#### 模型发布演示管理 / [release-showcase-manager](skills/release-showcase-manager)
 
-对代码质量有明确要求的场景启用。强制要求测试先行：输入/输出 definition → 编写测试用例 → 实现逻辑 → 验证覆盖率 → 修复边界条件。该流程虽增加初期成本，但显著减少后期 Debug 时间，尤其适用于复杂 SQL 或算法模块。
+针对 AI 模型发布的大规模演示项目管理框架。采用 `doc-todo-log-loop` 驱动，涵盖从模型能力研究、Scenario 设计、开发实施到录制笔记与性能评价的全生命周期。它是端到端的工程管理体系，而非简单的素材整理。
 
 #### 技能创造者 / [skill-creator](skills/skill-creator)
 
 用于自动化地创建、测试和优化 Agent Skill 本身。它涵盖了从意图捕捉、SKILL.md 编写到并行测试、自动评分和描述优化（提升触发准确率）的全生命周期。当你发现自己在重复某种复杂的指令流时，用它将其「固化」为技能。
-
-#### 基于浏览器的测试 / [browser-testing](skills/browser-testing)
-
-定义了一套不依赖重型框架的 E2E 测试流。测试用例写在 Markdown 里，通过截图和人工比对验证功能，结果存放在应用目录中作为凭证。
 
 ### 四、辅助工具
 
@@ -166,9 +158,9 @@ chmod +x link_skills.sh
 
 处理多媒体资产时的命名与分类工具。基于文件元数据（拍摄时间）或图像内容分析，自动生成 `YYYY-MM-DD_项目_描述.png` 格式的文件名，并输出带缩略图的索引 README。适用于设计素材归档、用户反馈截图整理等场景。用于维护运营资产库。
 
-#### 看看剪贴板图片 / [paste-image](skills/paste-image)
+#### 发布视频专业加工 / [showcase-video-processor](skills/showcase-video-processor)
 
-打通 macOS 剪贴板与 LLM 分析管道的桥梁。运行后自动将剪贴板中的图片保存为本地 PNG 文件，并返回路径供后续 Skill 调用。适用于「截图给 Coding Agent 看看效果」的场景。
+协助制作高质量模型发布视频。通过 FFmpeg 实现无损裁剪（去除系统 UI）、智能变速（加速推理过程）、定格缩放等专业操作，并支持撰写多粒度（微观/中观/宏观）分镜策划文档，打造“Luxury Tech”审美的演示集。
 
 #### 做微信表情包 / [wx-emoji-maker](skills/wx-emoji-maker)
 
@@ -185,3 +177,31 @@ chmod +x link_skills.sh
 #### 技能快速安装器 / [cafe3310-skill-installer](skills/cafe3310-skill-installer)
 
 自动化安装和更新本仓库中所有技能的专用工具。支持安全检测（防止覆盖用户自定义的同名技能）和安装后的状态预览。
+
+### 暂时不用的技能 (Parked Skills) / [skills_parked](skills_parked)
+
+这里存放一些目前不活跃、由于架构调整或个人工作流程变化而暂时“停靠”的技能。它们依然具有参考价值，但在当前阶段不作为推荐的默认工具。
+
+#### 完整版项目管理范式 / [project-management](skills_parked/project-management)
+
+确立项目级基础规则：Monorepo 目录结构、文档命名规范（`YYYYMMDD-type-topic.md`）、Git 分支策略（feature/hotfix/release）、任务追踪机制（TODO 标签与状态流转），给项目仓库一个限定完全的开发范式。
+
+#### TDD 驱动的工作流 / [tdd-dev-cycle](skills_parked/tdd-dev-cycle)
+
+对代码质量有明确要求的场景启用。强制要求测试先行：输入/输出 definition → 编写测试用例 → 实现逻辑 → 验证覆盖率 → 修复边界条件。该流程虽增加初期成本，但显著减少后期 Debug 时间，尤其适用于复杂 SQL 或算法模块。
+
+#### 基于浏览器的测试 / [browser-testing](skills_parked/browser-testing)
+
+定义了一套不依赖重型框架的 E2E 测试流。测试用例写在 Markdown 里，通过截图和人工比对验证功能，结果存放在应用目录中作为凭证。
+
+#### PMP 式迭代流程 / [pmp-dev-process](skills_parked/pmp-dev-process)
+
+引入结构化的迭代流程：修订章程 → 规划确认 → 执行 → 验证。适用于开启新功能、进行重大变更或需要严谨记录的场景。
+
+#### 研究报告编写 / [content-research-writer](skills_parked/content-research-writer)
+
+用于撰写深度文章、技术文档或博客时。助手协助梳理大纲、交叉验证资料、管理引用链路，并在保持作者原始语气的基础上优化段落逻辑。与简单生成文本的工具不同，它强调协作式写作，避免“AI腔”泛滥。
+
+#### 看看剪贴板图片 / [paste-image](skills_parked/paste-image)
+
+打通 macOS 剪贴板与 LLM 分析管道的桥梁。运行后自动将剪贴板中的图片保存为本地 PNG 文件，并返回路径供后续 Skill 调用。适用于「截图给 Coding Agent 看看效果」的场景。
