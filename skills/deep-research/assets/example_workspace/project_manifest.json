@@ -1,0 +1,12 @@
+{
+  "project_name": "AI Coding Assistant Market Research",
+  "overall_goal": "Analyze the market size, major players, technical differences, and developer sentiment of AI coding assistants.",
+  "max_search_depth": 3,
+  "max_subagents": 5,
+  "status": "In_Progress",
+  "dimensions": [
+    "task_1_market_size",
+    "task_2_major_players",
+    "task_3_developer_sentiment"
+  ]
+}
