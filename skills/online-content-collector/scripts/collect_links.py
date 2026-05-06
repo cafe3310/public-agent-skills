@@ -14,7 +14,7 @@ def collect_links(args):
 
     # Pattern to catch markers: #Marker-待下载, #Marker-下载中-YYYYMMDDHH, etc.
     # We want to capture the status and the optional suffix (like -演示)
-    marker_pattern = re.compile(r'#Marker-(待下载|下载中)(-[^\s\n]*?)?(-\d{10})?(\s|$)')
+    marker_pattern = re.compile(r'#Marker-(待下载|下载中|下载失败)(-[^\s\n]*?)?(-\d{10,})?(\s|$)')
     time_pattern = re.compile(r'time:\s*`?\s*([^`\s\n][^`\n]*[^`\s\n])\s*`?')
     source_pattern = re.compile(r'source:\s*`?\s*([^`\s\n][^`\n]*[^`\s\n])\s*`?')
     
@@ -60,10 +60,14 @@ def collect_links(args):
                             url = 'https://' + url
                             
                         # Determine the base tag (e.g. #Marker-待下载-演示)
-                        status_type = match.group(1) # 待下载 or 下载中
+                        status_type = match.group(1) # 待下载 or 下载中 or 下载失败
                         suffix = match.group(2) or "" # -演示
                         
-                        base_tag = f"#Marker-待下载{suffix}"
+                        # Clean up suffix
+                        clean_suffix = re.sub(r'^-+', '-', suffix)
+                        clean_suffix = re.sub(r'-+$', '', clean_suffix)
+                        
+                        base_tag = f"#Marker-待下载{clean_suffix}"
                         
                         found_items.append({
                             'date': item_time,
@@ -74,7 +78,7 @@ def collect_links(args):
                         })
                         
                         # Update line to #Marker-下载中-{suffix}-{now_stamp}
-                        new_marker = f"#Marker-下载中{suffix}-{now_stamp}"
+                        new_marker = f"#Marker-下载中{clean_suffix}-{now_stamp}"
                         # Replace the old marker with the new one
                         line = line.replace(match.group(0).strip(), new_marker)
                         file_changed = True

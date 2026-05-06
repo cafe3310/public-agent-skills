@@ -41,8 +41,9 @@ def sync_tags(args):
                 files_to_process[src] = []
             files_to_process[src].append(item)
 
-    # Marker pattern: capture the status and timestamp
-    marker_pattern = re.compile(r'#Marker-(下载中)(-[^\s\n]*?)?(-\d{10})')
+    # Marker pattern: capture the status and suffix (e.g. #Marker-下载中-演示-2026050418)
+    # We use a more flexible pattern to catch existing timestamps or malformed markers
+    marker_pattern = re.compile(r'#Marker-(下载中|已下载|下载失败)(-[^\s\n]*?)?(-\d{10,})?')
     source_line_pattern = re.compile(r'source:\s*`?\s*(.*?)\s*`?')
 
     for rel_path, file_items in files_to_process.items():
@@ -77,20 +78,24 @@ def sync_tags(args):
                 
                 if matched_item:
                     status = matched_item.get('status')
-                    original_tag = matched_item.get('tag_type', '#Marker-待下载')
-                    suffix = match.group(2) or "" # e.g. -演示
+                    # Clean up suffix: remove leading/trailing dashes or double dashes
+                    suffix = match.group(2) or ""
+                    clean_suffix = re.sub(r'^-+', '-', suffix)
+                    clean_suffix = re.sub(r'-+$', '', clean_suffix)
                     
                     if status == "下载完成":
-                        new_marker = f"#Marker-已下载{suffix}-{now_stamp}"
+                        new_marker = f"#Marker-已下载{clean_suffix}-{now_stamp}"
                         line = line.replace(match.group(0), new_marker)
                         file_changed = True
                         print(f"  [SUCCESS] {rel_path}: {matched_item['url']} -> 已下载")
                     elif "失败" in status:
-                        line = line.replace(match.group(0), original_tag)
+                        new_marker = f"#Marker-下载失败{clean_suffix}"
+                        line = line.replace(match.group(0), new_marker)
                         file_changed = True
-                        print(f"  [REVERT] {rel_path}: {matched_item['url']} -> {original_tag}")
+                        print(f"  [FAIL] {rel_path}: {matched_item['url']} -> 下载失败")
                 else:
-                    print(f"  [SKIP] {rel_path} 第 {i+1} 行: 未匹配到 URL 锚点。" )
+                    # If no item matched, still try to clean up the marker if it looks weird
+                    pass
             
             new_lines.append(line)
         

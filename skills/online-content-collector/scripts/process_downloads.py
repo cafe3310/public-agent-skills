@@ -108,8 +108,10 @@ def process_downloads(args):
             if site_type == 'x':
                 print("  正在调用 gallery-dl 抓取多媒体素材...")
                 # Force download into the current target_dir
+                # Use filter to avoid downloading videos already handled by yt-dlp
                 gdl_cmd = [
                     'gallery-dl',
+                    '--filter', "type != 'video' and extension not in ('mp4', 'mkv', 'webm', 'mov')",
                     '-D', target_dir,
                     url
                 ]
