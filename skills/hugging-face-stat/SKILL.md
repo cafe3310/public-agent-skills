@@ -1,7 +1,7 @@
 ---
 name: hugging-face-stat
 description: 专门用于获取 Hugging Face 上的模型、数据集和 Space 的详细统计信息，包括历史总下载量。
-author: ChatWise
+author: github/cafe3310
 license: Apache-2.0
 ---
 

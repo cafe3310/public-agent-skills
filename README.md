@@ -85,6 +85,7 @@ chmod +x link_skills.sh
 #### 单文件沉浸式网页生成 / [oneshot-website](skills/oneshot-website)
 
 一键生成高审美、全交互的单文件 HTML 网页。无需外部图片或构建步骤，仅通过 CSS 渐变、SVG 艺术和 Canvas API 打造顶级品牌感体验。适用于成果展示、AI 能力演示或创建令人惊叹的 CodePen 作品。
+（来源：github/jpcaparas）
 
 #### 深度调研生态合作规划 / [deep-research-partnership-planner](skills/deep-research-partnership-planner)
 
@@ -181,6 +182,16 @@ chmod +x link_skills.sh
 #### 代码库术语审计 / [code-naming-auditor](skills/code-naming-auditor)
 
 代码库术语一致性检查器。基于项目 Glossary 文件扫描变量/函数名，识别如 `getUserInfo()` 与 `fetchUserDetails()` 的命名冲突，输出重构建议。适合长期维护项目或微服务架构中保持领域语言统一。
+
+#### 浏览器自动化工具 / [agent-browser](skills/agent-browser)
+
+为 AI Agent 提供的快速浏览器自动化工具。通过 CDP 协议操作 Chrome/Chromium，支持无障碍树快照和紧凑的元素引用。适用于网页交互、导航及 Electron 应用自动化。
+（来源：https://github.com/vercel-labs/agent-browser）
+
+#### 产研级前端设计迭代 / [impeccable](skills/impeccable)
+
+专业的产研级前端界面设计与迭代工具。支持从需求定义（Shape）到代码实现（Craft）的全流程，专注于高审美的界面打磨、动画添加及优化，而非纯后端任务。
+（来源：https://github.com/pbakaus/impeccable）
 
 #### 技能快速安装器 / [cafe3310-skill-installer](skills/cafe3310-skill-installer)
 
