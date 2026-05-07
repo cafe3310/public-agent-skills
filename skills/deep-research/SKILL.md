@@ -15,6 +15,7 @@ This skill uses a file-system-driven, task-oriented architecture to prevent cont
 
 ### 1. Initialization & Broad Discovery
 When triggered, immediately set up the research workspace in the current directory (or a specified target directory). 
+- **Real-Time Visualizer**: You MUST start the real-time visualizer server in the background so the user can watch the research progress. Run: `python <path_to_this_skill_directory>/visualizer/server.py <target_directory> &` (or use the `run_shell_command` tool with `is_background: true`). Inform the user that they can view the dashboard at `http://localhost:8080`.
 - **Initial Broad Search**: Use `agent-browser` or your default search tools to perform a broad exploratory search on the overall topic. 
 - **Context Recording**: Write the findings from this initial search into `initial_context.md`. Use this context to identify the core dimensions of the topic.
 - **Workspace Setup**: Create the following structure:

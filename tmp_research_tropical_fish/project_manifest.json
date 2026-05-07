@@ -1,0 +1,11 @@
+{
+  "project_name": "热带鱼家庭养殖水质调节方法与指标 (Home Tropical Fish Water Quality)",
+  "overall_goal": "Establish a deep, data-driven understanding of how to regulate water quality for home tropical fish breeding, focusing on core chemical/biological parameters, regulation methods, and common issues.",
+  "max_search_depth": 3,
+  "max_subagents": 5,
+  "status": "In_Progress",
+  "dimensions": [
+    "task_1_chemical_and_biological_parameters",
+    "task_2_regulation_methods_and_filtration"
+  ]
+}
