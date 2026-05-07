@@ -52,23 +52,23 @@ chmod +x link_skills.sh
 
 #### 深度研究 / [deep-research](skills/deep-research)
 
-一个具备严谨性的多阶段深度研究方案。通过方法论先行 (Domain Methodology) 机制，在展开具体研究前自动确立行业标准评估框架。随后，它动态编排多个 Subagent 深入网络挖掘硬核数据点与对比指标，而非仅仅生成表面化的总结。它内置了基于交叉对比的饱和度测试，确保研究覆盖足够的维度、数据和来源，最终生成一篇有数据支撑的综合研究报告。
+一个具备严谨性的多阶段深度研究方案。通过领域方法论机制，在展开具体研究前自动确立行业标准评估框架。随后，它动态编排多个 Subagent 深入网络挖掘关键数据点与对比指标，避免生成表面化的总结。它内置了基于交叉对比的饱和度测试，确保研究覆盖足够的维度、数据和来源，最终生成一篇有数据支撑的综合研究报告。
 
 #### 语音转写长文处理 / [long-audio-transcript-processor](skills/long-audio-transcript-processor)
 
-解决超长语音转写稿（如全天会议、深度访谈）无法一次性塞入上下文的难题。通过文件系统记录处理状态，支持分段校对、清洗与结构化，同时动态维护全局勘误和术语表，以确保前后文一致。最重要的是支持「断点续传」，随时中断工作而不丢失进度，是整理录音稿的重型武器。也能随语音处理满足额外的内容提炼、问答获取、角色识别等需求。
+解决超长语音转写稿（如全天会议、深度访谈）无法一次性塞入上下文的难题。通过文件系统记录处理状态，支持分段校对、清洗与结构化，同时动态维护全局勘误和术语表，以确保前后文一致。支持「断点续传」，随时中断工作而不丢失进度，适合整理大规模录音稿。也能随语音处理满足额外的内容提炼、问答获取、角色识别等需求。
 
-方便你蒸馏自己。
+方便从自己身上提取知识。
 
 #### 语音整理入库 / [long-audio-to-obsidian](skills/long-audio-to-obsidian)
 
-专门用于将语音转写项目的复杂文件结构（原始录音、分段脚本、说明文档）整理并合并。它采用「Agent 规划排序 + 脚本机械执行」的模式，产出适合在 Obsidian 归档的 Markdown。
+专门用于将语音转写项目的复杂文件结构（原始录音、分段脚本、说明文档）整理并合并。它采用「Agent 规划与脚本执行相结合」的模式，产出适合在 Obsidian 归档的 Markdown。
 
 #### IM 知识库整理 / [im-local-kb](skills/im-local-kb)
 
 重型 IM 知识整理和分析技能，专注于从聊天记录中提取高价值的知识。它维护一个基于 Markdown 的本地文件系统，支持数据摄入、断档诊断和知识生成。可以处理上万行的大量群聊信息。
 
-方便你蒸馏别人。
+方便从网友身上提取知识。
 
 #### IM Wiki 提取 / [im-wiki-extractor](skills/im-wiki-extractor)
 
@@ -88,16 +88,16 @@ chmod +x link_skills.sh
 
 #### 单文件沉浸式网页生成 / [oneshot-website](skills/oneshot-website)
 
-一键生成高审美、全交互的单文件 HTML 网页。无需外部图片或构建步骤，仅通过 CSS 渐变、SVG 艺术和 Canvas API 打造顶级品牌感体验。适用于成果展示、AI 能力演示或创建令人惊叹的 CodePen 作品。
+一键生成高审美、全交互的单文件 HTML 网页。无需外部图片或构建步骤，仅通过 CSS 渐变、SVG 艺术和 Canvas API 提供高质量的视觉效果。适用于成果展示、AI 能力演示或创建令人惊叹的 CodePen 作品。
 （来源：github/jpcaparas）
 
 #### 深度调研生态合作规划 / [deep-research-partnership-planner](skills/deep-research-partnership-planner)
 
-结合深度调研（Deep Research）与人工洞察（Human-in-the-loop），为生态合作生成商业落地规划与颗粒度的宣发物料。通过严谨的两阶段调研（前期探索与深度研究）、引入人工战略判断，最终生成包含商业合作规划、早期预热方案及执行清单在内的全套 GTM 方案。强调「无调研不规划」，避免凭空编造，是进行深度业务合作的战略级工具。
+结合深度调研与人工洞察，为生态合作生成商业落地规划与颗粒度的宣发物料。通过严谨的两阶段调研（前期探索与深度研究）、引入人工战略判断，最终生成包含商业合作规划、早期预热方案及执行清单在内的全套 GTM 方案。强调「无调研不规划」，避免凭空编造，是进行业务合作的实用工具。
 
 #### 产研宣发物料生成 / [tech-to-marketing-brief](skills/tech-to-marketing-brief)
 
-充当产研侧与运营侧的「翻译官」。将冷冰冰的技术特性、算法指标通过痛点关联与风格重塑，转化为高颗粒度的运营 Brief、跨平台社媒宣发案例（小红书/公众号/X）以及配套的研发 Jira Ticket。确保技术卖点能精准转化为用户感知的心智，实现产研与营销的丝滑对接。
+充当产研侧与运营侧的「翻译官」。将冷冰冰的技术特性、算法指标通过痛点关联与风格重塑，转化为高颗粒度的运营 Brief、跨平台社媒宣发案例（小红书/公众号/X）以及配套的研发 Jira Ticket。确保技术卖点能精准转化为用户感知的心智，实现产研与营销的顺畅对接。
 
 #### 笔记库查资料 / [obsidian-knowledge-filter](skills/obsidian-knowledge-filter)
 
@@ -109,11 +109,11 @@ chmod +x link_skills.sh
 
 #### 标准化笔记编写 / [cafe3310-obsidian-writer](skills/cafe3310-obsidian-writer)
 
-指导 Agent 编写符合个人知识库风格的文档。强制要求包含 YAML 元数据、标准化标签（`#Type-`）、溯源说明（`[[双向引用]]`）以及特定的 Emoji 语意规范，确保知识库的长期整洁与可检索性。
+指导 Agent 编写符合个人知识库风格的文档。要求包含 YAML 元数据、标准化标签、溯源说明以及特定的 Emoji 语意规范，确保知识库的长期整洁与可检索性。
 
 #### 内容语气调整 / [content-tone-adjuster](skills/content-tone-adjuster)
 
-深度调整文本风格。内置「去模型味儿」模式（消除 AI 刻板表达）和「平实务实化」模式（去除浮夸大词与宏大叙事）。适用于需要将 AI 初稿转化为更自然、更务实的沟通文案或博客。
+深度调整文本风格。内置用于消除 AI 刻板表达的「去模型味儿」模式和去除浮夸大词与宏大叙事的「平实务实化」模式。适用于将 AI 初稿转化为更自然、更务实的沟通文案或博客。
 
 #### 写周报 / [weekly-report-writer](skills/weekly-report-writer)
 
@@ -123,7 +123,7 @@ chmod +x link_skills.sh
 
 #### 部署到 ModelScope / [deploy-folder-to-modelscope](skills/deploy-folder-to-modelscope)
 
-自动化 ModelScope 仓库发布流程：克隆目标仓库 → 复制指定子目录 → 提交带语义化信息的 commit → 推送远程。支持环境变量配置访问令牌。显著降低从实验到社区共享的摩擦成本。
+自动化 ModelScope 仓库发布流程：克隆目标仓库 → 复制指定子目录 → 提交带语义化信息的 commit → 推送远程。支持环境变量配置访问令牌。降低从实验到社区共享的发布成本。
 
 #### Hugging Face 数据查询 / [hugging-face-stat](skills/hugging-face-stat)
 
@@ -153,7 +153,7 @@ chmod +x link_skills.sh
 
 #### 模型发布演示管理 / [release-showcase-manager](skills/release-showcase-manager)
 
-针对 AI 模型发布的大规模演示项目管理框架。采用 `doc-todo-log-loop` 驱动，涵盖从模型能力研究、Scenario 设计、开发实施到录制笔记与性能评价的全生命周期。它是端到端的工程管理体系，而非简单的素材整理。
+针对 AI 模型发布的大规模演示项目管理框架。采用 `doc-todo-log-loop` 驱动，涵盖从模型能力研究、Scenario 设计、开发实施到录制笔记与性能评价的全生命周期。它是端到端的工程管理体系，不只是简单的素材整理。
 
 #### 技能创造者 / [skill-creator](skills/skill-creator)
 
@@ -173,19 +173,19 @@ chmod +x link_skills.sh
 
 #### 发布视频专业加工 / [showcase-video-processor](skills/showcase-video-processor)
 
-协助制作高质量模型发布视频。通过 FFmpeg 实现无损裁剪（去除系统 UI）、智能变速（加速推理过程）、定格缩放等专业操作，并支持撰写多粒度（微观/中观/宏观）分镜策划文档，打造“Luxury Tech”审美的演示集。
+协助制作高质量模型发布视频。通过 FFmpeg 实现无损裁剪（去除系统 UI）、智能变速（加速推理过程）、定格缩放等专业操作，并支持撰写多粒度（微观/中观/宏观）分镜策划文档，打造专业审美的演示集。
 
 #### 做微信表情包 / [wx-emoji-maker](skills/wx-emoji-maker)
 
-微信表情包批量生成工具。自动添加透明边框、调整至 240×240 像素、生成预览图包。虽属边缘功能，但在团队文化构建（如节日表情、梗图传播）中有不可替代的实用价值。
+微信表情包批量生成工具。自动添加透明边框、调整至 240×240 像素、生成预览图包。
 
 #### 使用本地 Claude 插件 / [use-claude-plugin](skills/use-claude-plugin)
 
-检索并使用本地目录中的 Claude 插件完成特定任务。它能定位插件库（如 Knowledge Work Plugins）中的专业技能（Skills），读取并遵循其 `SKILL.md` 指令，并模拟该插件的身份来执行任务，极大扩展了 Agent 的能力边界。
+检索并使用本地目录中的 Claude 插件完成特定任务。它能定位插件库中的专业技能，读取并遵循其 `SKILL.md` 指令，并模拟该插件的身份来执行任务。
 
-#### 文本隐写水印 (Robust Sync-Frame, Just for Fun) / [text-watermark-fountain](skills/text-watermark-fountain)
+#### 文本水印 / [text-watermark-fountain](skills/text-watermark-fountain)
 
-基于喷泉码（Fountain Code）与句子长度操纵的硬核文本隐写工具。它引入了同步帧（Sync Frame）机制，通过在文中嵌入特定长度模式的“同步锚点”，彻底解决了传统隐写中因删减或插入句子导致的全局偏移问题。即便载体文本被部分篡改，依然能高概率还原水印信息。适用于内容确权、溯源防伪等高抗干扰场景。
+基于喷泉码与句子长度操纵的文本隐写工具。娱乐向，并不是什么严谨方案。
 
 #### 代码库术语审计 / [code-naming-auditor](skills/code-naming-auditor)
 
@@ -198,7 +198,7 @@ chmod +x link_skills.sh
 
 #### 产研级前端设计迭代 / [impeccable](skills/impeccable)
 
-专业的产研级前端界面设计与迭代工具。支持从需求定义（Shape）到代码实现（Craft）的全流程，专注于高审美的界面打磨、动画添加及优化，而非纯后端任务。
+专业的产研级前端界面设计与迭代工具。支持从需求定义到代码实现的流程，专注于高审美的界面打磨、动画添加及优化。
 （来源：https://github.com/pbakaus/impeccable）
 
 #### 技能快速安装器 / [cafe3310-skill-installer](skills/cafe3310-skill-installer)
