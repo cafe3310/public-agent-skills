@@ -35,7 +35,10 @@
 
 1. **激活技能**: 激活 `showcase-video-processor`。
 2. **指令下达**: 将标注文件交给 Agent，要求其根据标注生成并执行 FFmpeg 指令。
-3. **成品产出**: 
+3. **裁剪知识持久化 (Knowledge Persistence)**:
+   - **操作**: 将本次用户提供的所有裁剪逻辑（源文件路径、时间戳范围、目标时长、变速倍率）完整记录到 `video-clipped/CLIPPING_LOG.md`。
+   - **意义**: 确保后期如果需要重新调整或溯源时，原始的剪辑指示清晰可见。
+4. **成品产出**: 
    - **存放路径**: `video-clipped/` 目录下。
    - **命名规范**: `{YYYY-MM-DD-HH}-{model}-{desc}-clipped.mp4`。
 

@@ -183,6 +183,10 @@ chmod +x link_skills.sh
 
 检索并使用本地目录中的 Claude 插件完成特定任务。它能定位插件库（如 Knowledge Work Plugins）中的专业技能（Skills），读取并遵循其 `SKILL.md` 指令，并模拟该插件的身份来执行任务，极大扩展了 Agent 的能力边界。
 
+#### 文本隐写水印 (Robust Sync-Frame, Just for Fun) / [text-watermark-fountain](skills/text-watermark-fountain)
+
+基于喷泉码（Fountain Code）与句子长度操纵的硬核文本隐写工具。它引入了同步帧（Sync Frame）机制，通过在文中嵌入特定长度模式的“同步锚点”，彻底解决了传统隐写中因删减或插入句子导致的全局偏移问题。即便载体文本被部分篡改，依然能高概率还原水印信息。适用于内容确权、溯源防伪等高抗干扰场景。
+
 #### 代码库术语审计 / [code-naming-auditor](skills/code-naming-auditor)
 
 代码库术语一致性检查器。基于项目 Glossary 文件扫描变量/函数名，识别如 `getUserInfo()` 与 `fetchUserDetails()` 的命名冲突，输出重构建议。适合长期维护项目或微服务架构中保持领域语言统一。

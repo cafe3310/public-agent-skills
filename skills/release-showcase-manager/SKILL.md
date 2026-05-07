@@ -25,6 +25,12 @@ license: Apache-2.0
 *   `video-raw/`: 存放原始录屏素材。
 *   `video-clipped/`: 存放经过初步裁剪和加工的成品视频。
 
+**结构一致性约束 (Structural Consistency)**：
+`showcases/`, `video-raw/` 与 `video-clipped/` **必须**保持完全一致的内部子目录层级。
+
+*   **以 showcases/ 为基准**：用户通常在开发过程中将所有原始素材（录屏、截图）直接存放在 `showcases/` 对应的项目子目录下。
+*   **Agent 的职责**：Agent 应当以 `showcases/` 为基准源，负责将原始素材同步/移动至 `video-raw/`，并将加工后的视频存放至 `video-clipped/`，同时严格维护一致的目录层级。禁止在根目录下直接堆放文件。
+
 工作区必须配置 **Git LFS** 以管理大型视频素材。
 
 ---
@@ -56,3 +62,4 @@ license: Apache-2.0
 *   **持续日志**: 每完成一个开发阶段，必须使用 `doc-todo-log-loop` 更新日志。
 *   **LFS 意识**: 在提交视频文件前，确保已正确配置 `.gitattributes`。
 *   **多维度记录**: 笔记中不仅要记录“做了什么”，更要记录模型在哪些地方表现出了“惊喜”或“挣扎”。
+*   **素材裁剪指示持久化**: 将用户提供的所有素材裁剪指令（时间戳、目标时长、变速比等）完整记录在 `video-clipped/CLIPPING_LOG.md` 中，确保每一段剪辑素材都有据可查、可追溯。
