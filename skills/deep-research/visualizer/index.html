@@ -37,7 +37,7 @@
         .step { margin-bottom: 24px; padding-left: 24px; border-left: 2px solid var(--border-color); position: relative; }
         .step::before { content: ''; position: absolute; left: -7px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--border-color); border: 2px solid var(--panel-bg); transition: background 0.3s; }
         .step.active { border-left-color: var(--warning); }
-        .step.active::before { background: var(--warning); box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.2); }
+        .step.active::before { background: var(--warning); }
         .step.done { border-left-color: var(--success); }
         .step.done::before { background: var(--success); }
         .step h3 { margin: 0 0 12px 0; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 8px;}
@@ -55,7 +55,7 @@
         .link-pill:hover { background: #e0e7ff; }
         .link-snippet { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
 
-        /* Report Modal */
+        /* Report Modal & Notifications */
         #report-btn { display: none; background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;}
         #report-btn:hover { background: #324fc7; }
         #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
@@ -64,6 +64,9 @@
         .close-btn:hover { color: #333; }
         .markdown-body { font-size: 0.95rem; line-height: 1.6; color: #333; }
         .markdown-body h1, .markdown-body h2 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+
+        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; display: none; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: fadeInUp 0.5s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
     </style>
 </head>
 <body>
@@ -104,11 +107,13 @@
         </div>
     </div>
 
+    <div id="toast">Research Completed!</div>
+
     <script>
         const chart = echarts.init(document.getElementById('graph-container'));
-        let blinkInterval;
-        let isBlinkOn = false;
         let currentGraphData = null;
+        let lastGraphString = "";
+        let hasShownCompletion = false;
 
         async function fetchData() {
             try {
@@ -117,13 +122,22 @@
                 updateStats(data);
                 renderFlow(data.status_flow, data.has_final_report);
                 renderLinks(data.links);
-
+                
                 if(data.has_final_report) {
                     document.getElementById('report-btn').style.display = 'block';
+                    if (!hasShownCompletion) {
+                        showToast("Research Completed!");
+                        hasShownCompletion = true;
+                    }
                 }
 
-                currentGraphData = data.graph;
-                renderGraph();
+                // Only re-render graph if data has changed to prevent jumping
+                const graphString = JSON.stringify(data.graph);
+                if (graphString !== lastGraphString) {
+                    currentGraphData = data.graph;
+                    renderGraph();
+                    lastGraphString = graphString;
+                }
 
                 const now = new Date();
                 document.getElementById('last-sync').innerText = now.toTimeString().split(' ')[0];
@@ -138,7 +152,6 @@
 
         function renderGraph() {
             if(!currentGraphData) return;
-            isBlinkOn = !isBlinkOn;
 
             const option = {
                 tooltip: { 
@@ -154,12 +167,9 @@
                         else if(n.category === 2) style = {color: '#4361ee'};
                         else if(n.category === 3) style = {color: '#06d6a0'};
                         
-                        // Blinking effect for ongoing tasks
                         if(n.category === 2 && !n.is_completed) {
-                            style.borderColor = isBlinkOn ? '#f72585' : '#4361ee';
-                            style.borderWidth = isBlinkOn ? 4 : 2;
-                            style.shadowBlur = isBlinkOn ? 15 : 0;
-                            style.shadowColor = '#f72585';
+                            style.borderColor = '#4361ee';
+                            style.borderWidth = 2;
                         }
                         return {...n, value: n.name, itemStyle: style};
                     }),
@@ -173,10 +183,20 @@
                         }
                     },
                     lineStyle: { color: '#ced4da', width: 1.5, curveness: 0.1 },
-                    force: { repulsion: 250, edgeLength: [30, 100], gravity: 0.1 }
+                    force: { 
+                        repulsion: 50, 
+                        edgeLength: [50, 150], 
+                        gravity: 0.1,
+                        friction: 0.6,
+                        layoutAnimation: false
+                    },
+                    draggable: true
                 }]
             };
-            chart.setOption(option);
+            chart.setOption(option, {
+                notMerge: false,
+                lazyUpdate: true
+            });
         }
 
         function renderFlow(flowData, hasReport) {
@@ -208,6 +228,13 @@
             `).join('');
         }
 
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
+        }
+
         async function openReport() {
             const res = await fetch('/api/report');
             const markdown = await res.text();
@@ -219,7 +246,6 @@
 
         fetchData();
         setInterval(fetchData, 2000); 
-        setInterval(renderGraph, 800); // 800ms blink toggle
         window.addEventListener('resize', () => chart.resize());
     </script>
 </body>
