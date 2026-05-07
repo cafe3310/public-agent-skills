@@ -112,10 +112,15 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
                 for u in urls:
                     if u not in [l['url'] for l in all_urls]:
                         domain = urlparse(u).netloc
+                        # Strip tags
                         snippet = re.sub(r'\[Source URL[^]]*\]', '', block)
                         snippet = re.sub(r'\[Data Precision[^]]*\]', '', snippet)
-                        snippet = snippet.replace('*', '').replace('-', '').strip()
-                        snippet = snippet[:70] + "..." if len(snippet) > 70 else snippet
+                        # Strip the URL itself from the snippet to avoid redundancy
+                        snippet = snippet.replace(u, '')
+                        # Clean up formatting
+                        snippet = snippet.replace('*', '').replace('-', '').replace('#', '').strip()
+                        
+                        snippet = snippet[:100] + "..." if len(snippet) > 100 else snippet
                         all_urls.append({"url": u, "domain": domain, "task": task_name_display, "snippet": snippet})
                 
                 info_text = re.sub(r'\[Source URL[^]]*\]', '', block)

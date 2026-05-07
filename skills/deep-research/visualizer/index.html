@@ -220,12 +220,23 @@
             const container = document.getElementById('links-container');
             if (!linksData || linksData.length === 0) return;
 
-            container.innerHTML = linksData.map(link => `
-                <div class="link-card">
-                    <a href="${link.url}" target="_blank" class="link-pill">${link.domain}</a>
-                    <div class="link-snippet">"${link.snippet}"</div>
-                </div>
-            `).join('');
+            container.innerHTML = linksData.map(link => {
+                if (!link.snippet) {
+                    return `
+                        <div style="margin-bottom: 12px;">
+                            <a href="${link.url}" target="_blank" class="link-pill">${link.domain}</a>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="link-card">
+                        <div style="margin-bottom:8px;">
+                            <a href="${link.url}" target="_blank" class="link-pill">${link.domain}</a>
+                        </div>
+                        <div class="link-snippet">${link.snippet}</div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function showToast(msg) {

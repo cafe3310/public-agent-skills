@@ -49,7 +49,7 @@ Invoke a **subagent** (like the `generalist` agent) to execute the research.
 2. **Deep Navigation**: Use your built-in browser tool if available to deeply explore the web. If no native browser tool is provided, use the `agent-browser` skill. You MUST click into secondary pages, PDFs, and data reports.
 
 > 3. **Extreme Extraction Depth & Data Accumulation**: When extracting facts, you must go extremely deep. DO NOT write surface-level summaries. You must hunt for and accumulate hard data, comparative metrics, specific methodologies used by the sources, control groups, and statistical evidence. Write highly detailed, comprehensive paragraphs.
-> 4. **Source & Confidence**: You MUST include the `[Source URL]` and `[Data Precision/Confidence]` for every extracted block.
+> 4. **Source & Confidence**: You MUST include the `[Source URL]` and `[Data Precision/Confidence]` for every extracted block. **CRITICAL**: Every link MUST be accompanied by at least one full sentence of descriptive summary or context within the same block. Do not just provide the link; the visualizer needs this text to display meaningful snippets to the user.
 > 5. **Redundancy & Contradiction Check**: Read `knowledge_fragments.md` before appending. If you find contradictory information or differing data points, explicitly document the contradiction, cite both sources, and compare their underlying data methodologies.
 > 6. **Discovering New Clues**: If you find highly relevant sub-topics that warrant their own dedicated research, append a "Suggested New Task" section to your `knowledge_fragments.md`.
 > 7. **Task Completion**: Once the task is exhausted, create a `status.txt` file and write exactly `Completed` inside it.
