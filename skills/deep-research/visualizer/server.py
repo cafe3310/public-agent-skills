@@ -7,6 +7,37 @@ import sys
 from urllib.parse import urlparse
 
 class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
+    def send_error(self, code, message=None, explain=None):
+        if code == 404:
+            self.send_response(code)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            cwd = os.getcwd()
+            try:
+                files = os.listdir(cwd)
+            except:
+                files = ["Unable to list directory"]
+            error_html = f"""
+            <html>
+            <head><title>404 Not Found</title></head>
+            <body style="font-family: sans-serif; padding: 2rem; background: #f8f9fa;">
+                <h1 style="color: #dc3545;">404 Not Found</h1>
+                <p>The requested path <code>{self.path}</code> was not found.</p>
+                <hr>
+                <p><b>Diagnostic Info:</b></p>
+                <ul>
+                    <li><b>Current Working Directory:</b> <code>{cwd}</code></li>
+                    <li><b>Files in CWD:</b> <code>{", ".join(files)}</code></li>
+                    <li><b>RESEARCH_DIR:</b> <code>{os.environ.get("RESEARCH_DIR", "Not Set")}</code></li>
+                </ul>
+                <p>Make sure you are running the server from the directory containing <code>index.html</code>.</p>
+            </body>
+            </html>
+            """
+            self.wfile.write(error_html.encode('utf-8'))
+        else:
+            super().send_error(code, message, explain)
+
     def do_GET(self):
         if self.path == '/api/data':
             self.send_response(200)
@@ -179,12 +210,16 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        os.environ["RESEARCH_DIR"] = sys.argv[1]
+        os.environ["RESEARCH_DIR"] = os.path.abspath(sys.argv[1])
     else:
         print("Usage: python server.py <path_to_research_workspace>")
         sys.exit(1)
         
     port = 8080
     socketserver.TCPServer.allow_reuse_address = True
+    
+    # Change working directory to the directory containing server.py so static files are served correctly
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    
     with socketserver.TCPServer(("", port), ResearchDataHandler) as httpd:
         httpd.serve_forever()

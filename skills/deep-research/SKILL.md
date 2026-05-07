@@ -15,23 +15,26 @@ This skill uses a file-system-driven, task-oriented architecture to prevent cont
 
 ### 1. Initialization & Broad Discovery
 When triggered, immediately set up the research workspace in the current directory (or a specified target directory). 
+- **Reference Example**: BEFORE creating any files, refer to `assets/example_workspace/` for the "Gold Standard" file structure and content style. Ensure your project layout matches this template perfectly.
 - **Real-Time Visualizer**: You MUST start the real-time visualizer server in the background so the user can watch the research progress. Run: `python <path_to_this_skill_directory>/visualizer/server.py <target_directory> &` (or use the `run_shell_command` tool with `is_background: true`). Inform the user that they can view the dashboard at `http://localhost:8080`.
 - **Initial Broad Search**: Use `agent-browser` or your default search tools to perform a broad exploratory search on the overall topic. 
 - **Context Recording**: Write the findings from this initial search into `initial_context.md`. Use this context to identify the core dimensions of the topic.
 - **Workspace Setup**: Create the following structure:
   - `project_manifest.json`: Tracks the overall goal, max search depth (e.g., 3), max subagents allowed (up to 10), and overall status.
-  - `main_log.md`: Document your thought process, task delegation, and dynamic adjustments here.
+  - `main_log.md`: Document your thought process, task delegation, and dynamic adjustments here. **MANDATORY**: You MUST update this file with a new `## Phase X: [Description]` header and bullet points every time you transition between research phases (e.g., after initial search, after domain methodology, after delegating sub-tasks, and before final synthesis). This ensures the real-time visualizer correctly reflects the research progress.
 
 ### 2. Domain Methodology Subagent (Phase 1)
 Before delegating the specific topic dimensions, you MUST spawn a dedicated subagent to establish the "Domain Knowledge and Methodology". 
 - Create a directory: `task_0_domain_methodology/`.
 - **Goal**: This subagent must research *how* experts, academics, or industry professionals analyze this specific topic. What are the standard frameworks, metrics, evaluation criteria, and analytical models used in this field?
 - **Output**: The subagent must write its findings to `domain_methodology.md` in the root workspace. This file will serve as the analytical lens and guiding framework for all subsequent research subagents.
+- **Log Update**: Update `main_log.md` once this phase is completed.
 
 ### 3. Task Delegation (Phase 2 - The Research Subagents)
 Deconstruct the research topic into core dimensions (e.g., `task_1_market_size/`, `task_2_tech_stack/`) based on `initial_context.md`.
 For each sub-directory, create a `task_spec.json` detailing the specific goals and keywords.
 Invoke a **subagent** (like the `generalist` agent) to execute the research.
+- **Log Update**: Update `main_log.md` as tasks are delegated and sub-topics are identified.
 
 **Provide the following exact instructions to the subagent when you invoke it:**
 
@@ -69,3 +72,9 @@ Once all required dimensions are Saturated, compile a comprehensive `final_synth
 - **File Append Mode**: Instruct subagents to append to files. Do not overwrite.
 - **No Memory Hoarding**: Rely on the file system (`knowledge_fragments.md`) as the single source of truth.
 - **Autonomy**: You manage the subagents. Let them mine the data. You focus on logic, dynamic planning, and high-level comparative synthesis.
+
+## Template & Testing
+A "Gold Standard" template workspace is available at `assets/example_workspace/`. 
+- Use this as a reference for the required file structures.
+- You can run the visualizer against this directory to verify UI changes: 
+  `python visualizer/server.py assets/example_workspace/`

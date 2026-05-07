@@ -1,11 +1,14 @@
-# Main Log: AI Coding Assistant Market Research
+# Deep Research Log: [Project Name]
 
-## Initialization
-- **Goal:** Analyze market size, major players, and sentiment.
-- **Dimensions identified:** Market Size, Major Players, Sentiment.
-- **Action:** Created directories `task_1_market_size`, `task_2_major_players`, `task_3_developer_sentiment`.
+## Phase 1: Initialization
+- Visualizer started.
+- Initial broad search completed.
+- Identified core dimensions for investigation.
 
-## Task Delegation
-- **Delegated:** `task_1_market_size` to subagent.
-  - *Goal:* Find TAM (Total Addressable Market) and CAGR.
-- **Status:** Waiting for `task_1_market_size` to complete.
+## Phase 2: Domain Methodology
+- Established analytical frameworks and success metrics.
+- Findings documented in `domain_methodology.md`.
+
+## Phase 3: Detailed Research
+- Delegated tasks to subagents.
+- Tracking progress via task directories.
