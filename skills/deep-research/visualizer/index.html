@@ -70,9 +70,12 @@
     <div id="header">
         <h3 style="margin:0; font-size: 1.1rem;">Deep Research <span style="font-weight: 300; color: var(--text-muted)">Visualizer</span></h3>
         <div class="stats-box">
-            <div class="stat-item">Ongoing Tasks: <span id="stat-ongoing" class="stat-val ongoing">0</span></div>
-            <div class="stat-item">Completed Tasks: <span id="stat-completed" class="stat-val" style="color:var(--success)">0</span></div>
-            <div class="stat-item">Extracted Sources: <span id="stat-links" class="stat-val">0</span></div>
+            <div class="stat-item">Ongoing: <span id="stat-ongoing" class="stat-val ongoing">0</span></div>
+            <div class="stat-item">Completed: <span id="stat-completed" class="stat-val" style="color:var(--success)">0</span></div>
+            <div class="stat-item">Sources: <span id="stat-links" class="stat-val">0</span></div>
+            <div class="stat-item" style="border-left: 1px solid var(--border-color); padding-left: 15px; color: var(--text-muted); font-size: 0.8rem;">
+                Last sync: <span id="last-sync">--:--:--</span>
+            </div>
         </div>
         <button id="report-btn" onclick="openReport()">View Final Report</button>
     </div>
@@ -114,13 +117,16 @@
                 updateStats(data);
                 renderFlow(data.status_flow, data.has_final_report);
                 renderLinks(data.links);
-                
+
                 if(data.has_final_report) {
                     document.getElementById('report-btn').style.display = 'block';
                 }
 
                 currentGraphData = data.graph;
                 renderGraph();
+
+                const now = new Date();
+                document.getElementById('last-sync').innerText = now.toTimeString().split(' ')[0];
             } catch(e) { console.error("Error fetching data:", e); }
         }
 
@@ -212,7 +218,7 @@
         function closeReport() { document.getElementById('modal').style.display = 'none'; }
 
         fetchData();
-        setInterval(fetchData, 3000); 
+        setInterval(fetchData, 2000); 
         setInterval(renderGraph, 800); // 800ms blink toggle
         window.addEventListener('resize', () => chart.resize());
     </script>

@@ -17,7 +17,7 @@ This skill uses a file-system-driven, task-oriented architecture to prevent cont
 When triggered, immediately set up the research workspace in the current directory (or a specified target directory). 
 - **Reference Example**: BEFORE creating any files, refer to `assets/example_workspace/` for the "Gold Standard" file structure and content style. Ensure your project layout matches this template perfectly.
 - **Real-Time Visualizer**: You MUST start the real-time visualizer server in the background so the user can watch the research progress. Run: `python <path_to_this_skill_directory>/visualizer/server.py <target_directory> &` (or use the `run_shell_command` tool with `is_background: true`). Inform the user that they can view the dashboard at `http://localhost:8080`.
-- **Initial Broad Search**: Use `agent-browser` or your default search tools to perform a broad exploratory search on the overall topic. 
+- **Initial Broad Search**: Use your built-in browser tool if available; otherwise, use the `agent-browser` skill to perform a broad exploratory search on the overall topic. 
 - **Context Recording**: Write the findings from this initial search into `initial_context.md`. Use this context to identify the core dimensions of the topic.
 - **Workspace Setup**: Create the following structure:
   - `project_manifest.json`: Tracks the overall goal, max search depth (e.g., 3), max subagents allowed (up to 10), and overall status.
@@ -34,7 +34,7 @@ Before delegating the specific topic dimensions, you MUST spawn a dedicated suba
 Deconstruct the research topic into core dimensions (e.g., `task_1_market_size/`, `task_2_tech_stack/`) based on `initial_context.md`.
 For each sub-directory, create a `task_spec.json` detailing the specific goals and keywords.
 Invoke a **subagent** (like the `generalist` agent) to execute the research.
-- **Log Update**: Update `main_log.md` as tasks are delegated and sub-topics are identified.
+- **Log Update**: Update `main_log.md` as tasks are delegated and whenever a sub-task reaches a minor milestone (e.g., "Started searching for [X]", "First data points for [Y] found").
 
 **Provide the following exact instructions to the subagent when you invoke it:**
 
@@ -42,19 +42,21 @@ Invoke a **subagent** (like the `generalist` agent) to execute the research.
 > You are responsible for executing the specific research task: [Insert Task Name].
 > **MANDATORY**: You MUST first read the `domain_methodology.md` file in the root workspace. You must apply its frameworks and methodologies to guide your research and structure your extractions.
 > 
-> # Execution Flow
-> 1. **Deep Navigation**: Use the `agent-browser` skill to deeply explore the web. You MUST click into secondary pages, PDFs, and data reports.
-> 2. **Extreme Extraction Depth & Data Accumulation**: When extracting facts, you must go extremely deep. DO NOT write surface-level summaries. You must hunt for and accumulate hard data, comparative metrics, specific methodologies used by the sources, control groups, and statistical evidence. Write highly detailed, comprehensive paragraphs into `[Insert Task Directory Path]/knowledge_fragments.md`. 
-> 3. **Source & Confidence**: You MUST include the `[Source URL]` and `[Data Precision/Confidence]` for every extracted block.
-> 4. **Redundancy & Contradiction Check**: Read `knowledge_fragments.md` before appending. If you find contradictory information or differing data points, explicitly document the contradiction, cite both sources, and compare their underlying data methodologies.
-> 5. **Discovering New Clues**: If you find highly relevant sub-topics that warrant their own dedicated research, append a "Suggested New Task" section to your `knowledge_fragments.md`.
-> 6. **Task Completion**: Once the task is exhausted, create a `status.txt` file and write exactly `Completed` inside it.
+# Execution Flow
+1. **Incremental Reporting**: DO NOT wait until the end of your search to write. Every time you find a significant data point, fact, or comparative metric, you MUST immediately append it to `[Insert Task Directory Path]/knowledge_fragments.md`. **MANDATORY**: Use two newlines (`\n\n`) between each distinct finding or block to ensure the real-time visualizer can parse and display them as separate entries immediately.
+2. **Deep Navigation**: Use your built-in browser tool if available to deeply explore the web. If no native browser tool is provided, use the `agent-browser` skill. You MUST click into secondary pages, PDFs, and data reports.
+
+> 3. **Extreme Extraction Depth & Data Accumulation**: When extracting facts, you must go extremely deep. DO NOT write surface-level summaries. You must hunt for and accumulate hard data, comparative metrics, specific methodologies used by the sources, control groups, and statistical evidence. Write highly detailed, comprehensive paragraphs.
+> 4. **Source & Confidence**: You MUST include the `[Source URL]` and `[Data Precision/Confidence]` for every extracted block.
+> 5. **Redundancy & Contradiction Check**: Read `knowledge_fragments.md` before appending. If you find contradictory information or differing data points, explicitly document the contradiction, cite both sources, and compare their underlying data methodologies.
+> 6. **Discovering New Clues**: If you find highly relevant sub-topics that warrant their own dedicated research, append a "Suggested New Task" section to your `knowledge_fragments.md`.
+> 7. **Task Completion**: Once the task is exhausted, create a `status.txt` file and write exactly `Completed` inside it.
 
 ### 4. Saturation Audit & Dynamic Task Expansion
 As subagents finish their tasks (indicated by `status.txt` containing `Completed`):
 - Review their `knowledge_fragments.md`.
 - **Dynamic Task Expansion**: Check if the subagent suggested new tasks. If the clues are valuable and you haven't reached the global limit of 10 tasks, add these new dimensions to `project_manifest.json`, create new task directories, and dispatch new subagents.
-- **Saturation Check**: Run the saturation check script:
+- **Saturation Check**: Run the saturation check script. **Note**: The bar for saturation is high (at least 5 unique domains and 10 granular facts per task):
   ```bash
   python <path_to_this_skill_directory>/scripts/check_saturation.py [Task Directory Path]
   ```

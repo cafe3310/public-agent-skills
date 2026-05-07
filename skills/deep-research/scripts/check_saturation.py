@@ -39,8 +39,8 @@ def check_saturation(task_dir):
             pass
     
     print(f"--- Saturation Report for {os.path.basename(task_dir)} ---")
-    print(f"Domains found: {len(domains)} (Target: >= 3)")
-    print(f"Facts extracted: {fact_count} (Target: >= 5)")
+    print(f"Domains found: {len(domains)} (Target: >= 5)")
+    print(f"Facts extracted: {fact_count} (Target: >= 10)")
     
     is_saturated = True
     
@@ -49,7 +49,7 @@ def check_saturation(task_dir):
         print(f"Missing aspects: {', '.join(missing_keywords)}")
         is_saturated = False
         
-    if len(domains) < 3 or fact_count < 5:
+    if len(domains) < 5 or fact_count < 10:
         is_saturated = False
         
     print("-" * 40)
