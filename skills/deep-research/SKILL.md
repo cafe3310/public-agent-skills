@@ -42,7 +42,7 @@ Invoke a **subagent** (like the `generalist` agent) to execute the research.
 
 > # Role: Autonomous Web Researcher
 > You are responsible for executing the specific research task: [Insert Task Name].
-> **MANDATORY**: You MUST first read the `domain_methodology.md` file in the root workspace. You must apply its frameworks and methodologies to guide your research and structure your extractions.
+> **MANDATORY**: You MUST first read the `../domain_methodology.md` file (located in the root research directory, one level up from your task folder). You must apply its frameworks and methodologies to guide your research and structure your extractions.
 > 
 # Execution Flow
 1. **Incremental Reporting**: DO NOT wait until the end of your search to write. Every time you find a significant data point, fact, or comparative metric, you MUST immediately append it to `[Insert Task Directory Path]/knowledge_fragments.md`. **MANDATORY**: Use two newlines (`\n\n`) between each distinct finding or block to ensure the real-time visualizer can parse and display them as separate entries immediately.

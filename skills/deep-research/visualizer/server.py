@@ -108,20 +108,47 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
             for i, block in enumerate(blocks):
                 if not block.strip() or block.startswith('#'): continue
                 
-                urls = re.findall(r'(https?://[^\s\]\>]+)', block)
-                for u in urls:
-                    if u not in [l['url'] for l in all_urls]:
-                        domain = urlparse(u).netloc
-                        # Strip tags
-                        snippet = re.sub(r'\[Source URL[^]]*\]', '', block)
-                        snippet = re.sub(r'\[Data Precision[^]]*\]', '', snippet)
-                        # Strip the URL itself from the snippet to avoid redundancy
-                        snippet = snippet.replace(u, '')
-                        # Clean up formatting
-                        snippet = snippet.replace('*', '').replace('-', '').replace('#', '').strip()
-                        
-                        snippet = snippet[:100] + "..." if len(snippet) > 100 else snippet
-                        all_urls.append({"url": u, "domain": domain, "task": task_name_display, "snippet": snippet})
+                # 1. Standard URL extraction
+                found_urls = re.findall(r'(https?://[^\s\]\>]+)', block)
+                
+                # 2. Extract from [Source URL(s)] tags (handling domains and partial paths)
+                tag_matches = re.findall(r'\[Source URLs?\]:?\s*(.*)', block, re.IGNORECASE)
+                for tag_content in tag_matches:
+                    # Strip any trailing markdown or metadata tags starting with [
+                    clean_content = re.split(r'\[', tag_content)[0].strip()
+                    # Split by semicolon or look inside parentheses
+                    parts = re.split(r'[;()]', clean_content)
+                    for p in parts:
+                        # Remove any remaining brackets or artifacts from the potential URL
+                        p = p.replace('[', '').replace(']', '').replace('*', '').strip().lower()
+                        # Simple domain/path heuristic
+                        if '.' in p and not p.startswith('http') and len(p) > 3:
+                            # Avoid picking up dates or version numbers
+                            if not re.match(r'^\d+\.\d+$', p):
+                                normalized = "https://" + p
+                                if normalized not in found_urls:
+                                    found_urls.append(normalized)
+
+                for u in found_urls:
+                    try:
+                        if u not in [l['url'] for l in all_urls]:
+                            parsed = urlparse(u)
+                            domain = parsed.netloc or parsed.path.split('/')[0]
+                            # Strip tags
+                            snippet = re.sub(r'\[Source URL[^]]*\]', '', block, flags=re.IGNORECASE)
+                            snippet = re.sub(r'\[Data Precision[^]]*\]', '', snippet, flags=re.IGNORECASE)
+                            # Strip the URL itself from the snippet to avoid redundancy
+                            snippet = snippet.replace(u, '')
+                            # Also strip bare versions of the URL if they exist
+                            bare_u = u.replace('https://', '').replace('http://', '')
+                            snippet = snippet.replace(bare_u, '')
+                            # Clean up formatting
+                            snippet = snippet.replace('*', '').replace('-', '').replace('#', '').strip()
+                            
+                            snippet = snippet[:100] + "..." if len(snippet) > 100 else snippet
+                            all_urls.append({"url": u, "domain": domain, "task": task_name_display, "snippet": snippet})
+                    except ValueError:
+                        continue # Skip malformed URLs
                 
                 info_text = re.sub(r'\[Source URL[^]]*\]', '', block)
                 info_text = re.sub(r'\[Data Precision[^]]*\]', '', info_text)
