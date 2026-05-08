@@ -11,11 +11,12 @@ license: Apache-2.0
 
 ## 核心概念
 
-- **学习主题 (Learning Subject)**: 宏观领域（如：量子物理、CUDA 编程）。
-- **学习计划 (Learning Plan)**: 具体路径（如：CUDA 进阶 - 语言机制深度解析）。
-- **概念 (Concept)**: 独立的知识点，是学习的基本单元。
-- **当前学习状态 (Current Learning Status)**: 唯一的单例实体，追踪当前活跃的计划。
-- **学习日志 (Learning Log)**: 记录学习进度和变更。
+- **学习主题 (Learning Subject)**: 宏观领域（如：Zig 编程语言）。
+- **子主题 (Sub-topic)**: 主题下的逻辑模块（如：内存管理、编译时元编程）。
+- **概念 (Concept)**: 独立的知识点，是学习的基本单元（如：Allocators、Comptime）。
+- **学习计划 (Learning Plan)**: 关联主题，定义子主题和概念的介绍顺序。
+- **当前学习状态 (Current Learning Status)**: 追踪当前活跃的计划与进度。
+- **学习日志 (Learning Log)**: 记录流水。
 
 ---
 
