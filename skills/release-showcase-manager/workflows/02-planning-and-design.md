@@ -16,19 +16,19 @@
      - **工具调用**: API 选择准确性、参数提取及多步 Agent 协同。
      - **长上下文召回**: 极长文本下的信息点精准定位与关联推理。
    - **市场与用户视角 (Market/User Perspective)**: 按任务类型进行拆分（如：效率办公、创意写作、专业编程、智能客服等）。
-   - **产出**: `YYYY-MM-DD-HH-llm-capability-atlas.md`。
+   - **产出**: `yyyy-mm-dd-hh Research llm-capability-atlas.md`。
 3. **人机协作初测 (Preliminary Assessment)**:
    - 针对上述技术维度进行压力测试。
    - 记录模型在特定维度下的“惊艳点”或“系统性瓶颈”。
-   - **产出**: `YYYY-MM-DD-HH-model-initial-assessment.md`。
+   - **产出**: `yyyy-mm-dd-hh 开发日志 initial-assessment.md`。
 4. **海量演示任务库 (Task Backlog)**:
    - 将能力点转化为具体的任务序列。
    - 遵循 KB 中的“七句故事结构”设计任务背景，确保任务具备视觉冲击力和商业逻辑。
-   - **产出**: `YYYY-MM-DD-HH-comprehensive-demo-backlog.md`。
+   - **产出**: `yyyy-mm-dd-hh 开发日志 demo-backlog.md`。
 5. **初始化日志**:
    - 使用 `doc-todo-log-loop` 开启本次周期的 `LOG.md`。
 
 ## 完成标准
 - [ ] 已产出按规定维度拆分的能力全景图。
 - [ ] 演示任务库已建立，且与技术维度高度对齐。
-- [ ] 所有文档均遵循 `YYYY-MM-DD-HH-` 命名规范。
+- [ ] 所有文档均遵循 `yyyy-mm-dd-hh 类型 名字.md` 命名规范。

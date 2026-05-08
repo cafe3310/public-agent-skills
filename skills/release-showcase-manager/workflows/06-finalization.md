@@ -23,7 +23,7 @@
      - **核心卖点**: {简短一句话描述}
      ```
 3. **资产关联度检查 (Consistency Check)**:
-   - 确保 `docs-and-ref/` 中的设计稿、`notes/` 中的洞察与 `showcases/` 中的代码逻辑完全一致。
+   - 确保 `notes/` 中的设计稿、开发日志与 `showcases/` 中的代码逻辑完全一致。
    - 检查所有内部链接（Internal Links）是否有效。
 4. **归档与提交 (Archiving)**:
    - 确认所有视频素材已正确提交至 Git LFS。

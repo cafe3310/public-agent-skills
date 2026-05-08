@@ -10,13 +10,13 @@
    - **自主调研 (Gemini Search)**: 调研业界同类模型、技术趋势及该模型在社区的初步反响。
    - **市场与运营 (GTM Goals)**: 明确当前市场希望传播的内容亮点，以及本次发布的核心运营目标。
 2. **规范化记录**:
-   - **强制命名规范**: 所有在 `docs-and-ref/` 或 `notes/` 中创建的文件必须以 `YYYY-MM-DD-HH-{描述}.md` 开头（执行前使用 `date` 获取时间）。
-   - **模型画像 (Model Profile)**: 创建名为 `YYYY-MM-DD-HH-model-{model_name}-{version}-profile.md` 的文档，作为该发布周期的基石。
+   - **强制命名规范**: 所有在 `notes/` 中创建的文件必须遵循 `yyyy-mm-dd-hh 类型 名字.md` 格式（如：`2026-05-08-10 文档摘录 Ling-Flash-Brief.md`）。
+   - **模型画像 (Model Profile)**: 创建名为 `yyyy-mm-dd-hh 开发日志 {model_name}-profile.md` 的文档，作为该发布周期的基石。
 3. **资产入库**:
-   - 将技术白皮书、Prompt 模板、Logo 素材等存入 `docs-and-ref/`。
-   - 建议在 `docs-and-ref/` 下按模型版本建立子目录，并同样遵循日期命名规范。
+   - 将技术白皮书、Prompt 模板、Logo 素材等存入 `notes/`，并归类为 `文档摘录` 或 `Research`。
+   - 建议在 `notes/` 下按模型版本建立子目录，并同样遵循上述命名规范。
 
 ## 完成标准
 - [ ] 已产出包含模型架构、运营目标及市场预期的核心文档。
-- [ ] 所有新创建的文件均遵循 `YYYY-MM-DD-HH-` 命名规范。
+- [ ] 所有新创建的文件均遵循 `yyyy-mm-dd-hh 类型 名字.md` 命名规范。
 - [ ] 已明确标注当前发布所属的模型版本信息。

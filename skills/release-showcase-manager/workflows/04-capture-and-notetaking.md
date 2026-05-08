@@ -7,7 +7,7 @@
 
 按照 Phase 3 准备的环境进行录制。
 - **原始素材存放**: `video-raw/` 目录下。
-- **命名规范**: `{YYYY-MM-DD-HH}-{model}-{desc}-raw.{ext}`。
+- **命名规范**: `{model}-{case_id}-{desc}-raw.{ext}`。
 - **Git LFS**: 确保视频文件被 Git LFS 追踪。
 
 ## 2. 结构化标注文件 (Sidecar Labeling)
@@ -40,7 +40,7 @@
    - **意义**: 确保后期如果需要重新调整或溯源时，原始的剪辑指示清晰可见。
 4. **成品产出**: 
    - **存放路径**: `video-clipped/` 目录下。
-   - **命名规范**: `{YYYY-MM-DD-HH}-{model}-{desc}-clipped.mp4`。
+   - **命名规范**: `{model}-{case_id}-{desc}-clipped.mp4`。
 
 ## 4. 同步笔记记录 (Final Notetaking)
 
@@ -50,4 +50,4 @@
 ## 完成标准
 - [ ] `video-raw/` 下已存放原始素材及对应的结构化标注文件。
 - [ ] 已调用 `showcase-video-processor` 产出对应的 `video-clipped/` 成品。
-- [ ] 视频命名严格遵循 YYYY-MM-DD-HH 规范。
+- [ ] 视频命名简洁且与项目目录对应。

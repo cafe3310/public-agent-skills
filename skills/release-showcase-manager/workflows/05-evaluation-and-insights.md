@@ -12,7 +12,7 @@
    - 强制参考 `kb/model-brief-standard.md`。
    - 确保产出文档包含核心价值、运营 Brief、KOL 建议、陷阱表格及案例组合。
 3. **编写评价底稿 (Drafting the Brief)**:
-   - **命名规范**: `YYYY-MM-DD-HH-model-{model_name}-{version}-evaluation.md`。
+   - **命名规范**: `yyyy-mm-dd-hh 开发日志 {model_name}-evaluation.md`。
    - 遵循标准中的 8 个核心章节进行撰写。
 4. **多维度评价与打分 (Scoring)**:
    - 结合 Phase 2 的图谱维度进行打分（1-10）：
@@ -30,4 +30,4 @@
 ## 完成标准
 - [ ] 已产出符合 `kb/model-brief-standard.md` 标准的正式评价底稿。
 - [ ] 底稿已深度整合所有开发笔记，包含具体的量化评分与亮点分析。
-- [ ] 文档遵循 `YYYY-MM-DD-HH-` 命名规范。
+- [ ] 文档遵循 `yyyy-mm-dd-hh 类型 名字.md` 命名规范。

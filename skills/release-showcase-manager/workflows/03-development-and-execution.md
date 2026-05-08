@@ -6,7 +6,7 @@
 ## 操作步骤
 
 1. **任务选取与准备**:
-   - 从 `YYYY-MM-DD-HH-comprehensive-demo-backlog.md` 中选取目标任务。
+   - 从 `yyyy-mm-dd-hh 开发日志 demo-backlog.md` 中选取目标任务。
    - 深入阅读关联的 `scenario.md` 和技术维度要求。
 2. **环境预热与录制对齐 (Recording Setup)**:
    - **参考规范**: 强制参考 `kb/recording-standards.md`。
@@ -17,8 +17,8 @@
      - [ ] 确认字体符合规范（首选 Inter 或 SF Pro）。
 3. **创建独立演示目录 (Isolated Workspace)**:
    - **位置**: 所有演示项目必须存放在 `showcases/` 目录下。
-   - **命名规范**: `YYYY-MM-DD-HH-{model}-{category}-{desc}`。
-   - 示例路径：`showcases/2026-05-01-14-gemini2-web-react-admin-gen/`。
+   - **命名规范**: `{model} {id} {name}`（尽量简洁，去除日期前缀）。
+   - 示例路径：`showcases/ring-2.6-1t 01 网页生成/`。
 4. **生成“一页纸”看板 (Project Dashboard)**:
    - 在演示目录下立即生成 `README.md`，包含以下部分以供开发时随时参考：
      - **项目背景**: 模型版本、所属发布周期。

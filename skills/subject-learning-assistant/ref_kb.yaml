@@ -1,0 +1,671 @@
+- type: entity
+  name: GPGPU 和 CUDA 应用
+  entityType: 学习主题
+  observations:
+    - "学习动机 (Why): 了解如何进行 LLM 的训练"
+    - "学习方式 (How): 理论优先，穿插代码示例"
+    - "背景知识: Java（精通）C/C++（熟悉）Web/JS/TS/HTML/CSS(精通) Node(精通)
+      的领域技能，以及计算机科学专业的大部分领域知识"
+    - "状态: 进行中"
+    - "状态: 进行中"
+    - "学习动机: 需要参与一些和 LLM 训练相关的工作"
+    - "背景知识: 比较熟悉 c/c++; 精通 java/js/ts. 没有接触过 opencl"
+    - "学习方式: 希望理论和代码多一些"
+- type: entity
+  name: 学习日志-20250903-001
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-03"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: GPGPU 与 CUDA 编程入门"
+    - "摘要: 完成了 'GPGPU 核心概念' 节点的学习，进入 'CUDA 编程基础' 节点。"
+- type: entity
+  name: 学习日志-20250903-002
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-03"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: GPGPU 与 CUDA 编程入门"
+    - "摘要: 完成了 'CUDA 编程基础' 节点的学习，进入 'CUDA 内存与执行模型' 节点。"
+- type: entity
+  name: 学习日志-20250903-003
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-03"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: GPGPU 与 CUDA 编程入门"
+    - "摘要: 完成了 'CUDA 内存与执行模型' 节点的学习，进入 'CUDA 在 LLM 训练中的应用' 节点。"
+- type: entity
+  name: 学习日志-20250903-004
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-03"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: GPGPU 与 CUDA 编程入门"
+    - "摘要: 完成了学习计划 'GPGPU 与 CUDA 编程入门' 的所有学习内容。"
+- type: entity
+  name: 学习日志-20250904-001
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-04"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: CUDA 进阶 - 语言机制与 API 深度解析"
+    - "摘要: 创建了新的学习计划 'CUDA 进阶 - 语言机制与 API 深度解析' 并关联到学习主题 'GPGPU 和 CUDA 应用'。"
+- type: entity
+  name: 学习日志-20250917-001
+  entityType: 学习日志
+  observations:
+    - "时间戳: 2025-09-17"
+    - "关联主题: GPGPU 和 CUDA 应用"
+    - "关联计划: CUDA 进阶 - 语言机制与 API 深度解析"
+    - '摘要: 学习计划 "CUDA 进阶 - 语言机制与 API 深度解析" 已完成。'
+- type: entity
+  name: CUDA 进阶 - 语言机制与 API 深度解析
+  entityType: 学习计划
+  observations:
+    - "创建日期: 2025-09-04"
+    - '任务大纲: ["高级内存管理与数据传输", "执行模型与并发控制", "CUDA C++ 语言扩展与模板编程", "关键 CUDA API
+      与生态库", "性能分析与优化实战"]'
+    - '任务节点-高级内存管理与数据传输: ["统一内存 (Unified Memory)", "锁页内存 (Pinned Memory)", "共享内存
+      (Shared Memory)", "常量内存与只读缓存", "纹理与表面内存 (Texture and Surface Memory)",
+      "设备端动态内存分配"]'
+    - '任务节点-执行模型与并发控制: ["Warp 与 SIMT 架构", "Warp 分化 (Warp Divergence)", "Warp 级原语
+      (Warp-level Primitives)", "流与事件 (Streams and Events)", "并发内核执行", "动态并行
+      (Dynamic Parallelism)", "协作组 (Cooperative Groups)"]'
+    - '任务节点-CUDA C++ 语言扩展与模板编程: ["核函数模板 (Kernel Templates)", "设备端函数与变量", "CUDA
+      中的 C++ Lambda 表达式", "张量核心 (Tensor Cores)", "WMMA API
+      (Warp-Matrix-Multiply-Accumulate)"]'
+    - '任务节点-关键 CUDA API 与生态库: ["cuBLAS", "cuDNN", "Thrust", "CUTLASS", "NCCL
+      (NVIDIA Collective Communications Library)"]'
+    - '任务节点-性能分析与优化实战: ["Nsight Compute", "Nsight Systems", "占用率 (Occupancy)",
+      "内存访问合并 (Memory Coalescing)", "指令级并行与寄存器压力", "使用 cuda-gdb 进行调试"]'
+    - "当前节点: 高级内存管理与数据传输"
+    - "当前节点: 执行模型与并发控制"
+- type: entity
+  name: GPGPU 与 CUDA 编程入门
+  entityType: 学习计划
+  observations:
+    - "创建日期: 2025-09-03"
+    - '学习路径大纲: ["GPGPU 核心概念", "CUDA 编程基础", "CUDA 内存与执行模型", "CUDA 在 LLM 训练中的应用"]'
+    - "状态: 已完成"
+- type: entity
+  name: 当前学习状态
+  entityType: 当前学习状态
+  observations:
+    - "最后更新: 2025-09-03 05:59:00"
+    - "当前主题: GPGPU 和 CUDA 应用"
+    - "当前计划: GPGPU 与 CUDA 编程入门"
+    - "最后更新: 2025-09-03 08:28:00"
+    - "当前主题: GPGPU 和 CUDA 应用"
+    - "当前计划: "
+    - "最后更新: 2025-09-04 00:00:00"
+    - "当前主题: GPGPU 和 CUDA 应用"
+    - "当前计划: CUDA 进阶 - 语言机制与 API 深度解析"
+- type: entity
+  name: CUDA C++ 内置变量汇总
+  entityType: 概念
+  observations:
+    - "用户反馈: 已梳理并理解了在设备端代码中用于定位线程身份的核心内置变量，如 threadIdx, blockIdx, blockDim,
+      gridDim 等。"
+- type: entity
+  name: CUDA C++ 核心扩展关键字汇总
+  entityType: 概念
+  observations:
+    - "用户反馈: 已梳理并理解了 CUDA C++ 的核心扩展关键字，包括函数执行空间说明符（__global__, __device__,
+      __host__）和变量内存空间说明符（__shared__, __constant__, __device__）。"
+- type: entity
+  name: CUDA C++ 核心运行时 API 汇总
+  entityType: 概念
+  observations:
+    - "用户反馈: 已梳理并理解了在主机端用于管理设备、内存、执行控制、流与事件以及错误处理的核心 API 函数。"
+- type: entity
+  name: CUDA 中的 C++ Lambda 表达式
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解在 CUDA 中使用 C++ Lambda 表达式的核心概念、捕获规则和主要应用场景。"
+- type: entity
+  name: CUDA 内存层次结构
+  entityType: 概念
+  observations:
+    - "简介: CUDA
+      编程模型中定义的一套内存体系结构，包括寄存器、共享内存、常量内存、纹理内存和全局内存等，它们具有不同的作用域、生命周期和访问速度。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: CUDA 如何加速矩阵乘法
+  entityType: 概念
+  observations:
+    - "简介: 通过将输出矩阵的每个元素计算任务分配给一个独立的 CUDA 线程，并利用二维的 Grid 和 Block
+      结构来组织这些线程，从而实现大规模并行计算。优化的 Kernel 会使用共享内存来减少对全局内存的访问。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: CUDA 核函数加载与执行机制
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解 CUDA 核函数在编译时即被编译为机器码并随程序加载到
+      VRAM。核函数启动是一个轻量级的“命令下达”操作，其延迟远高于内存访问但远低于数据传输。"
+- type: entity
+  name: CUTLASS
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-16"
+    - "初次介绍时间: 2025-09-16"
+- type: entity
+  name: GPU 内存耗时层级与体感
+  entityType: 概念
+  observations:
+    - "用户反馈: 对寄存器、共享内存、L1/L2缓存、全局内存的访问延迟，以及核函数启动和内存拷贝的耗时，建立了清晰的数量级概念和直观体感。"
+- type: entity
+  name: Kernel 函数
+  entityType: 概念
+  observations:
+    - "简介: 一个使用 __global__ 关键字修饰的函数，它从 CPU 调用，但在 GPU 上并行执行。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: LLM 训练中的并行计算需求
+  entityType: 概念
+  observations:
+    - "简介: LLM 的训练涉及海量的矩阵乘法和其他按元素操作，这些本质上都是高度并行的，非常适合 GPU 加速。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: NCCL (NVIDIA Collective Communications Library)
+  entityType: 概念
+  observations: []
+- type: entity
+  name: Nsight Compute
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-16"
+- type: entity
+  name: Nsight Systems
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-17"
+- type: entity
+  name: PTX
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-16"
+    - "用户反馈: 已确认理解 PTX 作为 CUDA 中间汇编语言的作用，特别是其在保证硬件兼容性方面的重要性。"
+- type: entity
+  name: ReLU
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-16"
+    - "用户反馈: 已确认理解 ReLU 作为深度学习激活函数的核心定义和作用。"
+- type: entity
+  name: Thrust
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-16"
+    - "用户反馈: 已确认理解 Thrust 的核心理念、常用算法及其签名，能够使用其解决常见的并行计算问题。"
+- type: entity
+  name: WMMA API (Warp-Matrix-Multiply-Accumulate)
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解 WMMA API 的核心思想、组件和编程限制。"
+- type: entity
+  name: Warp 与 SIMT 架构
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解 SIMT (单指令多线程) 是 GPU 的核心执行模型，Warp (32个线程) 是其基本的调度和执行单元。通过对
+      if/else 分支的探讨，深入理解了硬件通过串行化和线程屏蔽来处理 Warp 分化的机制，并能推断出无限循环和 goto 等非结构化控制流对
+      Warp 执行的破坏性影响。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: Warp 分化 (Warp Divergence)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已深入理解 Warp 分化是因控制流导致 Warp
+      内线程执行不同路径的现象。掌握了硬件通过串行化执行和线程屏蔽来处理分化的机制，并能识别出 if-else, switch-case,
+      以及条件循环是导致分化的主要来源，理解其对计算资源利用率的损害。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: Warp 级原语 (Warp-level Primitives)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解 Warp 级原语是用于在 Warp 内部进行高效、无分化协作的硬件指令封装。掌握了 __shfl_sync,
+      __all_sync, __ballot_sync 等核心原语的功能，并通过分析 Warp
+      级规约的代码，深入理解了其如何避免共享内存和重量级同步，实现极致的线程间数据交换。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: cuBLAS
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解 cuBLAS 的核心价值、使用场景，以及在行业中算法工程师对其的使用情况。"
+- type: entity
+  name: cuDNN
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解 cuDNN 的核心价值、功能以及在工程实践中的权衡。"
+- type: entity
+  name: safetensors 的工作原理
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解 safetensors 通过 JSON 元数据头部和内存映射(mmap)实现权重文件的安全、快速、零拷贝加载。"
+    - "初次介绍时间: 2025-09-04"
+- type: entity
+  name: 什么是 CUDA
+  entityType: 概念
+  observations:
+    - "简介: CUDA (Compute Unified Device Architecture) 是 NVIDIA
+      推出的一个并行计算平台和编程模型，它允许开发者使用 C/C++ 等高级语言来利用 GPU 的并行计算能力。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: 什么是 GPGPU
+  entityType: 概念
+  observations:
+    - "简介: GPGPU（General-Purpose computing on Graphics Processing
+      Units）是一种利用图形处理器（GPU）来执行通用科学与工程计算的技术。"
+    - "初次介绍时间: 2025-09-03"
+    - "简介: GPGPU（General-Purpose computing on Graphics Processing
+      Units）是一种利用图形处理器（GPU）来执行通用科学与工程计算的技术。"
+    - "初次介绍时间: 2025-09-03"
+- type: entity
+  name: 使用 cuda-gdb 进行调试
+  entityType: 概念
+  observations: []
+- type: entity
+  name: 全局内存 vs. 共享内存
+  entityType: 概念
+  observations:
+    - "简介: 全局内存容量大但速度慢，是 GPU 的主存储；共享内存容量小但速度快，用于 Block
+      内线程的高效协作。优化关键在于用共享内存减少全局内存访问。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: 共享内存 (Shared Memory)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解共享内存（Shared Memory）是线程块（Thread
+      Block）内所有线程共享的高速片上内存。掌握了其作为“可编程缓存”的核心思想，即通过一次协同的全局内存加载，换取后续多次高速的片上访问，以实现数\
+      据重用并提升性能。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: 内存访问合并 (Memory Coalescing)
+  entityType: 概念
+  observations: []
+- type: entity
+  name: 动态并行 (Dynamic Parallelism)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解动态并行允许 GPU 核函数直接启动新的子核函数，打破了以往只能由 CPU
+      启动的扁平模型。掌握了其核心优势在于处理工作量不确定的自适应算法和递归问题，通过在 GPU
+      内部完成“计算-分析-再计算”的闭环来避免高昂的主机-设备通信延迟。同时，也理解了其数据传递依赖指针，开发者必须手动管理数据同步和内存，特别是子核\
+      函数无法直接访问父核函数的共享内存。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: 协作组 (Cooperative Groups)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解协作组（Cooperative Groups）是一套打破 CUDA 僵化同步层级的现代 C++
+      编程模型。掌握了其核心思想：通过将线程抽象为灵活的“组”对象，并在任意粒度上（如块内切片、整个Grid）进行同步，从而实现更模块化、可复用和面向未\
+      来的 CUDA 代码。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: 占用率 (Occupancy)
+  entityType: 概念
+  observations: []
+- type: entity
+  name: 常量内存与只读缓存
+  entityType: 概念
+  observations:
+    - "用户反馈:
+      已理解常量内存和只读缓存的核心特性，特别是当Warp内线程访问同一地址时触发的高效广播机制。能够通过分析矩阵乘法中的数据访问模式，推断出哪个矩阵更\
+      适合通过只读缓存加载以提升性能。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: 并发内核执行
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解并发内核执行是利用 CUDA
+      流实现的宏观任务级并行。掌握了其核心思想：将独立的核函数放入不同的流中，以便在硬件资源允许的情况下，在 GPU 不同的 SM
+      上同时运行。通过分析批量图片处理的双层并行代码示例，深入理解了如何将并发内核执行（外层任务并行）与计算/拷贝重叠（内层流水线并行）组合使用，以最大化
+      GPU 硬件利用率。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: 张量核心 (Tensor Cores)
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解 Tensor Cores 的概念、混合精度原理及其与 CUDA Cores 的关系。"
+- type: entity
+  name: 指令级并行与寄存器压力
+  entityType: 概念
+  observations: []
+- type: entity
+  name: 核函数模板 (Kernel Templates)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已介绍核函数模板的基本概念、用途和实例化方法。学习暂停，等待后续深入。"
+    - "初次介绍时间: 2025-09-09"
+    - "初次介绍时间: 2025-09-09"
+    - "用户反馈: 已确认理解核函数模板的核心概念和优势。"
+- type: entity
+  name: 模型量化
+  entityType: 概念
+  observations:
+    - "用户反馈:
+      已理解模型量化是一种推理时优化技术，通过将高精度浮点权重映射到低精度整数（如INT8），以牺牲极小精度为代价，换取2-4倍的速度提升和一半的内存占\
+      用，从而让大模型在消费级硬件上运行成为可能。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: 流与事件 (Streams and Events)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解流（Stream）是独立的 GPU
+      任务队列，事件（Event）是队列中的同步标记点。通过分析视频分块处理的流水线案例，深入掌握了如何利用多条流来重叠数据传输（Copy）和核心计算（\
+      Compute），从而隐藏内存延迟，提升 GPU 硬件的整体利用率。"
+    - "初次介绍时间: 2025-09-09"
+- type: entity
+  name: 粒子运算
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解粒子运算的基本原理，以及如何使用空间划分（如统一网格）在GPU上加速粒子间的交互计算。"
+- type: entity
+  name: 纹理与表面内存 (Texture and Surface Memory)
+  entityType: 概念
+  observations:
+    - "用户反馈:
+      已理解纹理内存并非独立的物理内存，而是通过一个拥有专用缓存和硬件单元（如插值、边界处理）的特殊“数据访问管道”来读取全局VRAM中的数据。能够清晰\
+      地区分普通全局内存访问路径和纹理内存访问路径在缓存系统、优化目标和硬件功能上的差异。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: 线程 (Thread)、块 (Block) 和网格 (Grid)
+  entityType: 概念
+  observations:
+    - "简介: CUDA 用于组织并行执行的三层结构。线程是基本单位，一组线程构成块，一组块构成网格。"
+    - "初次介绍时间: 2025-09-03"
+    - "用户反馈: 已理解"
+- type: entity
+  name: 统一内存 (Unified Memory)
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解统一内存（Unified Memory）通过单一指针简化编程，并通过页面迁移机制自动在主机和设备间移动数据。了解了
+      cudaMallocManaged, cudaDeviceSynchronize, cudaMemPrefetchAsync, 和
+      cudaMemAdvise 的作用，并能将其与 LLM 训练中权重矩阵的优化联系起来。"
+    - "初次介绍时间: 2025-09-04"
+- type: entity
+  name: 设备端函数与变量
+  entityType: 概念
+  observations:
+    - "初次介绍时间: 2025-09-15"
+    - "用户反馈: 已确认理解设备端函数与变量的核心概念和用途。"
+- type: entity
+  name: 设备端动态内存分配
+  entityType: 概念
+  observations:
+    - "用户反馈: 已理解设备端动态内存分配的机制、优势（灵活性、节约内存）和代价（性能开销），并能清晰地辨析其与共享内存在适用场景上的根本区别。"
+    - "初次介绍时间: 2025-09-08"
+- type: entity
+  name: 锁页内存 (Pinned Memory)
+  entityType: 概念
+  observations:
+    - "用户反馈: 理解了锁页内存（Pinned Memory）通过固定物理地址来加速主机-设备数据传输的原理，以及它与可分页内存（Pageable
+      Memory）在性能和系统资源占用上的权衡。能辨析其并非LLM VRAM需求的主要原因。"
+    - "初次介绍时间: 2025-09-04"
+- type: relation
+  from: GPGPU 和 CUDA 应用
+  to: CUDA 进阶 - 语言机制与 API 深度解析
+  relationType: HAS_PLAN
+- type: relation
+  from: GPGPU 和 CUDA 应用
+  to: GPGPU 与 CUDA 编程入门
+  relationType: HAS_PLAN
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: CUDA 中的 C++ Lambda 表达式
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: CUTLASS
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: NCCL (NVIDIA Collective Communications Library)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Nsight Compute
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Nsight Systems
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Thrust
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: WMMA API (Warp-Matrix-Multiply-Accumulate)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Warp 与 SIMT 架构
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Warp 分化 (Warp Divergence)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: Warp 级原语 (Warp-level Primitives)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: cuBLAS
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: cuDNN
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 使用 cuda-gdb 进行调试
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 共享内存 (Shared Memory)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 内存访问合并 (Memory Coalescing)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 动态并行 (Dynamic Parallelism)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 协作组 (Cooperative Groups)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 占用率 (Occupancy)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 常量内存与只读缓存
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 并发内核执行
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 张量核心 (Tensor Cores)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 指令级并行与寄存器压力
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 核函数模板 (Kernel Templates)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 流与事件 (Streams and Events)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 纹理与表面内存 (Texture and Surface Memory)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 统一内存 (Unified Memory)
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 设备端函数与变量
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 设备端动态内存分配
+  relationType: INCLUDES
+- type: relation
+  from: CUDA 进阶 - 语言机制与 API 深度解析
+  to: 锁页内存 (Pinned Memory)
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: CUDA 内存层次结构
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: CUDA 如何加速矩阵乘法
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: Kernel 函数
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: LLM 训练中的并行计算需求
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: 什么是 CUDA
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: 什么是 GPGPU
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: 全局内存 vs. 共享内存
+  relationType: INCLUDES
+- type: relation
+  from: GPGPU 与 CUDA 编程入门
+  to: 线程 (Thread)、块 (Block) 和网格 (Grid)
+  relationType: INCLUDES
+- type: guide
+  name: 关系定义 - HAS_PLAN
+  description: |-
+    * **结构:** `(学习主题) -[HAS_PLAN]-> (学习计划)`
+    * **用途:** 表明一个学习主题下可以包含一个或多个具体的学习计划。
+  targets:
+    - 学习主题
+    - 学习计划
+- type: guide
+  name: 关系定义 - INCLUDES
+  description: |-
+    * **结构:** `(学习计划) -[INCLUDES]-> (概念)`
+    * **用途:** 表达一个学习计划包含要教授的知识概念。
+  targets:
+    - 学习计划
+    - 概念
+- type: guide
+  name: 图谱综述
+  description: >-
+    本知识图谱作为“学习模式助手”的长期记忆，用于服务**单用户**的学习追踪。
+
+    * **实体类型:** 图谱中仅包含以下五种实体类型：`当前学习状态`, `学习主题`, `学习计划`, `概念`,
+    `学习日志`。除此外不应创建任何其他类型的实体。 
+
+    * **关系类型:** 图谱中仅包含以下两种关系类型：`HAS_PLAN`, `INCLUDES`。除此外不应创建任何其他类型的关系。
+
+    * **特殊实体:** 图谱中包含一个名为 `当前学习状态` 的特殊核心实体，作为所有操作的入口点。
+  targets:
+    - 当前学习状态
+    - 学习主题
+    - 学习计划
+    - 概念
+    - 学习日志
+    - HAS_PLAN
+    - INCLUDES
+- type: guide
+  name: 实体类型定义 - 学习主题
+  description: >-
+    代表用户希望学习的一个完整的、高阶的知识领域。
+
+    * **名称规则:** 名称应简洁明了，如 `机器学习`, `数据结构与算法`, `前端开发` 等；避免使用过于宽泛或模糊的名称，如 `编程`,
+    `技术`。
+
+    * **观察/属性:**
+        * `状态`: 字符串，枚举值 (`进行中`, `已完成`)。
+        * `学习动机`: 字符串。记录用户为什么想学习这个主题。
+        * `学习方式`: 字符串。记录用户偏好的学习方法。
+        * `背景知识`: 字符串。记录用户在该主题相关领域已有的知识水平。
+        * `其他观察`: 字符串。记录用户表达的其他意愿或要求。
+  targets: null
+- type: guide
+  name: 实体类型定义 - 学习日志
+  description: >-
+    作为一条独立的交互记录，用于审计和回顾。它**不与**任何其他实体建立关系。
+
+    * **名称规则:** `学习日志-YYYYMMDD-NNN`，其中 `YYYYMMDD` 是交互发生的日期，`NNN` 是当天的交互序号，从
+    `001` 开始递增。 例如，`学习日志-20250901-006` 表示 2025 年 9 月 1 日的第 6 条交互记录。
+
+    * **观察/属性:**
+        * `时间戳`: 字符串 (YYYY-MM-DD) 。
+        * `关联主题`: 字符串。记录本次交互关联的 `学习主题` 名称，如果有的话。
+        * `关联计划`: 字符串。记录本次交互关联的 `学习计划` 名称，如果有的话。
+        * `摘要`: 字符串。对重点变更的描述。
+  targets: null
+- type: guide
+  name: 实体类型定义 - 学习计划
+  description: |-
+    针对某个 `学习主题` 的一个具体的、可执行的学习路径或待办事项列表。
+    * **名称规则:** 名称应包含所属的 `学习主题`，并简要描述计划内容，如 `机器学习-基础入门`, `数据结构与算法-树与图` 等。
+    * **观察/属性:**
+        * `创建日期`: 字符串 (YYYY-MM-DD)。
+        * `任务大纲`: 字符串（任务节点）列表。按顺序记录高级别的学习任务节点。
+        * `任务节点-$名称`: 字符串（概念）列表。记录 `学习路径大纲` 中，每个节点需要介绍的概念列表。`$名称` 是具体节点的名称。
+        * `当前节点`: 字符串。记录用户当前正在学习的任务节点名称。
+        * `当前节点待学概念队列`: 字符串（概念）列表。记录在当前节点下，尚未需要介绍的具体概念名称。介绍一个移除一个。
+        * `临时学习队列`: 字符串（概念）列表。用于存放和处理用户在主线学习过程中插入的即时问题。介绍一个移除一个。
+  targets: null
+- type: guide
+  name: 实体类型定义 - 当前学习状态
+  description: |-
+    这是整个知识图谱的唯一入口点。它是一个全局唯一的单例实体，作为追踪用户当前学习进度的核心指针。
+    在每次对话开始时，**必须**首先读取此实体以恢复上下文。
+    * **名称规则:** 固定名称 `当前学习状态`。
+    * **观察/属性:**
+        * `最后更新`: 字符串 (YYYY-MM-DD HH:MM:SS)
+        * `当前主题`: 字符串。记录用户当前正在学习的 `学习主题` 名称。
+        * `当前计划`: 字符串。记录用户当前正在进行的 `学习计划` 名称。
+        * `其他状态`: 字符串。记录用户表达的其他意愿或要求。
+  targets:
+    - 当前学习状态
+- type: guide
+  name: 实体类型定义 - 概念
+  description: |-
+    代表一个独立的、具体的知识点。可以是某个知识概念，也可以是「如何做某件事情」这种任务名称。
+    * **名称规则:** 名称应简洁但具体精确，如 `监督学习`, `快速排序算法`, `如何搭建 React 开发环境` 等。
+    * **观察/属性:**
+        * `简介`: 字符串。对该概念的核心定义或解释。
+        * `初次介绍时间`: 字符串 (YYYY-MM-DD) 。
+        * `用户反馈`: 字符串。记录用户对该概念的理解情况、疑问或反馈。可以包含多条记录。
+  targets: null
