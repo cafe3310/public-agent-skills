@@ -7,22 +7,71 @@ import socketserver
 
 def extract_data_from_dir(kb_path):
     data = []
-    if os.path.isfile(kb_path):
+    files = []
+    
+    # Support memocli default directory structure
+    if os.path.isdir(kb_path):
+        entities_dir = os.path.join(kb_path, 'entities')
+        search_dir = entities_dir if os.path.exists(entities_dir) else kb_path
+        
+        for f in os.listdir(search_dir):
+            if f.endswith(('.yaml', '.yml', '.json', '.md')) and not f.startswith('.'):
+                files.append(os.path.join(search_dir, f))
+    elif os.path.isfile(kb_path):
         files = [kb_path]
-    elif os.path.isdir(kb_path):
-        files = [os.path.join(kb_path, f) for f in os.listdir(kb_path) if f.endswith(('.yaml', '.yml', '.json'))]
-    else:
-        return []
 
     for file in files:
         try:
             with open(file, 'r', encoding='utf-8') as f:
                 if file.endswith('.json'):
                     content = json.load(f)
-                else:
+                    if isinstance(content, list): data.extend(content)
+                elif file.endswith(('.yaml', '.yml')):
                     content = yaml.safe_load(f)
-                if isinstance(content, list):
-                    data.extend(content)
+                    if isinstance(content, list): data.extend(content)
+                elif file.endswith('.md'):
+                    raw_text = f.read()
+                    frontmatter = {}
+                    body = raw_text
+                    if raw_text.startswith('---'):
+                        parts = raw_text.split('---', 2)
+                        if len(parts) >= 3:
+                            try: frontmatter = yaml.safe_load(parts[1]) or {}
+                            except: pass
+                            body = parts[2]
+                    
+                    name = os.path.basename(file).replace('.md', '')
+                    entity_type = frontmatter.get('entity type', 'Unknown')
+                    
+                    obs = []
+                    for line in body.split('\n'):
+                        line = line.strip()
+                        if line.startswith('- '): line = line[2:]
+                        elif line.startswith('* '): line = line[2:]
+                        # Clean up append-update literal \n rendering
+                        line = line.replace('\\n', ' ')
+                        if line and not line.startswith('<!--') and not line.startswith('#'):
+                            obs.append(line)
+                            
+                    data.append({
+                        "type": "entity",
+                        "name": name,
+                        "entityType": entity_type,
+                        "observations": obs
+                    })
+                    
+                    for key, val in frontmatter.items():
+                        if key.startswith('relation as '):
+                            rel_type = key.replace('relation as ', '')
+                            targets = val if isinstance(val, list) else [t.strip() for t in str(val).split(',')]
+                            for t in targets:
+                                if t:
+                                    data.append({
+                                        "type": "relation",
+                                        "from": name,
+                                        "to": t.replace(' ', '-'),
+                                        "relationType": rel_type
+                                    })
         except Exception as e:
             print(f"Error reading {file}: {e}")
 
@@ -90,7 +139,7 @@ def extract_data_from_dir(kb_path):
         for topic_name in task_outline:
             st_status = "pending"
             for n in nodes:
-                if n['id'] == topic_name:
+                if n['id'] == topic_name.replace(' ', '-'):
                     st_status = n['status']
                     break
             
@@ -106,7 +155,7 @@ def extract_data_from_dir(kb_path):
             for c_name in concepts_in_st:
                 c_status = "pending"
                 for n in nodes:
-                    if n['id'] == c_name:
+                    if n['id'] == c_name.replace(' ', '-'):
                         c_status = n['status']
                         break
                 group_concepts.append({"name": c_name, "status": c_status})

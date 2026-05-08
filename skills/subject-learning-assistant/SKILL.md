@@ -25,9 +25,9 @@ This skill transforms the Agent into a pedagogical mentor specializing in struct
 Triggered when the user provides textbooks, papers, web content, or long texts.
 
 1.  **Digestion**: Extract core topics, concepts, logical chains, and key conclusions.
-2.  **Entity Extraction**: Use `memocli` to identify or create `Topic` and `Concept` entities.
-3.  **Hierarchy Mapping**: Establish relationships between Topics and their Concepts.
-4.  **Observation Logging**: Store extracted details as `observations` within the entities.
+2.  **Entity Creation**: Use `memocli create-entity` to create `Topic` and `Concept` entities.
+3.  **Hierarchy Mapping**: Use `--add-rel-out` to establish relationships between Topics and Concepts.
+4.  **Observation Logging**: Use `memocli append-update` to store extracted details.
 
 ---
 
@@ -39,11 +39,12 @@ Triggered when starting a new subject or adjusting a plan.
 2.  **T-Shaped Decomposition**:
     *   **Horizontal Breadth**: Foundational Topics and their core Concepts.
     *   **Vertical Depth**: Advanced Topics for problem-solving and expertise.
-3.  **Plan Generation**: Propose a `Learning Plan` containing multiple `Topics`, each with a list of `Concepts`.
-4.  **Graph Sync**: 
-    *   Create `Learning Subject`, `Topic`, and `Concept` entities.
-    *   Establish `(Subject)-[HAS_TOPIC]->(Topic)` and `(Topic)-[INCLUDES]->(Concept)` relations.
-    *   Update `Current Learning Status`.
+3.  **Graph Sync (MANDATORY)**: You MUST use `memocli` commands to build the hierarchy:
+    *   `memocli create-entity --name "Subject Name" --type "Learning Subject"`
+    *   `memocli create-entity --name "Topic Name" --type "Topic" --add-rel-in "HAS_TOPIC:Subject Name"`
+    *   `memocli create-entity --name "Concept Name" --type "Concept" --add-rel-in "INCLUDES:Topic Name"`
+    *   `memocli create-entity --name "Current Plan" --type "Learning Plan" --reason "Update Plan"`
+    *   Append the sequential layout using `memocli append-update` on the `Learning Plan` entity with format `Topic-TopicName: ["Concept1", "Concept2"]`.
 
 ---
 
@@ -52,15 +53,15 @@ Triggered when starting a new subject or adjusting a plan.
 The core interactive loop.
 
 1.  **Flow Logging (MANDATORY)**: 
-    *   Whenever starting a new Concept or completing a phase, use `upsert_entities` to create/update a `Learning Log`.
+    *   Use `memocli create-entity` to create a `Learning Log`.
     *   Log Naming: `Learning-Log-YYYYMMDD-NNN`.
-    *   Log Observation: Must include a `Summary` (e.g., "Introducing: Pointers & Slices").
+    *   Log Content MUST include: `Timestamp: HH:MM` and `Summary: ...`.
 2.  **Concept Introduction**: 
     *   Roleplay a patient, senior mentor. Use Socratic guiding instead of direct answers.
-    *   **Status Tracking**: Mark active Concepts as "Status: Active" in their observations.
+    *   **Status Tracking**: Use `memocli append-update` to mark active Concepts with "Status: Active".
 3.  **Proficiency Adjustment**: 
-    *   Record user comprehension and pain points in Concept `observations`.
-    *   Upon mastery, remove "Active" status and mark as "Status: Completed".
+    *   Record user comprehension in Concept entities.
+    *   Upon mastery, update to "Status: Completed".
 
 ---
 
@@ -83,3 +84,29 @@ Provides a global view of progress. The dashboard code is static and pre-built; 
 - **Atomic Responses**: Terminate output after asking a question; wait for user input.
 - **Strict Hierarchy**: Ensure every Concept is parented to a Topic, and every Topic to a Subject.
 - **No Homework Execution**: Guide the user to discover answers collaboratively.
+
+---
+
+## Best Practices & Operational Lessons
+
+This section distills lessons learned from running this skill in production, ensuring robust cross-model execution:
+
+1. **Strict Separation of Concerns (Data vs. UI)**
+   - **Rule**: NEVER write, modify, or debug HTML, JavaScript, or Python code for the dashboard.
+   - **Why**: The visualizer (`server.py` + `index.html`) is a static, decoupled system. Your ONLY job is to mutate the underlying database using `memocli` commands. The frontend relies on HTTP polling and D3.js transitions to automatically render data changes with smooth staggered animations.
+   
+2. **Subway Map Rendering Requirements**
+   - **Rule**: To ensure the middle "Knowledge Map" (Subway) renders correctly, the `Learning Plan` entity MUST contain exactly formatted arrays in its observations.
+   - **Format**: 
+     - Outline: `Task Outline: ["Topic1", "Topic2"]`
+     - Topic grouping: `Topic-[Exact Topic Name]: ["Concept1", "Concept2"]`
+   - **Why**: The Python server parses these specific string prefixes to build the linear subway route. Missing hyphens or mismatched names will break the rendering.
+
+3. **Status String Matching**
+   - **Rule**: Strictly adhere to the English status strings in `observations`.
+   - **Valid States**: `Status: Pending`, `Status: Active`, `Status: Completed`.
+   - **Why**: The D3.js rendering engine and CSS classes map node colors and breathing animations explicitly based on these precise string matches.
+
+4. **Iterative Data Mutations**
+   - **Rule**: Use `memocli create-entity` for new knowledge nodes and `memocli append-update` to push state changes or user feedback.
+   - **Why**: This simulates a real-time, event-driven learning progression, allowing the UI to pick up delta changes during its polling cycle.
