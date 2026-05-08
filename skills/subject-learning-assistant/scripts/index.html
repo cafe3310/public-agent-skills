@@ -79,27 +79,44 @@
         let oldSubwayIds = new Set(); // track concepts already rendered in subway
         let oldTopicIds = new Set();
         
-        let revealQueue = [];
-        let isRevealing = false;
+        let subwayRevealQueue = [];
+        let graphRevealQueue = [];
+        let isRevealingSubway = false;
+        let isRevealingGraph = false;
 
-        async function processRevealQueue(isInitialQueue = false) {
-            if (isRevealing) return;
-            isRevealing = true;
-            while (revealQueue.length > 0) {
-                let task = revealQueue.shift();
+        async function processSubwayRevealQueue(isInitialQueue = false) {
+            if (isRevealingSubway) return;
+            isRevealingSubway = true;
+            while (subwayRevealQueue.length > 0) {
+                let task = subwayRevealQueue.shift();
                 task();
-                if (revealQueue.length > 0) {
-                    let delay = isInitialQueue ? 50 : (2000 + Math.random() * 3000); 
+                if (subwayRevealQueue.length > 0) {
+                    let delay = isInitialQueue ? 50 : (500 + Math.random() * 1000); 
                     await new Promise(r => setTimeout(r, delay));
                 }
             }
-            isRevealing = false;
+            isRevealingSubway = false;
+        }
+
+        async function processGraphRevealQueue(isInitialQueue = false) {
+            if (isRevealingGraph) return;
+            isRevealingGraph = true;
+            while (graphRevealQueue.length > 0) {
+                let task = graphRevealQueue.shift();
+                task();
+                if (graphRevealQueue.length > 0) {
+                    let delay = isInitialQueue ? 50 : (500 + Math.random() * 1000); 
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+            isRevealingGraph = false;
         }
 
         const panel = document.getElementById('left-panel');
         const width = panel.clientWidth, height = panel.clientHeight;
+        const zoom = d3.zoom().scaleExtent([0.2, 3]).on("zoom", (e) => container.attr("transform", e.transform));
         const svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height)
-            .call(d3.zoom().scaleExtent([0.2, 3]).on("zoom", (e) => container.attr("transform", e.transform)))
+            .call(zoom)
             .append("g");
         
         const defs = svg.append("defs");
@@ -152,7 +169,7 @@
                     topicEl.style.transition = "all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                     subwayContainer.appendChild(topicEl);
                     
-                    revealQueue.push(() => {
+                    subwayRevealQueue.push(() => {
                         topicEl.style.opacity = 1;
                         topicEl.style.transform = "translateX(0)";
                     });
@@ -176,7 +193,7 @@
                         conceptEl.style.transition = "all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
                         conceptList.appendChild(conceptEl);
                         
-                        revealQueue.push(() => {
+                        subwayRevealQueue.push(() => {
                             conceptEl.style.opacity = 1;
                             conceptEl.style.transform = "translateX(0)";
                         });
@@ -260,10 +277,14 @@
             if (isInitial || newNodesAdded) {
                 simulation.alpha(isInitial ? 1 : 0.3).restart();
                 
+                if (newNodesAdded && !isInitial) {
+                    d3.select("#viz svg").transition().duration(2000).call(zoom.scaleBy, 0.85);
+                }
+
                 data.nodes.forEach(nn => {
                     if (!oldNodeIds.has(nn.id)) {
                         oldNodeIds.add(nn.id);
-                        revealQueue.push(() => {
+                        graphRevealQueue.push(() => {
                             d3.select(`#node-${nn.id.replace(/[^a-zA-Z0-9_-]/g, '')}`)
                               .transition().duration(800).style("opacity", 1);
                             linkMerge.filter(l => (l.source.id || l.source) === nn.id || (l.target.id || l.target) === nn.id)
@@ -273,7 +294,8 @@
                 });
             }
 
-            processRevealQueue(isInitial);
+            processSubwayRevealQueue(isInitial);
+            processGraphRevealQueue(isInitial);
 
             simulation.on("tick", () => {
                 linkMerge.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
