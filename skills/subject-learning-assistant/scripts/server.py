@@ -73,7 +73,7 @@ def extract_data_from_dir(kb_path):
                                         "relationType": rel_type
                                     })
         except Exception as e:
-            print(f"Error reading {file}: {e}")
+            print(f"读取文件错误 {file}: {e}")
 
     nodes = []
     links = []
@@ -193,13 +193,13 @@ def start_server(kb_path, port=8000):
 
     os.chdir(script_dir)
     with socketserver.TCPServer(('', port), Handler) as httpd:
-        print(f"Serving Dashboard at http://localhost:{port}")
-        print(f"Monitoring Knowledge Base at: {kb_path}")
+        print(f"正在启动仪表盘: http://localhost:{port}")
+        print(f"正在监控知识库: {kb_path}")
         httpd.serve_forever()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python server.py <KB_DIR_OR_FILE> [port]")
+        print("用法: python server.py <知识库目录或文件> [端口]")
         sys.exit(1)
     
     kb_p = sys.argv[1]
