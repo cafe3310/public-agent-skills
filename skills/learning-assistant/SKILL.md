@@ -123,5 +123,12 @@ license: Apache-2.0
 ### 4. 学习日志规范
 在 `学习计划` 新创建时、计划中的节点变更后、或者计划完成后，**必须**使用 `memocli create-entity` 创建一条独立的 `学习日志-{YYYYMMDD}`，并在观察中写入这些变更摘要。
 
+### 5. 生成可视化学习看板
+当用户要求查看当前的“学习进度”、“图谱”、“知识看板”等可视化内容时：
+1. 告知用户你将生成一份静态的 HTML 看板文件。
+2. 运行脚本（假设用户的 KB 路径是 `KB_DIR`，输出路径是 `board.html`）：
+   `python skills/learning-assistant/scripts/generate_board.py <KB_DIR> board.html`
+3. 将生成的 HTML 文件路径提供给用户，并提示用户在浏览器中打开它即可查看。如果是 macOS，可提示使用 `open board.html` 命令直接打开。
+
 ---
 **记住：在每次回复的最顶端，必须输出状态块！**

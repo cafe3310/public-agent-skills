@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>学习看板</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; display: flex; height: 100vh; background: #f4f7f6; color: #2c3e50; }
+        #left-panel { flex: 3; position: relative; border-right: 1px solid #e0e0e0; background: #fff; }
+        #mid-panel { width: 400px; background: #fafafa; overflow-y: auto; padding: 25px; box-shadow: inset 10px 0 15px -10px rgba(0,0,0,0.05); }
+        
+        .node text { pointer-events: none; font-size: 11px; fill: #555; }
+        .link { stroke: #d3d3d3; stroke-opacity: 0.5; stroke-width: 1.5px; }
+        
+        .tooltip {
+            position: absolute; padding: 15px; background: white; border-radius: 12px;
+            pointer-events: none; font-size: 12px; max-width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; border: 1px solid #f0f0f0;
+        }
+
+        .subway-container { position: relative; padding-left: 5px; }
+        .subway-item { position: relative; margin-bottom: 25px; }
+        .topic-header { display: flex; align-items: center; margin-bottom: 12px; }
+        .topic-dot { 
+            width: 16px; height: 16px; border-radius: 4px; background: #3498db; 
+            margin-right: 12px; flex-shrink: 0; box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
+        }
+        .topic-label { font-size: 15px; font-weight: 700; color: #34495e; transition: color 0.5s; }
+        .topic-item.completed .topic-dot { background: #2ecc71; box-shadow: 0 3px 6px rgba(46, 204, 113, 0.3); }
+        .topic-item.active .topic-dot { 
+            background: #f1c40f; border: 2px solid #e67e22; 
+            animation: pulse 2s infinite; 
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.4); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(230, 126, 34, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(230, 126, 34, 0); }
+        }
+
+        .concept-list { padding-left: 22px; border-left: 2px solid #eee; margin-left: 7px; }
+        .concept-item { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; }
+        .concept-dot { width: 10px; height: 10px; border-radius: 50%; background: #dfe6e9; margin-right: 12px; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: background 0.5s; }
+        .concept-item.completed .concept-dot { background: #2ecc71; }
+        .concept-item.active .concept-dot { background: #f1c40f; border-color: #e67e22; }
+        .concept-item.active .concept-label { font-weight: 600; color: #d35400; }
+        .concept-item.pending .concept-label { color: #95a5a6; }
+        .concept-label { transition: color 0.5s, font-weight 0.5s; }
+
+        h2 { font-size: 18px; font-weight: 800; margin-top: 0; padding-bottom: 15px; border-bottom: 2px solid #3498db; display: flex; align-items: center; }
+        h2 span { margin-right: 12px; font-size: 24px; }
+
+        .legend { position: absolute; bottom: 30px; left: 30px; background: rgba(255,255,255,0.95); padding: 15px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); font-size: 11px; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 8px; }
+        .legend-color { width: 14px; height: 14px; margin-right: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div id="left-panel">
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color" style="background: #e74c3c; border-radius: 50%;"></div> 学习主题</div>
+            <div class="legend-item"><div class="legend-color" style="background: #3498db; border-radius: 3px;"></div> 任务节点</div>
+            <div class="legend-item"><div class="legend-color" style="background: #2ecc71; border-radius: 50%;"></div> 已完成概念</div>
+            <div class="legend-item"><div class="legend-color" style="background: #f1c40f; border: 2px solid #e67e22; border-radius: 50%;"></div> 进行中概念</div>
+        </div>
+        <div id="viz"></div>
+    </div>
+    <div id="mid-panel">
+        <h2><span>🗺️</span> 知识地图</h2>
+        <div class="subway-container" id="subway-items"></div>
+    </div>
+    <div class="tooltip" id="tooltip" style="opacity: 0;"></div>
+
+    <script>
+        let nodesData = [];
+        let linksData = [];
+        let oldNodeIds = new Set();
+        let oldLinkIds = new Set();
+        let oldSubwayIds = new Set();
+        let oldTopicIds = new Set();
+        
+        let subwayRevealQueue = [];
+        let graphRevealQueue = [];
+        let isRevealingSubway = false;
+        let isRevealingGraph = false;
+
+        async function processSubwayRevealQueue(isInitialQueue = false) {
+            if (isRevealingSubway) return;
+            isRevealingSubway = true;
+            while (subwayRevealQueue.length > 0) {
+                let task = subwayRevealQueue.shift();
+                task();
+                if (subwayRevealQueue.length > 0) {
+                    let delay = isInitialQueue ? 50 : (500 + Math.random() * 1000); 
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+            isRevealingSubway = false;
+        }
+
+        async function processGraphRevealQueue(isInitialQueue = false) {
+            if (isRevealingGraph) return;
+            isRevealingGraph = true;
+            while (graphRevealQueue.length > 0) {
+                let task = graphRevealQueue.shift();
+                task();
+                if (graphRevealQueue.length > 0) {
+                    let delay = isInitialQueue ? 50 : (500 + Math.random() * 1000); 
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+            isRevealingGraph = false;
+        }
+
+        const panel = document.getElementById('left-panel');
+        const width = panel.clientWidth, height = panel.clientHeight;
+        const zoom = d3.zoom().scaleExtent([0.2, 3]).on("zoom", (e) => container.attr("transform", e.transform));
+        const svg = d3.select("#viz").append("svg").attr("width", width).attr("height", height)
+            .call(zoom)
+            .append("g");
+        
+        const defs = svg.append("defs");
+        const filter = defs.append("filter").attr("id", "glow");
+        filter.append("feGaussianBlur").attr("stdDeviation", "2.5").attr("result", "coloredBlur");
+        const feMerge = filter.append("feMerge");
+        feMerge.append("feMergeNode").attr("in", "coloredBlur");
+        feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+        const container = svg.append("g");
+        const linkGroup = container.append("g").attr("class", "links");
+        const nodeGroup = container.append("g").attr("class", "nodes");
+        
+        let simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(d => d.id).distance(d => d.source.type === 'Topic' ? 80 : 120))
+            .force("charge", d3.forceManyBody().strength(-500))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(50));
+
+        function getNodeColor(d) {
+            if (d.type === "Learning Subject") return "#e74c3c";
+            if (d.type === "Topic") return "#3498db";
+            if (d.status === "completed") return "#2ecc71";
+            if (d.status === "active") return "#f1c40f";
+            return "#dfe6e9";
+        }
+
+        function updateDashboard(data, isInitial = false) {
+            if (!data || !data.nodes) return;
+
+            // Subway Updates
+            const subwayContainer = document.getElementById("subway-items");
+            data.subway.forEach(st => {
+                let topicId = `subway-topic-${st.topic.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+                let topicEl = document.getElementById(topicId);
+                
+                if (!topicEl) {
+                    topicEl = document.createElement("div");
+                    topicEl.id = topicId;
+                    topicEl.className = `subway-item topic-item ${st.status}`;
+                    topicEl.innerHTML = `
+                        <div class="topic-header">
+                            <div class="topic-dot"></div>
+                            <div class="topic-label">${st.topic}</div>
+                        </div>
+                        <div class="concept-list" id="list-${topicId}"></div>
+                    `;
+                    topicEl.style.opacity = 0;
+                    topicEl.style.transform = "translateX(-20px)";
+                    topicEl.style.transition = "all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                    subwayContainer.appendChild(topicEl);
+                    
+                    subwayRevealQueue.push(() => {
+                        topicEl.style.opacity = 1;
+                        topicEl.style.transform = "translateX(0)";
+                    });
+                } else {
+                    topicEl.className = `subway-item topic-item ${st.status}`;
+                }
+                
+                const conceptList = document.getElementById(`list-${topicId}`);
+                st.concepts.forEach(c => {
+                    let conceptId = `subway-concept-${c.name.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+                    let conceptEl = document.getElementById(conceptId);
+                    
+                    if (!conceptEl) {
+                        conceptEl = document.createElement("div");
+                        conceptEl.id = conceptId;
+                        conceptEl.className = `concept-item ${c.status}`;
+                        conceptEl.innerHTML = `<div class="concept-dot"></div><div class="concept-label">${c.name}</div>`;
+                        
+                        conceptEl.style.opacity = 0;
+                        conceptEl.style.transform = "translateX(-20px)";
+                        conceptEl.style.transition = "all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+                        conceptList.appendChild(conceptEl);
+                        
+                        subwayRevealQueue.push(() => {
+                            conceptEl.style.opacity = 1;
+                            conceptEl.style.transform = "translateX(0)";
+                        });
+                    } else {
+                        conceptEl.className = `concept-item ${c.status}`;
+                    }
+                });
+            });
+
+            // Graph Updates
+            let newNodesAdded = false;
+            
+            data.nodes.forEach(nn => {
+                let existing = nodesData.find(d => d.id === nn.id);
+                if (existing) {
+                    existing.status = nn.status;
+                    existing.info = nn.info;
+                } else {
+                    newNodesAdded = true;
+                    nn.x = width / 2 + (Math.random() - 0.5) * 100;
+                    nn.y = height / 2 + (Math.random() - 0.5) * 100;
+                    nodesData.push(nn);
+                }
+            });
+
+            data.links.forEach(nl => {
+                let key = nl.source + "-" + nl.target;
+                if (!oldLinkIds.has(key)) {
+                    oldLinkIds.add(key);
+                    linksData.push(nl);
+                }
+            });
+
+            let nodeSelection = nodeGroup.selectAll(".node-group").data(nodesData, d => d.id);
+            let nodeEnter = nodeSelection.enter().append("g")
+                .attr("class", "node-group")
+                .attr("id", d => `node-${d.id.replace(/[^a-zA-Z0-9_-]/g, '')}`)
+                .style("opacity", 0)
+                .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+            nodeEnter.append("path")
+                .attr("d", d => {
+                    if (d.type === "Topic") return d3.symbol().type(d3.symbolSquare).size(400)();
+                    if (d.type === "Learning Subject") return d3.symbol().type(d3.symbolCircle).size(1000)();
+                    return d3.symbol().type(d3.symbolCircle).size(250)();
+                })
+                .attr("stroke-width", d => d.status === "active" ? 4 : 2);
+
+            nodeEnter.append("text")
+                .attr("dx", 18).attr("dy", ".35em")
+                .text(d => d.label)
+                .style("font-weight", d => d.type === "Topic" ? "bold" : "normal")
+                .style("fill", "#333");
+
+            let nodeMerge = nodeEnter.merge(nodeSelection);
+            
+            nodeMerge.select("path").transition().duration(800)
+                .attr("fill", getNodeColor)
+                .attr("stroke", d => d.status === "active" ? "#e67e22" : "#fff")
+                .attr("stroke-width", d => d.status === "active" ? 4 : 2)
+                .style("filter", d => d.status === "active" ? "url(#glow)" : "none");
+
+            const tooltip = d3.select("#tooltip");
+            const typeMap = {
+                "Learning Subject": "学习主题",
+                "Topic": "任务节点",
+                "Concept": "知识概念"
+            };
+
+            nodeMerge.on("mouseover", (event, d) => {
+                tooltip.transition().duration(100).style("opacity", 1);
+                tooltip.html(`<strong>${d.label}</strong> <span style="color:#95a5a6; font-size:10px;">• ${typeMap[d.type] || d.type}</span><hr style="margin:10px 0; border:0; border-top:1px solid #f0f0f0;">${d.info}`)
+                    .style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 20) + "px");
+            }).on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0));
+
+            let linkSelection = linkGroup.selectAll(".link").data(linksData, d => (d.source.id || d.source) + "-" + (d.target.id || d.target));
+            let linkEnter = linkSelection.enter().append("line")
+                .attr("class", "link")
+                .attr("id", d => `link-${((d.source.id || d.source) + "-" + (d.target.id || d.target)).replace(/[^a-zA-Z0-9_-]/g, '')}`)
+                .style("opacity", 0);
+            
+            let linkMerge = linkEnter.merge(linkSelection);
+
+            simulation.nodes(nodesData);
+            simulation.force("link").links(linksData);
+            
+            if (isInitial || newNodesAdded) {
+                simulation.alpha(isInitial ? 1 : 0.3).restart();
+                
+                if (newNodesAdded && !isInitial) {
+                    d3.select("#viz svg").transition().duration(2000).call(zoom.scaleBy, 0.85);
+                }
+
+                data.nodes.forEach(nn => {
+                    if (!oldNodeIds.has(nn.id)) {
+                        oldNodeIds.add(nn.id);
+                        graphRevealQueue.push(() => {
+                            d3.select(`#node-${nn.id.replace(/[^a-zA-Z0-9_-]/g, '')}`)
+                              .transition().duration(800).style("opacity", 1);
+                            linkMerge.filter(l => (l.source.id || l.source) === nn.id || (l.target.id || l.target) === nn.id)
+                                     .transition().duration(800).style("opacity", 1);
+                        });
+                    }
+                });
+            }
+
+            processSubwayRevealQueue(isInitial);
+            processGraphRevealQueue(isInitial);
+
+            simulation.on("tick", () => {
+                linkMerge.attr("x1", d => d.source.x).attr("y1", d => d.source.y).attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+                nodeMerge.attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        // Initialize static data
+        const initialData = __INJECTED_DATA__;
+        updateDashboard(initialData, true);
+
+        function dragstarted(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+        function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+        function dragended(event, d) { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+        window.addEventListener('resize', () => {
+            const w = panel.clientWidth, h = panel.clientHeight;
+            d3.select("svg").attr("width", w).attr("height", h);
+        });
+    </script>
+</body>
+</html>
