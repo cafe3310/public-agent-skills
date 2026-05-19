@@ -51,9 +51,41 @@ def run_command(cmd):
         print(f"错误: 执行命令时发生异常: {e}")
         return ""
 
+def ensure_autoconnect_config():
+    """确保 agent-browser 全局配置中开启了 autoConnect，以优先连接真实浏览器"""
+    config_dir = os.path.expanduser("~/.agent-browser")
+    config_path = os.path.join(config_dir, "config.json")
+    
+    # 确保目录存在
+    if not os.path.exists(config_dir):
+        try:
+            os.makedirs(config_dir)
+        except Exception as e:
+            print(f"无法创建配置目录: {e}")
+            return
+
+    config = {}
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+        except Exception:
+            pass # 损坏则覆盖
+
+    # 如果没有设置或不是 true，则强制写入
+    if config.get("autoConnect") is not True:
+        print(f"正在配置 agent-browser 以优先连接真实浏览器 (autoConnect: true)...")
+        config["autoConnect"] = True
+        try:
+            with open(config_path, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2)
+        except Exception as e:
+            print(f"写入配置失败: {e}")
+
 def get_metrics(url):
     """访问推文页面并提取数据"""
-    session_cmd = ["--session-name", "twitter-watch"]
+    # 强制使用 headed 模式
+    session_cmd = ["--headed", "--session-name", "twitter-watch"]
 
     # 打开 URL
     run_command(["agent-browser"] + session_cmd + ["open", url])
@@ -181,7 +213,8 @@ def get_tweet_id(url):
 
 def verify_real_browser():
     """快速验证 agent-browser 处于‘非测试模式’且连接已建立"""
-    session_cmd = ["--session-name", "twitter-watch"]
+    # 强制 headed 模式
+    session_cmd = ["--headed", "--session-name", "twitter-watch"]
     
     # 尝试获取浏览器 user-agent
     ua = run_command(["agent-browser"] + session_cmd + ["eval", "navigator.userAgent"])
@@ -192,12 +225,14 @@ def verify_real_browser():
         sys.exit(1)
     
     if "Headless" in ua:
-        print("警告: 检测到浏览器仍处于无头(Headless)模式。")
+        print("警告: 检测到浏览器仍处于无头(Headless)模式，这可能导致抓取失败。")
     else:
-        print(f"环境验证通过: {ua}")
+        print(f"环境验证通过 (非无头模式): {ua}")
 
 def main():
     check_dependencies()
+    # 自动设置配置
+    ensure_autoconnect_config()
     
     # 1. 引导 Agent 进行手动确认
     verify_real_browser()
@@ -270,7 +305,8 @@ def main():
     except Exception as e:
         print(f"生成报告时出错: {e}")
 
-    run_command(["agent-browser", "close", "--all"])
+    # 同样在关闭时显式指定会话
+    run_command(["agent-browser", "--session-name", "twitter-watch", "close", "--all"])
 
 if __name__ == "__main__":
     main()
