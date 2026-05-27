@@ -21,18 +21,20 @@ Agent Skill 可能非常个性化，很多都是用户个人最佳实践的提�
 
 #### 手动安装
 
-可以 clone 项目仓库，并运行以下脚本：
+在同时使用 `antigravity-cli`, `opencode`, `pi` 等不同 Agent 工具时，详尽的 skills 安装说明与最佳实践如下：
+
+1. **原始文件保持在 git 目录**
+2. **在 `~/.agents/skills` 目录放入软链接**，指向第 1 步中的 git 目录（供 `opencode`, `pi` 等工具使用）
+3. **在 `~/.gemini/antigravity-cli/skills` 目录放入软链接**，指向第 1 步中的 git 目录（供 `antigravity-cli` 使用）
+
+你可以克隆项目仓库后，直接运行以下脚本来自动完成上述软链接的配置：
 
 ```bash
 chmod +x link_skills.sh
 ./link_skills.sh
 ```
 
-该脚本会
-- 将 `skills/` 目录下的所有子目录符号链接到 `$HOME/.agents/skills/` （这个目录会被多数 Coding Agent 使用）
-- 将 Skill 中的 Sub-agent 文件复制到 `$HOME/.gemini/agents` 目录下（Gemini 的安全策略要求 subagent 必须以非软链接形式存在于该目录）
-
-如果不符合你的要求，稍微改一下就好。
+该脚本会自动探测你系统中的 `~/.agents`、`~/.claude`、`~/.gemini/antigravity-cli` 和 `~/.gemini` 等目录，并自动在这些已存在的目录下创建 `skills` 软链接（若均不存在，则默认在 `~/.agents/skills` 和 `~/.gemini/antigravity-cli/skills` 中创建）。
 
 #### 自动安装
 
