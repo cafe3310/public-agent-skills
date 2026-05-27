@@ -3,7 +3,7 @@ name: deep-research-partnership-planner
 description: 结合深度调研（Deep Research）与人工洞察（Human-in-the-loop），为大模型生态合作生成商业落地规划与极度颗粒度的宣发物料。当用户希望通过严谨的两阶段调研（前期探索与深度研究）、引入人工战略判断，并最终生成全套合作与 GTM 方案时，使用此技能。
 author: github/cafe3310
 depends_on_skill:
-  - github/cafe3310/agent-skill-use-claude-plugin -> plugin-search-and-use
+  - github/cafe3310/public-agent-skills -> plugin-search-and-use
 depends_on_binary: []
 ---
 

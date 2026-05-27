@@ -4,7 +4,7 @@ description: 作为一个 doc-todo-log-loop 的补充技能，用于在开发过
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill:
-  - github/cafe3310/agent-skill-doc-todo-log-loop -> doc-todo-log-loop
+  - github/cafe3310/public-agent-skills -> doc-todo-log-loop
 depends_on_binary: []
 ---
 

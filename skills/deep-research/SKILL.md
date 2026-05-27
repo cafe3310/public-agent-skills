@@ -4,7 +4,7 @@ description: A comprehensive, autonomous deep research framework. Use this skill
 license: MIT
 author: github/cafe3310
 depends_on_skill:
-  - github/vercel-labs/agent-browser -> agent-browser
+  - github/cafe3310/public-agent-skills -> agent-browser
 depends_on_binary:
   - python3
 ---

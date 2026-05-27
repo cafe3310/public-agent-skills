@@ -4,9 +4,9 @@ description: 全生命周期模型发布演示管理。涵盖从素材收集、�
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill:
-  - github/cafe3310/agent-skill-doc-todo-log-loop -> doc-todo-log-loop
-  - github/cafe3310/agent-skill-showcase-video-processor -> showcase-video-processor
-  - github/jpcaparas/oneshot-website -> oneshot-website
+  - github/cafe3310/public-agent-skills -> doc-todo-log-loop
+  - github/cafe3310/public-agent-skills -> showcase-video-processor
+  - github/cafe3310/public-agent-skills -> oneshot-website
 depends_on_binary: []
 ---
 
