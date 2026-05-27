@@ -1,8 +1,11 @@
 ---
 name: interview-processor
 description: 处理面试记录的 Agent 技能。包含面试大纲规划、面试提问提取与纠错、面试总结自评，以及知识图谱存储方案。
-author: cafe3310
+author: github/cafe3310
 license: Apache-2.0
+depends_on_skill:
+  - github/cafe3310/agent-skill-memories-off -> memories-off
+depends_on_binary: []
 ---
 
 # Agent Skill: interview-processor (面试记录处理技能)
