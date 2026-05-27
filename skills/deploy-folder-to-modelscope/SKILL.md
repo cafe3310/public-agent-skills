@@ -1,8 +1,12 @@
 ---
 name: deploy-folder-to-modelscope
 description: 当需要将项目特定目录部署到 ModelScope 仓库时，应使用此技能。
-author: github/cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - git
+  - python3
 ---
 
 # 部署项目特定目录到 ModelScope (deploy-folder-to-modelscope)

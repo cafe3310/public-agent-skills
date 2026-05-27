@@ -3,6 +3,9 @@ name: agent-browser
 description: Browser automation CLI for AI agents. Use when the user needs to interact with websites, including navigating pages. Also use for automating Electron desktop apps.
 allowed-tools: Bash(agent-browser:*), Bash(npx agent-browser:*)
 author: https://github.com/vercel-labs/agent-browser
+depends_on_skill: []
+depends_on_binary:
+  - node
 ---
 
 # agent-browser

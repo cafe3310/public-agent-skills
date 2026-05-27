@@ -1,8 +1,11 @@
 ---
 name: obsidian-todo-collector
 description: 专门用于从 Obsidian 知识库中整理指定时间范围内的未完成事件。它会遍历文档，提取具体工作事项和抽象规划，并生成/更新一个统一的「未完成事件整理」文档。
-author: github/cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - python3
 ---
 
 # Obsidian 未完成事件整理

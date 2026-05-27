@@ -1,8 +1,13 @@
 ---
 name: gemini-omni-video-to-sticker-gif
 description: 此技能用于提取视频片段并制作微信等平台的高质量动态表情包 (GIF)。支持截取带刻度网格的预览帧以精确定位坐标，并支持裁剪、缩放、速度调整以及最后一帧定格等高级参数设置。
-author: antigravity
 license: Apache-2.0
+author: github/antigravity
+depends_on_skill: []
+depends_on_binary:
+  - ffmpeg
+  - ffprobe
+  - python3
 ---
 
 # 技能：gemini-omni-video-to-sticker-gif

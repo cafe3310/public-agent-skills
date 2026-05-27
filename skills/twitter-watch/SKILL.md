@@ -1,8 +1,14 @@
 ---
 name: twitter-watch
 description: 读取包含 Twitter 链接的文件，使用 agent-browser 访问每个链接，执行拟人化滚动，并提取互动数据（查看次数、回复、转发、喜欢、书签）。最后整合所有数据生成报告。
-author: cafe3310
 license: MIT
+author: github/cafe3310
+depends_on_skill:
+  - github/vercel-labs/agent-browser -> agent-browser
+depends_on_binary:
+  - python3
+  - node
+  - npm
 ---
 
 # twitter-watch

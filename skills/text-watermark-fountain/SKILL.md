@@ -1,8 +1,11 @@
 ---
 name: text-watermark-fountain
 description: A specialized skill for embedding and extracting resilient watermarks in text by manipulating sentence lengths and using Fountain Codes. Use this when the user wants to add a hidden, robust watermark to text or verify an existing one.
-author: cafe3310
 license: MIT
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - python3
 ---
 
 # Text Watermark Fountain (Robust Sync-Frame Version)

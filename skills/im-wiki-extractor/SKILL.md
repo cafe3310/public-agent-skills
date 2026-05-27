@@ -1,8 +1,12 @@
 ---
 name: im-wiki-extractor
 description: 专门用于将超长群聊日志转化为结构化知识图谱。采用滑动窗口增量提取，规避上下文限制，并确保实体与关系的沉淀与溯源。
-author: github/cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill:
+  - github/cafe3310/agent-skill-memories-off -> memories-off
+depends_on_binary:
+  - python3
 ---
 
 # Agent Skill: im-wiki-extractor (群聊知识图谱提取器)

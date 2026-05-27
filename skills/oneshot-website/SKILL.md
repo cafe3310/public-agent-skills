@@ -2,6 +2,9 @@
 name: oneshot-website
 description: "Generate immersive, one-shot single-file HTML websites with embedded CSS and JS. No external images. Hostable on CodePen or Vercel. Use for writeup showcases, AI capability demos, and portfolio pieces."
 author: github/jpcaparas
+depends_on_skill: []
+depends_on_binary:
+  - python3
 ---
 
 # Oneshot Website

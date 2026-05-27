@@ -2,6 +2,8 @@
 name: plugin-search-and-use
 description: 检索并使用本地的 Claude Plugin 完成特定任务。适用于当用户想要利用现有插件库（如 Knowledge Work Plugins）中的专业技能，或需要发现并执行特定插件指令时。
 author: github/cafe3310
+depends_on_skill: []
+depends_on_binary: []
 ---
 
 # 检索和使用 Claude Plugin

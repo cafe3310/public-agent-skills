@@ -1,9 +1,12 @@
 ---
 name: showcase-video-processor
 description: 专门用于模型发布视频的处理。支持原始素材整理、基于 FFmpeg 的初稿编辑（裁剪、变速、缩放等）以及多粒度分镜文档策划。
-author: github/cafe3310
 license: Apache-2.0
 status: wip
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - ffmpeg
 ---
 ---
 

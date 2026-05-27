@@ -2,6 +2,9 @@
 name: tech-to-marketing-brief
 description: 将零散的技术特性和算法更新，转化为完整的运营 Brief、社媒宣发案例库以及配套的研发 Jira Ticket。
 author: github/cafe3310
+depends_on_skill:
+  - github/cafe3310/agent-skill-use-claude-plugin -> plugin-search-and-use
+depends_on_binary: []
 ---
 
 # Tech-to-Marketing-Brief (产研侧宣发物料生成器)

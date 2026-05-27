@@ -1,8 +1,11 @@
 ---
 name: impeccable
 description: Use when the user wants to design, redesign, shape, critique, audit, polish, clarify, distill, harden, optimize, adapt, animate, colorize, extract, or otherwise improve a frontend interface. Not for backend-only or non-UI tasks.
-author: https://github.com/pbakaus/impeccable
 version: 3.0.7
+author: https://github.com/pbakaus/impeccable
+depends_on_skill: []
+depends_on_binary:
+  - node
 ---
 
 Designs and iterates production-grade frontend interfaces. Real working code, committed design choices, exceptional craft.

@@ -1,8 +1,11 @@
 ---
 name: cafe3310-skill-installer
 description: 自动化安装和更新来自 cafe3310 的所有 Agent Skills。
-author: github/cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - bash
 ---
 
 # 安装和更新 cafe3310 的所有 Agent Skill

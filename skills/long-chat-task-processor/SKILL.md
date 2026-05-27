@@ -1,8 +1,11 @@
 ---
 name: long-chat-task-processor
 description: 当用户需要将以 Markdown 标题组织的大量聊天记录（如“# 群聊A”、“## 私聊B”）转化为结构化的项目管理文档（待办、决策、里程碑）或特定主题报告时使用此技能。
-author: github/cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill: []
+depends_on_binary:
+  - python3
 ---
 
 # 聊天记录项目化处理工作流 (Long Chat Task Processor)

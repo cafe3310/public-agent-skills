@@ -1,8 +1,12 @@
 ---
 name: subject-learning-assistant
 description: 一个基于 memocli (memories-off) 的结构化、三层分级的学习助手。支持内容摄取、自动大纲规划（主题 -> 任务 -> 概念）、引导式教学以及实时的地铁图可视化。
-author: cafe3310
 license: Apache-2.0
+author: github/cafe3310
+depends_on_skill:
+  - github/cafe3310/agent-skill-memories-off -> memories-off
+depends_on_binary:
+  - python3
 ---
 
 # 学习助手 (Subject Learning Assistant)
