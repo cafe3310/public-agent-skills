@@ -11,6 +11,11 @@ Agent Skill 可能非常个性化，很多都是用户个人最佳实践的提�
 
 任何 LLM 相关的问题基本都是公开知识，学习如何使用 LLM 或让它协同你工作的方法里，最好的就是问 LLM 自己，最智障的是花钱买课。可以先问问 Gemini / GPT「这是我看到的文档，我希望学习关于 x 的知识。交互式地教教我」。
 
+为了让 Agent 能够正确识别每个 Skill 的依赖，这个仓库中的 `SKILL.md` Frontmatter 声明了以下扩展属性：
+
+- `depends_on_skill`：这个 Agent Skill 运行依赖的其他 Agent Skill。
+- `depends_on_binary`：这个 Agent Skill 运行依赖的其他程序（如 `ffmpeg`、`python3`）。
+
 ### 后续计划
 
 工作和生活中自己不想做的麻烦事情基本会做成 Agent Skill 放在这里。
