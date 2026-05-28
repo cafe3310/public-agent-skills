@@ -33,9 +33,10 @@ echo
 
 # --- 增加全局确认逻辑 ---
 echo "即将执行以下操作："
-echo "1. 将 $SOURCE_BASE 下的技能软链接到上述目录"
-echo "2. 将生成的软链接添加到对应目录的 .gitignore"
-echo "3. 尝试从 Git 版本控制中移除已有的软链接（git rm --cached）"
+echo "1. 将 $SOURCE_BASE 下的技能以物理目录形式安装/同步到上述目录"
+echo "   (当目标中已存在且有差异时，会交互式提示您确认覆盖)"
+echo "2. 将安装的技能目录添加到对应目录的 .gitignore"
+echo "3. 尝试从 Git 版本控制中移除对应目录缓存（git rm --cached）"
 echo
 read -p "是否确定继续？(y/N) " global_confirm
 if [[ "$global_confirm" != "y" && "$global_confirm" != "Y" ]]; then
@@ -48,7 +49,7 @@ for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
     mkdir -p "$target_dir"
 done
 
-echo "正在批量链接技能..."
+echo "正在批量安装/同步技能..."
 echo "------------------------------------------------"
 
 # 遍历 source 目录下的所有子目录
@@ -57,20 +58,41 @@ for skill_dir in "$SOURCE_BASE"/*; do
     if [ -d "$skill_dir" ]; then
         skill_name=$(basename "$skill_dir")
 
-        # 链接至每个目标目录
+        # 安装至每个目标目录
         for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
-            target_link="$target_dir/$skill_name"
+            target_skill_dir="$target_dir/$skill_name"
 
-            # 检查技能目录链接
-            if [ -L "$target_link" ] && [ ! -e "$target_link" ]; then
-                # 如果是损坏的软链接，则直接覆盖
-                ln -sf "$skill_dir" "$target_link"
-                echo " [覆盖无效链接] $skill_name -> $target_link"
-            elif [ -e "$target_link" ] || [ -L "$target_link" ]; then
-                echo " [跳过技能] $skill_name (在 $target_dir 已存在)"
+            # 1. 软链接强制替换为物理复制
+            if [ -L "$target_skill_dir" ]; then
+                rm -f "$target_skill_dir"
+                cp -r "$skill_dir" "$target_skill_dir"
+                echo " [覆盖软链接] $skill_name -> $target_skill_dir"
+            
+            # 2. 目标真实目录存在，执行 diff 校验
+            elif [ -d "$target_skill_dir" ]; then
+                diff_output=$(diff -r -q "$skill_dir" "$target_skill_dir" 2>&1)
+                diff_status=$?
+                
+                if [ $diff_status -eq 0 ]; then
+                    echo " [一致跳过] $skill_name (内容一致，无需更新)"
+                else
+                    echo -e "\033[1;33m⚠️  检测到 $skill_name 在目标中存在差异：\033[0m"
+                    echo "$diff_output" | sed 's/^/    /'
+                    
+                    read -p "是否覆盖目标 $target_skill_dir ？(y/N) " confirm_overwrite
+                    if [[ "$confirm_overwrite" == "y" || "$confirm_overwrite" == "Y" ]]; then
+                        rm -rf "$target_skill_dir"
+                        cp -r "$skill_dir" "$target_skill_dir"
+                        echo " [更新技能] $skill_name (已物理覆盖)"
+                    else
+                        echo " [保留旧版] $skill_name (已跳过)"
+                    fi
+                fi
+            
+            # 3. 目标不存在，直接物理复制
             else
-                ln -s "$skill_dir" "$target_link"
-                echo " [创建技能] $skill_name -> $target_link"
+                cp -r "$skill_dir" "$target_skill_dir"
+                echo " [新建安装] $skill_name -> $target_skill_dir"
             fi
 
             # --- 增加 Git 忽略和清理逻辑 ---
