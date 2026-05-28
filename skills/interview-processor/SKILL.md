@@ -12,15 +12,15 @@ depends_on_binary: []
 
 本技能用于辅助面试官在面试前后进行高效的结构化处理，沉淀招聘成果并客观自评提问水平。它可以配合 `memories-off` 技能的 `memocli` 将生成数据安全写入本地知识图谱。
 
-## 1. 依赖工具 (Dependencies)
+## 1. 依赖工具与规范声明 (Dependencies)
 
-本技能依赖本地优先的知识库管理工具 `memocli`。在执行任何图谱写入前，请确保 `memocli` 已经配置，并知晓知识库根目录的路径（可通过 `--path` 或 `-p` 传入）。
+本技能依赖本地优先的知识库管理工具 `memocli`。
 
-常用 `memocli` 命令参考：
-- `memocli explore -p <path>`：全局探索。
-- `memocli search-entities <pattern> -p <path>`：模糊检索实体。
-- `memocli create-entity -p <path> -e <name> -t <type> -c <content> --add-rel-out <rel>`：创建新实体并建立关系。
-- `memocli append-update -p <path> -e <name> -c <content> --add-rel-out <rel>`：以追加更新块模式更新实体。
+### 外部依赖与规范说明
+
+本 Skill 依赖 `memories-off` 库进行实体管理与长期记忆。在执行任何任务前，您必须先查阅并完整遵循当前目录下的 [memories-off-declare.md](memories-off-declare.md) 声明文档，以获取其定义的实体类型规范及封装的子过程操作细节。
+
+同时，为了简化指令的输入长度，建议您在 `~/.config/memocli/config.yaml` 中配置全局路径别名，并使用简写别名（如 `-p work` 或 `-p life`）来运行本技能涉及的所有 `memocli` 指令。
 
 ---
 
