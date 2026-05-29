@@ -41,6 +41,8 @@ chmod +x link_skills.sh
 
 该脚本会自动探测你系统中的 `~/.agents`、`~/.claude`、`~/.gemini/antigravity-cli` 和 `~/.gemini` 等目录，并在这些已存在的目录下执行物理技能目录的同步与拷贝。若目标目录中已存在且文件有修改，会交互式提示您确认覆盖（若均不存在，则默认在 `~/.agents/skills` 和 `~/.gemini/antigravity-cli/skills` 中创建并拷贝）。
 
+此外，脚本在执行时，若目标目录下不存在 `agents.md`，它会自动在该目录下创建一个 `agents.md` 说明文件，指明这里的 skills 是复制自哪个本地物理仓库路径，提示在该工作区下编辑 skills 时应优先编辑源路径并重新运行 `link_skills.sh` 脚本；若目标目录下已存在该文件，则跳过生成。
+
 #### 自动安装
 
 向你的 Agent 发以下指令：
@@ -165,6 +167,10 @@ chmod +x link_skills.sh
 #### 轻量版项目管理范式 / [doc-todo-log-loop](skills/doc-todo-log-loop)
 
 作为轻量级默认开发循环，适用于无复杂流程的中小型项目。要求每项任务始于文档分析 → 生成 TODO 清单 → 开发后附加执行日志 → 提交前验证闭环。强调人的确认，最小化「想到哪做到哪」的不可控性，也防止自己忘掉。
+
+#### 跨会话任务交接 / [handoff](skills/handoff)
+
+编写或更新交接文档，以便拥有全新上下文的下一个 Agent 可以继续此项工作。它会基于当前进展、目标（包括当前 TODO 文件）、近期尝试（已生效/未生效方案）、推荐技能以及后续步骤，在项目根目录下生成或更新 `HANDOFF.md`。支持根据传入参数定制任务焦点，并生成一段可供用户在全新 Agent 对话中一键粘贴的交接指令，实现快速交接与断点续传。
 
 #### 模型发布演示管理 / [release-showcase-manager](skills/release-showcase-manager)
 

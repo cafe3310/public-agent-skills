@@ -23,7 +23,7 @@
         
         /* D3 元素特定 CSS */
         .node text { pointer-events: none; font-size: 11px; fill: #666; font-weight: 300; }
-        .link { stroke: #94a3b8; stroke-opacity: 0.8; stroke-width: 1.8px; }
+        .link { stroke: #e0e0e0; stroke-opacity: 0.3; stroke-width: 1px; }
     </style>
 </head>
 <body class="flex h-screen bg-[#fbfbfb] text-[#1a1a1a] antialiased overflow-hidden">
@@ -39,9 +39,8 @@
     <div id="left-panel" class="flex-1 relative bg-white h-full overflow-hidden">
         <!-- 图例 (legend) -->
         <div class="legend absolute bottom-6 left-6 bg-white/90 border border-[#eef0f2] rounded p-3 text-[10px] text-[#747d8c] z-10 space-y-1.5 shadow-sm">
-            <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-full" style="background: #9b59b6;"></div> 学习目录</div>
             <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-full" style="background: #1e272e;"></div> 学习主题</div>
-            <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-full" style="background: #3498db;"></div> 任务节点</div>
+            <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-sm" style="background: #3498db;"></div> 任务节点</div>
             <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-full" style="background: #2ed573;"></div> 已完成概念</div>
             <div class="legend-item flex items-center"><div class="legend-color w-2.5 h-2.5 mr-2 rounded-full" style="background: #ffa502;"></div> 进行中概念</div>
         </div>
@@ -259,10 +258,10 @@
 
             nodeEnter.append("path")
                 .attr("d", d => {
-                    if (d.type === "Root") return d3.symbol().type(d3.symbolCircle).size(1400)(); // 根节点使用超大圆形
-                    if (d.type === "Learning Subject") return d3.symbol().type(d3.symbolCircle).size(900)(); // 主题节点大圆形
-                    if (d.type === "Topic") return d3.symbol().type(d3.symbolCircle).size(450)(); // 任务节点中等圆形
-                    return d3.symbol().type(d3.symbolCircle).size(200)(); // 概念节点小圆形
+                    if (d.type === "Root") return d3.symbol().type(d3.symbolDiamond).size(1200)(); // 根节点使用大菱形形状
+                    if (d.type === "Topic") return d3.symbol().type(d3.symbolSquare).size(400)();
+                    if (d.type === "Learning Subject") return d3.symbol().type(d3.symbolCircle).size(1000)();
+                    return d3.symbol().type(d3.symbolCircle).size(250)();
                 })
                 .attr("stroke-width", d => d.status === "active" ? 4 : 2);
 
@@ -289,6 +288,12 @@
                 "学习日志": "学习日志"
             };
 
+            nodeMerge.on("mouseover", (event, d) => {
+                tooltip.transition().duration(100).style("opacity", 1);
+                tooltip.html(`<strong>${d.label}</strong> <span style="color:#95a5a6; font-size:10px;">• ${typeMap[d.type] || d.type}</span><hr style="margin:10px 0; border:0; border-top:1px solid #f0f0f0;">${d.info}`)
+                    .style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 20) + "px");
+            }).on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0));
+
             let linkSelection = linkGroup.selectAll(".link").data(linksData, d => (d.source.id || d.source) + "-" + (d.target.id || d.target));
             let linkEnter = linkSelection.enter().append("line")
                 .attr("class", "link")
@@ -296,54 +301,6 @@
                 .style("opacity", 0);
             
             let linkMerge = linkEnter.merge(linkSelection);
-
-            // Bind interactions after linkMerge is defined
-            nodeMerge.on("mouseover", (event, d) => {
-                tooltip.transition().duration(100).style("opacity", 1);
-                tooltip.html(`<strong>${d.label}</strong> <span style="color:#95a5a6; font-size:10px;">• ${typeMap[d.type] || d.type}</span><hr style="margin:10px 0; border:0; border-top:1px solid #f0f0f0;">${d.info}`)
-                    .style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 20) + "px");
-
-                // Highlight directly connected links and dim others
-                linkMerge.transition().duration(150)
-                    .style("stroke", l => {
-                        const sId = l.source.id || l.source;
-                        const tId = l.target.id || l.target;
-                        return (sId === d.id || tId === d.id) ? "#475569" : "#cbd5e1";
-                    })
-                    .style("stroke-opacity", l => {
-                        const sId = l.source.id || l.source;
-                        const tId = l.target.id || l.target;
-                        return (sId === d.id || tId === d.id) ? 1.0 : 0.15;
-                    })
-                    .style("stroke-width", l => {
-                        const sId = l.source.id || l.source;
-                        const tId = l.target.id || l.target;
-                        return (sId === d.id || tId === d.id) ? "2.4px" : "1.2px";
-                    });
-
-                // Highlight directly connected nodes and dim others
-                nodeMerge.transition().duration(150)
-                    .style("opacity", n => {
-                        if (n.id === d.id) return 1.0;
-                        const connected = linksData.some(l => {
-                            const sId = l.source.id || l.source;
-                            const tId = l.target.id || l.target;
-                            return (sId === d.id && tId === n.id) || (sId === n.id && tId === d.id);
-                        });
-                        return connected ? 0.95 : 0.25;
-                    });
-            }).on("mouseout", () => {
-                tooltip.transition().duration(500).style("opacity", 0);
-
-                // Reset styling
-                linkMerge.transition().duration(150)
-                    .style("stroke", null)
-                    .style("stroke-opacity", null)
-                    .style("stroke-width", null);
-
-                nodeMerge.transition().duration(150)
-                    .style("opacity", 1.0);
-            });
 
             simulation.nodes(nodesData);
             simulation.force("link").links(linksData);
@@ -378,7 +335,7 @@
         }
 
         // Initialize static data
-        const initialData = __INJECTED_DATA__;
+        const initialData = {"nodes": [{"id": "\u5fae\u670d\u52a1\u67b6\u6784", "label": "\u5fae\u670d\u52a1\u67b6\u6784", "type": "Learning Subject", "status": "pending", "info": "# \u5fae\u670d\u52a1\u67b6\u6784\n\n\u5fae\u670d\u52a1\u67b6\u6784\u662f\u4e00\u79cd\u5c06\u5355\u4f53\u5e94\u7528\u62c6\u5206\u4e3a\u4e00\u7ec4\u5fae\u5c0f\u670d\u52a1\u7684\u67b6\u6784\u98ce\u683c\uff0c\u6bcf\u4e2a\u670d\u52a1\u8fd0\u884c\u5728\u81ea\u5df1\u7684\u8fdb\u7a0b\u4e2d\uff0c\u5e76\u901a\u8fc7\u8f7b\u91cf\u7ea7\u673a\u5236\u8fdb\u884c\u901a\u4fe1\u3002\n", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784"}, {"id": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-Dockerfile\u7f16\u5199", "label": "Dockerfile\u7f16\u5199", "type": "Concept", "status": "active", "info": "# \u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-Dockerfile\u7f16\u5199\n\n## \u6982\u5ff5\u8be6\u89e3\nDockerfile \u662f\u4e00\u4e2a\u6587\u672c\u6587\u4ef6\uff0c\u5176\u5185\u5305\u542b\u4e86\u4e00\u6761\u6761\u7684\u6307\u4ee4\uff0c\u6bcf\u4e00\u6761\u6307\u4ee4\u90fd\u6784\u5efa\u4e00\u5c42\u955c\u50cf\uff0c\u4ece\u800c\u5b9e\u73b0\u81ea\u52a8\u5316\u3001\u53ef\u91cd\u590d\u7684\u955c\u50cf\u6784\u5efa\u3002...", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-Dockerfile\u7f16\u5199"}, {"id": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u501f\u7528\u4e0e\u5f15\u7528", "label": "\u501f\u7528\u4e0e\u5f15\u7528", "type": "Concept", "status": "completed", "info": "# Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u501f\u7528\u4e0e\u5f15\u7528\n\n## \u6982\u5ff5\u8be6\u89e3\n\u5f15\u7528\uff08Reference\uff09\u5141\u8bb8\u5728\u4e0d\u83b7\u53d6\u6240\u6709\u6743\u7684\u60c5\u51b5\u4e0b\u4f7f\u7528\u503c\u3002\u501f\u7528\uff08Borrowing\uff09\u6307\u5c06\u5f15\u7528\u4f5c\u4e3a\u53c2\u6570\u4f20\u9012\u7ed9\u51fd\u6570\u3002\u9075\u5faa\u6838\u5fc3\u89c4\u5219\uff1a\u540c\u4e00\u65f6\u95f4\u53ea\u80fd...", "original_name": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u501f\u7528\u4e0e\u5f15\u7528"}, {"id": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u751f\u547d\u5468\u671f", "label": "\u751f\u547d\u5468\u671f", "type": "Concept", "status": "pending", "info": "# Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u751f\u547d\u5468\u671f\n\n## \u6982\u5ff5\u8be6\u89e3\n\u751f\u547d\u5468\u671f\u662f\u7f16\u8bd1\u5668\u7528\u6765\u786e\u4fdd\u6240\u6709\u5f15\u7528\u5728\u6709\u6548\u65f6\u95f4\u5185\u90fd\u53ef\u7528\u7684\u53c2\u6570\u7b26\u53f7\uff08\u5982 `'a`\uff09\u3002\u5b83\u5e76\u4e0d\u6539\u53d8\u5f15\u7528\u7684\u5b9e\u9645\u751f\u5b58\u65f6\u95f4\uff0c\u53ea\u662f\u7528\u6765\u660e\u786e\u5f15\u7528\u4e4b\u95f4\u7684\u5173\u7cfb\u3002\n\n#...", "original_name": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u751f\u547d\u5468\u671f"}, {"id": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u6570\u636e\u7c7b\u578b", "label": "\u6570\u636e\u7c7b\u578b", "type": "Concept", "status": "completed", "info": "# Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u6570\u636e\u7c7b\u578b\n\n## \u6982\u5ff5\u8be6\u89e3\nRust \u662f\u9759\u6001\u7c7b\u578b\u8bed\u8a00\uff0c\u5206\u4e3a\u6807\u91cf\u7c7b\u578b\uff08\u6574\u6570\u3001\u6d6e\u70b9\u6570\u3001\u5e03\u5c14\u503c\u3001\u5b57\u7b26\uff09\u548c\u590d\u5408\u7c7b\u578b\uff08\u5143\u7ec4\u3001\u6570\u7ec4\uff09\u3002\n\n## \u5b66\u4e60\u8fc7\u7a0b\u6574\u7406\n\u5bf9\u57fa\u672c\u7c7b\u578b\u505a\u4e86\u7cfb\u7edf\u68b3\u7406\uff0c\u91cd...", "original_name": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u6570\u636e\u7c7b\u578b"}, {"id": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5", "label": "\u57fa\u7840\u8bed\u6cd5", "type": "Topic", "status": "completed", "info": "# Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5\n\n\u672c\u8ba1\u5212\u662f Rust \u7f16\u7a0b\u7684\u5165\u95e8\u5b66\u4e60\u89c4\u5212\uff0c\u4e3b\u8981\u638c\u63e1\u53d8\u91cf\u7ed1\u5b9a\u3001\u57fa\u7840\u6570\u636e\u7c7b\u578b\u7b49\u6838\u5fc3\u8bed\u6cd5\u6982\u5ff5\u3002\n\n## \u53c2\u8003\u8d44\u6599\n- [Rust \u5b98\u65b9\u5723\u7ecf (Rust Book)](./mate...", "original_name": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5"}, {"id": "Rust\u7f16\u7a0b", "label": "Rust\u7f16\u7a0b", "type": "Learning Subject", "status": "pending", "info": "# Rust\u7f16\u7a0b\n\nRust \u7f16\u7a0b\u8bed\u8a00\u662f\u4e00\u95e8\u8d4b\u4e88\u6bcf\u4e2a\u4eba\u6784\u5efa\u53ef\u9760\u4e14\u9ad8\u6548\u8f6f\u4ef6\u80fd\u529b\u7684\u7cfb\u7edf\u7f16\u7a0b\u8bed\u8a00\u3002\n", "original_name": "Rust\u7f16\u7a0b"}, {"id": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236", "label": "\u6240\u6709\u6743\u673a\u5236", "type": "Topic", "status": "active", "info": "# Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236\n\n\u6240\u6709\u6743\u662f Rust \u6700\u72ec\u7279\u4e14\u6838\u5fc3\u7684\u7279\u6027\uff0c\u5b83\u8ba9 Rust \u65e0\u9700\u5783\u573e\u56de\u6536\u5668\u5373\u53ef\u4fdd\u8bc1\u5185\u5b58\u5b89\u5168\u3002\n\n## \u53c2\u8003\u8d44\u6599\n- [Rust \u5b98\u65b9\u5723\u7ecf (Rust Book)](./ma...", "original_name": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236"}, {"id": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-\u955c\u50cf\u4e0e\u5bb9\u5668", "label": "\u955c\u50cf\u4e0e\u5bb9\u5668", "type": "Concept", "status": "completed", "info": "# \u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-\u955c\u50cf\u4e0e\u5bb9\u5668\n\n## \u6982\u5ff5\u8be6\u89e3\n\u955c\u50cf\u662f Docker \u8fd0\u884c\u7684\u9759\u6001\u53ea\u8bfb\u6a21\u677f\uff0c\u5305\u542b\u8fd0\u884c\u5bb9\u5668\u6240\u9700\u7684\u6240\u6709\u6587\u4ef6\u7cfb\u7edf\u548c\u8fd0\u884c\u53c2\u6570\uff1b\u5bb9\u5668\u5219\u662f\u955c\u50cf\u8fd0\u884c\u65f6\u7684\u5b9e\u4f53\uff0c\u662f\u72ec\u7acb\u4e14\u53d7\u9694\u79bb\u7684\u8fdb\u7a0b\u7a7a\u95f4\u3002...", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-\u955c\u50cf\u4e0e\u5bb9\u5668"}, {"id": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840", "label": "Docker\u57fa\u7840", "type": "Topic", "status": "active", "info": "# \u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840\n\n\u5bb9\u5668\u5316\u6280\u672f\u662f\u5fae\u670d\u52a1\u67b6\u6784\u843d\u5730\u7684\u6838\u5fc3\u57fa\u77f3\u3002\u672c\u8ba1\u5212\u4e3b\u8981\u638c\u63e1 Docker \u7684\u6838\u5fc3\u7406\u5ff5\u4e0e\u5b9e\u7528\u64cd\u4f5c\u3002\n\n## \u53c2\u8003\u8d44\u6599\n- [Docker \u5b98\u65b9\u7528\u6237\u6307\u5357](./materia...", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840"}, {"id": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u53d8\u91cf\u7ed1\u5b9a", "label": "\u53d8\u91cf\u7ed1\u5b9a", "type": "Concept", "status": "completed", "info": "# Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u53d8\u91cf\u7ed1\u5b9a\n\n## \u6982\u5ff5\u8be6\u89e3\nRust \u4f7f\u7528 `let` \u5173\u952e\u5b57\u7ed1\u5b9a\u53d8\u91cf\uff0c\u53d8\u91cf\u9ed8\u8ba4\u662f\u4e0d\u53ef\u53d8\u7684\uff08immutable\uff09\u3002\u82e5\u9700\u53ef\u53d8\uff0c\u9700\u4f7f\u7528 `mut` \u5173\u952e\u5b57\u3002\n\n## \u5b66\u4e60\u8fc7\u7a0b\u6574...", "original_name": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u53d8\u91cf\u7ed1\u5b9a"}, {"id": "Root", "label": "\u5b66\u4e60\u4e3b\u76ee\u5f55", "type": "Root", "status": "completed", "info": "\u865a\u6784\u7684\u77e5\u8bc6\u5e93\u6839\u8282\u70b9\uff0c\u7528\u4e8e\u62c9\u8fd1\u548c\u7edf\u4e00\u7ba1\u7406\u4e0d\u540c\u7684\u5b66\u4e60\u4e3b\u9898\u4e0e\u65e5\u5fd7\u3002", "original_name": "Root"}], "links": [{"source": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-Dockerfile\u7f16\u5199", "target": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840"}, {"source": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u501f\u7528\u4e0e\u5f15\u7528", "target": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236"}, {"source": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236-\u751f\u547d\u5468\u671f", "target": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236"}, {"source": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u6570\u636e\u7c7b\u578b", "target": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5"}, {"source": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5", "target": "Rust\u7f16\u7a0b"}, {"source": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236", "target": "Rust\u7f16\u7a0b"}, {"source": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840-\u955c\u50cf\u4e0e\u5bb9\u5668", "target": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840"}, {"source": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840", "target": "\u5fae\u670d\u52a1\u67b6\u6784"}, {"source": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5-\u53d8\u91cf\u7ed1\u5b9a", "target": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5"}, {"source": "Root", "target": "\u5fae\u670d\u52a1\u67b6\u6784"}, {"source": "Root", "target": "Rust\u7f16\u7a0b"}], "subway": [{"subject": "\u5fae\u670d\u52a1\u67b6\u6784", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784", "topics": [{"topic": "Docker\u57fa\u7840", "original_name": "\u5fae\u670d\u52a1\u67b6\u6784-Docker\u57fa\u7840", "status": "active", "concepts": [{"name": "Dockerfile\u7f16\u5199", "status": "active"}, {"name": "\u955c\u50cf\u4e0e\u5bb9\u5668", "status": "completed"}]}]}, {"subject": "Rust\u7f16\u7a0b", "original_name": "Rust\u7f16\u7a0b", "topics": [{"topic": "\u57fa\u7840\u8bed\u6cd5", "original_name": "Rust\u7f16\u7a0b-\u57fa\u7840\u8bed\u6cd5", "status": "completed", "concepts": [{"name": "\u6570\u636e\u7c7b\u578b", "status": "completed"}, {"name": "\u53d8\u91cf\u7ed1\u5b9a", "status": "completed"}]}, {"topic": "\u6240\u6709\u6743\u673a\u5236", "original_name": "Rust\u7f16\u7a0b-\u6240\u6709\u6743\u673a\u5236", "status": "active", "concepts": [{"name": "\u501f\u7528\u4e0e\u5f15\u7528", "status": "completed"}, {"name": "\u751f\u547d\u5468\u671f", "status": "pending"}]}]}]};
         updateDashboard(initialData, true);
 
         function dragstarted(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }

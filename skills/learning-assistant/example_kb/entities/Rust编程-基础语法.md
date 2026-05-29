@@ -7,13 +7,14 @@ relation as belongs_to: Rust编程
 
 # Rust编程-基础语法
 
-(在此处输入实体的详细描述...)
+本计划是 Rust 编程的入门学习规划，主要掌握变量绑定、基础数据类型等核心语法概念。
 
-<!-- UPDATE_BLOCK_START: 2026-05-19 00:32:07 | reason: 初始化示例数据 -->
+## 参考资料
+- [Rust 官方圣经 (Rust Book)](./materials/rust-book-guide.md)
+
 ## 已学习内容
 - Rust编程-基础语法-变量绑定
 - Rust编程-基础语法-数据类型
 
 ## 待学习内容
 无
-<!-- UPDATE_BLOCK_END: 2026-05-19 00:32:07 -->

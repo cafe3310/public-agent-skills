@@ -1,0 +1,12 @@
+[
+  {
+    "case_id": 1,
+    "prompt_delimeter": "xml",
+    "expected_answer": "XML tag delimiter was correctly processed"
+  },
+  {
+    "case_id": 2,
+    "prompt_delimeter": "markdown",
+    "expected_answer": "Markdown block was correctly processed"
+  }
+]

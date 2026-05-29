@@ -7,8 +7,8 @@ relation as belongs_to: 微服务架构-Docker基础
 
 # 微服务架构-Docker基础-Dockerfile编写
 
-(在此处输入实体的详细描述...)
+## 概念详解
+Dockerfile 是一个文本文件，其内包含了一条条的指令，每一条指令都构建一层镜像，从而实现自动化、可重复的镜像构建。
 
-<!-- UPDATE_BLOCK_START: 2026-05-19 00:32:09 | reason: 初始化示例数据 -->
-状态：未开始
-<!-- UPDATE_BLOCK_END: 2026-05-19 00:32:09 -->
+## 学习过程整理
+无

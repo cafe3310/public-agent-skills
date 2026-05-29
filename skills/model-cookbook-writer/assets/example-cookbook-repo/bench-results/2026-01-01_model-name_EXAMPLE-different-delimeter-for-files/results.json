@@ -1,0 +1,14 @@
+{
+  "bench_date": "2026-01-01",
+  "bench_target": "benches/2026-01-01_EXAMPLE-different-delimeter-for-files",
+  "model_name": "model-name",
+  "metrics": {
+    "xml_delimeters_accuracy": 0.95,
+    "markdown_delimeters_accuracy": 0.82,
+    "latency_p50_ms": 1150
+  },
+  "configuration": {
+    "temperature": 0.0,
+    "max_tokens": 1024
+  }
+}

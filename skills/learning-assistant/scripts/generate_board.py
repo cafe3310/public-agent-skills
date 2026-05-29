@@ -25,6 +25,25 @@ def parse_md(filepath):
         
     return frontmatter, body
 
+def parse_chapters(body):
+    chapters = {}
+    current_chapter = None
+    current_lines = []
+    
+    for line in body.splitlines():
+        if line.strip().startswith('## '):
+            if current_chapter:
+                chapters[current_chapter] = "\n".join(current_lines).strip()
+            current_chapter = line.strip().replace('## ', '').strip()
+            current_lines = []
+        elif current_chapter is not None:
+            current_lines.append(line)
+            
+    if current_chapter:
+        chapters[current_chapter] = "\n".join(current_lines).strip()
+        
+    return chapters
+
 def main(kb_dir, template_path, output_path):
     entities_dir = os.path.join(kb_dir, "entities")
     if not os.path.exists(entities_dir):
@@ -35,6 +54,16 @@ def main(kb_dir, template_path, output_path):
     links = []
     topics_map = {}
     
+    # 0. Get current concept from state file
+    current_concept = None
+    state_path = os.path.join(entities_dir, "当前学习状态.md")
+    if os.path.exists(state_path):
+        _, state_body = parse_md(state_path)
+        state_chapters = parse_chapters(state_body)
+        current_concept = state_chapters.get("当前正在介绍概念", "无").strip()
+        if current_concept == "无":
+            current_concept = state_chapters.get("当前正在介绍的概念", "无").strip()
+        
     # 1. Parse all files
     for filepath in glob.glob(os.path.join(entities_dir, "*.md")):
         filename = os.path.basename(filepath)
@@ -44,12 +73,25 @@ def main(kb_dir, template_path, output_path):
         etype = fm.get('entity type', 'unknown')
         
         status = "pending"
-        if "状态：已掌握" in body:
-            status = "completed"
-        elif "状态：未开始" in body:
-            status = "pending"
-        elif "状态：正在学习" in body or "状态：正在介绍" in body:
-            status = "active"
+        chapters = parse_chapters(body)
+        
+        if etype == "概念":
+            # Normalize names to check if it's the active concept
+            is_active = False
+            if current_concept and current_concept != "无":
+                curr_c_base = current_concept.split('-')[-1].strip()
+                entity_base = entity_name.split('-')[-1].strip()
+                if current_concept.strip() == entity_name.strip() or curr_c_base == entity_base:
+                    is_active = True
+            
+            if is_active:
+                status = "active"
+            else:
+                progress = chapters.get("学习过程整理", "无").strip()
+                if progress and progress != "无" and progress != "":
+                    status = "completed"
+                else:
+                    status = "pending"
             
         mapped_type = "Unknown"
         if etype == "学习主题": mapped_type = "Learning Subject"
@@ -67,7 +109,7 @@ def main(kb_dir, template_path, output_path):
             "original_name": entity_name
         }
         
-        if mapped_type != "State":
+        if mapped_type != "State" and mapped_type != "学习日志":
             nodes.append(node)
             
         # extract relations
@@ -121,8 +163,45 @@ def main(kb_dir, template_path, output_path):
         if topic_node:
             topic_node["status"] = t_data["status"]
             
-    subway = list(topics_map.values())
+    # 2.1 Build subjects map and group topics under subjects
+    subjects_map = {}
+    for node in nodes:
+        if node["type"] == "Learning Subject":
+            subjects_map[node["id"]] = {
+                "subject": node["label"],
+                "original_name": node["id"],
+                "topics": []
+            }
+            
+    for link in links:
+        source = link["source"]
+        target = link["target"]
+        source_node = next((n for n in nodes if n["id"] == source), None)
+        if source_node and source_node["type"] == "Topic" and target in subjects_map:
+            t_data = topics_map.get(source)
+            if t_data and t_data not in subjects_map[target]["topics"]:
+                subjects_map[target]["topics"].append(t_data)
+                
+    subway = list(subjects_map.values())
     
+    # 3. Add virtual Root node to pull all subjects and logs together
+    root_node = {
+        "id": "Root",
+        "label": "学习主目录",
+        "type": "Root",
+        "status": "completed",
+        "info": "虚构的知识库根节点，用于拉近和统一管理不同的学习主题与日志。",
+        "original_name": "Root"
+    }
+    nodes.append(root_node)
+    
+    for node in nodes:
+        if node["id"] != "Root" and node["type"] == "Learning Subject":
+            links.append({
+                "source": "Root",
+                "target": node["id"]
+            })
+            
     data = {
         "nodes": nodes,
         "links": links,

@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# 获取脚本所在的绝对目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # 当前目录下的 skills 路径
-SOURCE_BASE="$(pwd)/skills"
+SOURCE_BASE="$SCRIPT_DIR/skills"
 
 if [ ! -d "$SOURCE_BASE" ]; then
     echo "错误：当前目录下未找到 'skills' 文件夹。"
@@ -18,6 +20,12 @@ for base_dir in "~/.agents" "~/.claude" "~/.gemini/antigravity-cli" "~/.gemini";
         TARGET_SKILLS_DIRS+=("$expanded_dir/skills")
     fi
 done
+
+# 额外探测：如果 ~/.codefuse/engine/cc/skills 已存在，也作为目标
+CODEFUSE_SKILLS_DIR="$HOME/.codefuse/engine/cc/skills"
+if [ -d "$CODEFUSE_SKILLS_DIR" ]; then
+    TARGET_SKILLS_DIRS+=("$CODEFUSE_SKILLS_DIR")
+fi
 
 # 如果未探测到任何基础目录，默认创建并安装到 ~/.agents/skills 与 ~/.gemini/antigravity-cli/skills
 if [ ${#TARGET_SKILLS_DIRS[@]} -eq 0 ]; then
@@ -44,9 +52,36 @@ if [[ "$global_confirm" != "y" && "$global_confirm" != "Y" ]]; then
     exit 0
 fi
 
-# 确保所有目标目录存在
+# 确保所有目标目录存在，并在各目标目录下创建 agents.md 说明文件（如果不存在）
 for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
     mkdir -p "$target_dir"
+
+    if [ ! -f "$target_dir/agents.md" ]; then
+        cat > "$target_dir/agents.md" <<EOF
+# Agent Skills
+
+这里的 agent skill 复制自 \`$SCRIPT_DIR\`。
+如果要变更和编辑 skill，优先编辑该路径并重新调用 \`link_skills.sh\`。
+EOF
+        echo " [新建安装] agents.md -> $target_dir/agents.md"
+    else
+        echo " [一致跳过] agents.md (已存在，无需更新)"
+    fi
+
+    # --- 对 agents.md 增加 Git 忽略和清理逻辑 ---
+    IS_GIT_REPO=false
+    if [ -d "$(dirname "$target_dir")/.git" ] || [ -d "$target_dir/.git" ]; then
+        IS_GIT_REPO=true
+    fi
+
+    if [ "$IS_GIT_REPO" = true ]; then
+        GITIGNORE_PATH="$target_dir/.gitignore"
+        if ! grep -qxF "agents.md" "$GITIGNORE_PATH" 2>/dev/null; then
+            echo "agents.md" >> "$GITIGNORE_PATH"
+            echo " [Git] 已将 agents.md 添加到 $GITIGNORE_PATH"
+        fi
+        (cd "$target_dir" && git rm --cached -r "agents.md" 2>/dev/null && echo " [Git] 已从缓存中从 $target_dir 移除 agents.md") || true
+    fi
 done
 
 echo "正在批量安装/同步技能..."
