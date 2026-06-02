@@ -1,6 +1,6 @@
 ---
 name: interview-processor
-description: 处理面试记录的 Agent 技能。包含面试大纲规划、面试提问提取与纠错、面试总结自评，以及知识图谱存储方案。
+description: 处理面试记录，包含面试大纲规划、提问提取与纠错、总结和知识图谱存储
 author: github/cafe3310
 license: Apache-2.0
 depends_on_skill:
@@ -91,6 +91,6 @@ depends_on_binary: []
 
 当用户触发本技能时，请根据当前所处的面试阶段，跳转至对应的子任务执行详细指南：
 
-*   **面试前**：[子任务 1：规划面试大纲](file:///Users/sipan/workspace/_working/public-agent-skills/skills/interview-processor/task-1-pre-interview.md) —— 结合简历、JD 生成定制化面试大纲。
-*   **面试后 (提问整理)**：[子任务 3：整理真实提问](file:///Users/sipan/workspace/_working/public-agent-skills/skills/interview-processor/task-3-post-interview-questions.md) —— 从录音转写中提炼、纠错、规范化面试官的所有真实提问。
-*   **面试后 (纪要总结)**：[子任务 2：整理面试纪要与评估](file:///Users/sipan/workspace/_working/public-agent-skills/skills/interview-processor/task-2-post-interview-summary.md) —— 生成面试总结报告、进行专家级面试官表现自评，并写入知识图谱。
+*   **面试前**：[子任务 1：规划面试大纲](task-1-pre-interview.md) —— 结合简历、JD 生成定制化面试大纲。
+*   **面试后 (提问整理)**：[子任务 3：整理真实提问](task-3-post-interview-questions.md) —— 从录音转写中提炼、纠错、规范化面试官的所有真实提问。
+*   **面试后 (纪要总结)**：[子任务 2：整理面试纪要与评估](task-2-post-interview-summary.md) —— 生成面试总结报告、进行专家级面试官表现自评，并写入知识图谱。

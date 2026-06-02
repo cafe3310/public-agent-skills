@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep Research Visualizer</title>
+    <title>深度研究可视化器 (Deep Research Visualizer)</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -236,31 +236,31 @@
 </head>
 <body>
     <div id="header">
-        <h3 style="margin:0; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Deep Research</h3>
+        <h3 style="margin:0; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">深度研究 (Deep Research)</h3>
         <div class="stats-box">
-            <div class="stat-item">ONGOING: <span id="stat-ongoing" class="stat-val ongoing">0</span></div>
-            <div class="stat-item">COMPLETED: <span id="stat-completed" class="stat-val" style="color:var(--success)">0</span></div>
-            <div class="stat-item">SOURCES: <span id="stat-links" class="stat-val">0</span></div>
+            <div class="stat-item">进行中: <span id="stat-ongoing" class="stat-val ongoing">0</span></div>
+            <div class="stat-item">已完成: <span id="stat-completed" class="stat-val" style="color:var(--success)">0</span></div>
+            <div class="stat-item">数据源: <span id="stat-links" class="stat-val">0</span></div>
             <div class="stat-item" style="border-left: 1px solid var(--border-color); padding-left: 12px; color: var(--text-muted); font-size: 0.75rem;">
-                SYNC: <span id="last-sync">--:--:--</span>
+                同步时间: <span id="last-sync">--:--:--</span>
             </div>
         </div>
-        <button id="report-btn" onclick="openReport()">VIEW REPORT</button>
+        <button id="report-btn" onclick="openReport()">查看报告</button>
     </div>
     
     <div id="main">
         <div id="left" class="panel">
-            <h2>Knowledge Graph</h2>
+            <h2>知识图谱 (Knowledge Graph)</h2>
             <div id="graph-container" style="flex: 1; width: 100%;"></div>
         </div>
         
         <div id="middle" class="panel">
-            <h2>Execution Flow</h2>
-            <div id="flow-container"><div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.8rem;">Initializing OS...</div></div>
+            <h2>执行流程 (Execution Flow)</h2>
+            <div id="flow-container"><div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.8rem;">正在初始化系统...</div></div>
         </div>
         
         <div id="right">
-            <h2 style="padding: 20px 20px 8px 20px; background: var(--bg-color); margin-bottom: 0;">Extracted Sources</h2>
+            <h2 style="padding: 20px 20px 8px 20px; background: var(--bg-color); margin-bottom: 0;">提取的来源 (Extracted Sources)</h2>
             <div id="links-container" style="overflow-y: auto; height: calc(100vh - 100px);"></div>
         </div>
     </div>
@@ -268,14 +268,14 @@
     <div id="modal">
         <div id="modal-content">
             <div style="position: sticky; top: -32px; background: var(--panel-bg); z-index: 10; padding: 10px 0; display: flex; justify-content: flex-end; gap: 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
-                <button id="autoscroll-btn" onclick="toggleAutoScroll()" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 2px; font-size: 0.75rem; font-family: var(--font-mono); cursor: pointer;">AUTO-SCROLL: OFF</button>
+                <button id="autoscroll-btn" onclick="toggleAutoScroll()" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 2px; font-size: 0.75rem; font-family: var(--font-mono); cursor: pointer;">自动滚动：关</button>
                 <span class="close-btn" onclick="closeReport()" style="position: static; font-size: 1.2rem; line-height: 1;">&times;</span>
             </div>
             <div id="report-body" class="markdown-body"></div>
         </div>
     </div>
 
-    <div id="toast">RESEARCH COMPLETED</div>
+    <div id="toast">研究已完成</div>
 
     <script>
         const chart = echarts.init(document.getElementById('graph-container'));
@@ -296,7 +296,7 @@
                 if(data.has_final_report) {
                     document.getElementById('report-btn').style.display = 'block';
                     if (!hasShownCompletion) {
-                        showToast("RESEARCH COMPLETED");
+                        showToast("研究已完成");
                         hasShownCompletion = true;
                     }
                 }
@@ -447,7 +447,7 @@
             
             isAutoScrolling = !isAutoScrolling;
             if (isAutoScrolling) {
-                btn.innerText = "AUTO-SCROLL: ON";
+                btn.innerText = "自动滚动：开";
                 btn.style.color = "var(--primary)";
                 
                 const scroll = () => {
@@ -460,7 +460,7 @@
                 };
                 scrollRequestId = requestAnimationFrame(scroll);
             } else {
-                btn.innerText = "AUTO-SCROLL: OFF";
+                btn.innerText = "自动滚动：关";
                 btn.style.color = "var(--text-main)";
                 cancelAnimationFrame(scrollRequestId);
             }

@@ -1,6 +1,6 @@
 ---
 name: online-content-collector
-description: 全库自动化素材剪藏。扫描 `#marker-待下载` 标签，生成下载列表，并本地化网页、视频及附件至 Obsidian 仓库。
+description: 对 Obsidian 仓库进行自动素材媒体剪藏，本地化特定 tag 标注的网页、视频及附件
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill: []

@@ -1,6 +1,6 @@
 ---
 name: project-design-concept-organizer
-description: 作为一个 doc-todo-log-loop 的补充技能，用于在开发过程中整理、归纳项目的设计理念、核心概念和架构模式。旨在将分散的开发决策和隐性知识转化为系统的设计文档。
+description: 补充 doc-todo-log-loop，在开发过程中归纳项目的设计理念和架构模式，将开发决策和隐性知识转化为系统的设计文档
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill:

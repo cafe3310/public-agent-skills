@@ -1,6 +1,6 @@
 ---
 name: content-tone-adjuster
-description: 内容语气调整技能，提供「去 AI 腔调」、「平实务实化」、「极简直白风」等三种文本风格调整方向。通过交互式询问用户意图，加载对应规则，进行文本改写。
+description: 调整内容风格，提供「去 AI 腔调」「平实务实化」「极简直白风」三种方向
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill: []

@@ -14,8 +14,8 @@
 
 ## 关联来源文档
 
-- 原始需求文档：[2026-05-27-20-26-original-requirements.md](file:///Users/sipan/workspace/_working/public-agent-skills/skills/interview-processor/2026-05-27-20-26-original-requirements.md)
-- 关联技能：[memories-off SKILL.md](file:///Users/sipan/.gemini/antigravity-cli/skills/memories-off/SKILL.md)
+- 原始需求文档：[2026-05-27-20-26-original-requirements.md](2026-05-27-20-26-original-requirements.md)
+- 关联技能：[memories-off SKILL.md](~/.gemini/antigravity-cli/skills/memories-off/SKILL.md)
 
 ---
 

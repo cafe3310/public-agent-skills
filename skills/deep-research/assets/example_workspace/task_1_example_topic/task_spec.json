@@ -1,5 +1,5 @@
 {
-  "task_name": "Example Topic Name",
-  "goal": "Describe what this specific task should achieve.",
-  "keywords": ["keyword1", "keyword2"]
+  "task_name": "示例主题名称",
+  "goal": "描述此特定任务应达成的目标。",
+  "keywords": ["关键词1", "关键词2"]
 }

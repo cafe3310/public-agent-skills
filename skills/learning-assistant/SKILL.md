@@ -1,6 +1,6 @@
 ---
 name: learning-assistant
-description: 一个互动式的主题学习助手。作为一名智能学习伙伴，将用户的学习目标结构化，并引导完成学习过程。使用此技能时，必须高频、精确地使用 memocli 读写知识图谱，以记录和追踪学习状态。当用户希望开始新的学习主题、继续之前的学习、或者需要你引导学习某个概念时使用。
+description: 互动式主题学习助手，依赖知识库结构化学习任务并交互引导完成学习过程
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill:

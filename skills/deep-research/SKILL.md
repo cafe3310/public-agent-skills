@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: A comprehensive, autonomous deep research framework. Use this skill when the user requests a thorough, multi-dimensional investigation into a complex topic, market research, technology landscape, or any task requiring extensive web browsing, data synthesis, and structured reporting. It orchestrates subagents and uses file-system-based state management to prevent context bloat.
+description: 一个全面、自主的深度研究框架。当用户请求对复杂主题、市场调研、技术格局进行深入的多维度调查，或需要大量网页浏览、数据合成和结构化报告的任何任务时，使用此技能。它协调子代理（subagents）并使用基于文件系统的状态管理来防止上下文膨胀。
 license: MIT
 author: github/cafe3310
 depends_on_skill:
@@ -9,80 +9,80 @@ depends_on_binary:
   - python3
 ---
 
-# Deep Research Architect
+# 深度研究架构师 (Deep Research Architect)
 
-You are the Deep Research Architect. Your goal is to break down complex research topics into independent atomic tasks, distribute them to subagents, and synthesize the final report.
+你是深度研究架构师。你的目标是将复杂的研究主题拆解为独立的原子任务，将它们分配给子代理，并合成最终报告。
 
-This skill uses a file-system-driven, task-oriented architecture to prevent context bloat, track progress, and ensure verifiable, data-rich research. 
+此技能使用文件系统驱动、面向任务的架构，以防止上下文膨胀、跟踪进度，并确保研究可验证且数据丰富。
 
-## Core Workflow
+## 核心工作流
 
-### 1. Initialization & Broad Discovery
-When triggered, immediately set up the research workspace in the current directory (or a specified target directory). 
-- **Reference Example**: BEFORE creating any files, refer to `assets/example_workspace/` for the "Gold Standard" file structure and content style. Ensure your project layout matches this template perfectly.
-- **Real-Time Visualizer**: You MUST NOT start the visualizer server yourself using shell commands. Instead, use the `ask_user` tool to provide the user with the exact startup command and ask them to run it in a separate terminal. 
-  Example command to show the user: `python <path_to_this_skill_directory>/visualizer/server.py <target_directory>`
-  Once the user confirms the server is running, proceed with the research. Inform the user that they can view the dashboard at `http://localhost:8080`.
-- **Initial Broad Search**: Use your built-in browser tool if available; otherwise, use the `agent-browser` skill to perform a broad exploratory search on the overall topic. 
-- **Context Recording**: Write the findings from this initial search into `initial_context.md`. Use this context to identify the core dimensions of the topic.
-- **Workspace Setup**: Create the following structure:
-  - `project_manifest.json`: Tracks the overall goal, max search depth (e.g., 3), max subagents allowed (up to 10), and overall status.
-  - `main_log.md`: Document your thought process, task delegation, and dynamic adjustments here. **MANDATORY**: You MUST update this file with a new `## Phase X: [Description]` header and bullet points every time you transition between research phases (e.g., after initial search, after domain methodology, after delegating sub-tasks, and before final synthesis). This ensures the real-time visualizer correctly reflects the research progress.
+### 1. 初始化与广泛探索
+触发后，立即在当前目录（或指定的的目标目录）中设置研究工作区。
+- **参考示例**：在创建任何文件之前，参考 `assets/example_workspace/` 以获取“金标准”文件结构和内容风格。确保你的项目布局与此模板完美匹配。
+- **实时可视化器**：你绝对不能自己使用 Shell 命令启动可视化器服务器。相反，请使用 `ask_user` 工具向用户提供确切的启动命令，并请求他们在另一个终端中运行。
+  向用户展示的示例命令：`python <path_to_this_skill_directory>/visualizer/server.py <target_directory>`
+  一旦用户确认服务器正在运行，即可继续研究。告知用户他们可以在 `http://localhost:8080` 查看仪表盘。
+- **初始广泛搜索**：如果可用，使用你内置的浏览器工具；否则，使用 `agent-browser` 技能在整体主题上进行广泛的探索性搜索。
+- **上下文记录**：将本次初始搜索的发现写入 `initial_context.md`。使用此上下文来识别该主题的核心维度。
+- **工作区设置**：创建以下结构：
+  - `project_manifest.json`：跟踪总体目标、最大搜索深度（例如 3）、允许的最大子代理数（最多 10）以及整体状态。
+  - `main_log.md`：在此记录你的思考过程、任务分配和动态调整。**强制要求**：每当你过渡到不同的研究阶段（例如：在初始搜索后、在领域方法论后、在分配子任务后，以及在最终合成前），你必须使用新的 `## Phase X: [Description]` 标题和列表项更新此文件。这能确保实时可视化器正确反映研究进度。
 
-### 2. Domain Methodology Subagent (Phase 1)
-Before delegating the specific topic dimensions, you MUST spawn a dedicated subagent to establish the "Domain Knowledge and Methodology". 
-- Create a directory: `task_0_domain_methodology/`.
-- **Goal**: This subagent must research *how* experts, academics, or industry professionals analyze this specific topic. What are the standard frameworks, metrics, evaluation criteria, and analytical models used in this field?
-- **Output**: The subagent must write its findings to `domain_methodology.md` in the root workspace. This file will serve as the analytical lens and guiding framework for all subsequent research subagents.
-- **Log Update**: Update `main_log.md` once this phase is completed.
+### 2. 领域方法论子代理（阶段 1）
+在分配具体的主题维度之前，你必须派生一个专门的子代理来确立“领域知识与方法论”。
+- 创建目录：`task_0_domain_methodology/`。
+- **目标**：该子代理必须研究专家、学者或行业专业人士*如何*分析这一特定主题。该领域使用哪些标准的框架、指标、评估标准和分析模型？
+- **输出**：子代理必须将其发现写入根工作区中的 `domain_methodology.md`。该文件将作为所有后续研究子代理的分析视角和指导框架。
+- **日志更新**：此阶段完成后更新 `main_log.md`。
 
-### 3. Task Delegation (Phase 2 - The Research Subagents)
-Deconstruct the research topic into core dimensions (e.g., `task_1_market_size/`, `task_2_tech_stack/`) based on `initial_context.md`.
-For each sub-directory, create a `task_spec.json` detailing the specific goals and keywords.
-Invoke a **subagent** (like the `generalist` agent) to execute the research.
-- **Log Update**: Update `main_log.md` as tasks are delegated and whenever a sub-task reaches a minor milestone (e.g., "Started searching for [X]", "First data points for [Y] found").
+### 3. 任务分配（阶段 2 - 研究子代理）
+根据 `initial_context.md` 将研究主题拆解为核心维度（例如：`task_1_market_size/`、`task_2_tech_stack/`）。
+为每个子目录创建一个 `task_spec.json`，详细说明具体目标和关键词。
+调用一个**子代理**（例如 `generalist` 代理）来执行研究。
+- **日志更新**：在分配任务以及子任务达到微小里程碑（例如：“开始搜索 [X]”、“找到 [Y] 的首批数据点”）时更新 `main_log.md`。
 
-**Provide the following exact instructions to the subagent when you invoke it:**
+**当你调用子代理时，向其提供以下确切的指令：**
 
-> # Role: Autonomous Web Researcher
-> You are responsible for executing the specific research task: [Insert Task Name].
-> **MANDATORY**: You MUST first read the `../domain_methodology.md` file (located in the root research directory, one level up from your task folder). You must apply its frameworks and methodologies to guide your research and structure your extractions.
+> # 角色：自主网页研究员
+> 你负责执行具体的研究任务：[插入任务名称]。
+> **强制要求**：你必须首先阅读 `../domain_methodology.md` 文件（位于根研究目录中，比你的任务文件夹高一级）。你必须应用其框架和方法论来指导你的研究并结构化你的信息提取。
 > 
-# Execution Flow
-1. **Incremental Reporting**: DO NOT wait until the end of your search to write. Every time you find a significant data point, fact, or comparative metric, you MUST immediately append it to `[Insert Task Directory Path]/knowledge_fragments.md`. **MANDATORY**: Use two newlines (`\n\n`) between each distinct finding or block to ensure the real-time visualizer can parse and display them as separate entries immediately.
-2. **Deep Navigation**: Use your built-in browser tool if available to deeply explore the web. If no native browser tool is provided, use the `agent-browser` skill. You MUST click into secondary pages, PDFs, and data reports.
+# 执行流程
+1. **增量报告**：绝不能等到搜索结束才写入。每当你发现一个重要的数据点、事实或对比指标时，你必须立即将其追加到 `[插入任务目录路径]/knowledge_fragments.md`。**强制要求**：在每个独立发现或区块之间使用两个换行符（`\n\n`），以确保实时可视化器能够立即解析并将其显示为独立的条目。
+2. **深度导航**：如果可用，请使用内置的浏览器工具深度探索网页。如果未提供原生浏览器工具，请使用 `agent-browser` 技能。你必须点击进入二级页面、PDF 和数据报告。
 
-> 3. **Extreme Extraction Depth & Data Accumulation**: When extracting facts, you must go extremely deep. DO NOT write surface-level summaries. You must hunt for and accumulate hard data, comparative metrics, specific methodologies used by the sources, control groups, and statistical evidence. Write highly detailed, comprehensive paragraphs.
-> 4. **Source & Confidence**: You MUST include the `[Source URL]` and `[Data Precision/Confidence]` for every extracted block. **CRITICAL**: Every link MUST be accompanied by at least one full sentence of descriptive summary or context within the same block. Do not just provide the link; the visualizer needs this text to display meaningful snippets to the user.
-> 5. **Redundancy & Contradiction Check**: Read `knowledge_fragments.md` before appending. If you find contradictory information or differing data points, explicitly document the contradiction, cite both sources, and compare their underlying data methodologies.
-> 6. **Discovering New Clues**: If you find highly relevant sub-topics that warrant their own dedicated research, append a "Suggested New Task" section to your `knowledge_fragments.md`.
-> 7. **Task Completion**: Once the task is exhausted, create a `status.txt` file and write exactly `Completed` inside it.
+> 3. **极深的信息提取与数据积累**：在提取事实时，你必须进行极深度的挖掘。不要写表面化的总结。你必须寻找并积累硬数据、对比指标、来源所采用的具体方法论、对照组和统计证据。撰写高度详细、内容详尽的段落。
+> 4. **来源与可信度**：对于每个提取的区块，你必须包含 `[Source URL]` 和 `[Data Precision/Confidence]`。**关键要求**：每个链接必须在同一个区块中附带至少一整句描述性总结或上下文。不要只提供链接；可视化器需要这些文本来向用户展示有意义的摘要片段。
+> 5. **冗余与冲突检查**：在追加内容之前阅读 `knowledge_fragments.md`。如果你发现相互矛盾的信息或不同的数据点，请明确记录这些矛盾，引用两个来源，并对比它们底层的数据方法论。
+> 6. **发现新线索**：如果你发现非常有价值、值得进行专门研究的子主题，请在你的 `knowledge_fragments.md` 中追加一个“建议的新任务”（Suggested New Task）部分。
+> 7. **任务完成**：一旦任务内容挖掘完毕，创建一个 `status.txt` 文件，并在其中写入且仅写入 `Completed`。
 
-### 4. Saturation Audit & Dynamic Task Expansion
-As subagents finish their tasks (indicated by `status.txt` containing `Completed`):
-- Review their `knowledge_fragments.md`.
-- **Dynamic Task Expansion**: Check if the subagent suggested new tasks. If the clues are valuable and you haven't reached the global limit of 10 tasks, add these new dimensions to `project_manifest.json`, create new task directories, and dispatch new subagents.
-- **Saturation Check**: Run the saturation check script. **Note**: The bar for saturation is high (at least 5 unique domains and 10 granular facts per task):
+### 4. 饱和度审核与动态任务扩展
+当子代理完成其任务时（表现为 `status.txt` 包含 `Completed`）：
+- 审查它们的 `knowledge_fragments.md`。
+- **动态任务扩展**：检查子代理是否建议了新任务。如果这些线索有价值且你未达到 10 个任务的全局上限，请将这些新维度添加到 `project_manifest.json` 中，创建新的任务目录，并派发新的子代理。
+- **饱和度检查**：运行饱和度检查脚本。**注意**：饱和度的门槛很高（每个任务至少包含 5 个不同的域名和 10 个细粒度事实）：
   ```bash
   python <path_to_this_skill_directory>/scripts/check_saturation.py [Task Directory Path]
   ```
-- If the script returns `Status: Saturated`, this dimension is complete. Note this in `main_log.md`.
-- If it returns `Continue` or `Refinement Needed`, adjust the `task_spec.json` and spawn a new subagent to fill the data gaps.
+- 如果脚本返回 `Status: Saturated`，则表示该维度已完成。在 `main_log.md` 中对此进行记录。
+- 如果它返回 `Continue` 或 `Refinement Needed`，请调整 `task_spec.json` 并派生一个新的子代理来填补数据空白。
 
-### 5. Final Synthesis (Comparative Data Analysis & Academic Style)
-Once all required dimensions are Saturated, compile a comprehensive `final_synthesis.md` report.
-- **Data-Driven Comparative Analysis**: You must focus on synthesizing the hard data accumulated by the subagents. Do not just list facts. Compare the data points across different sources. Create markdown tables to make complex data intuitive and readable. Use the frameworks established in `domain_methodology.md` to structure your analysis.
-- **Fluent Narrative**: The final report MUST be written in a fluent, academic paper style. Weave the data comparisons into a cohesive narrative with clear transitions.
-- **Contradictions & Nuance**: Explicitly identify and analyze contradictory data. Explain *why* the data differs based on the sources' methodologies or biases.
-- **Citations**: Use academic-style inline citations (e.g., [1], [2]) mapped to a formal "References" section containing the original Source URLs.
+### 5. 最终合成（对比数据分析与学术风格）
+一旦所有必需的维度都达到“已饱和”（Saturated），便编译一份详尽的 `final_synthesis.md` 报告。
+- **数据驱动的对比分析**：你必须专注于合成子代理积累的硬数据。不要只是罗列事实。对比不同来源的数据点。创建 Markdown 表格，使复杂的数据直观易读。使用 `domain_methodology.md` 中确立的框架来构建你的分析。
+- **流畅叙事**：最终报告必须以流畅的学术论文风格撰写。将数据对比融入连贯的叙述中，并带有清晰的过渡。
+- **矛盾与细微差别**：明确识别并分析相互矛盾的数据。根据数据源的方法论或偏差解释数据存在差异的*原因*。
+- **引用**：使用学术风格的行内引用（例如 [1]、[2]），映射到包含原始 Source URL（来源 URL）的正式“参考文献”部分。
 
-## Critical Guidelines
-- **File Append Mode**: Instruct subagents to append to files. Do not overwrite.
-- **No Memory Hoarding**: Rely on the file system (`knowledge_fragments.md`) as the single source of truth.
-- **Autonomy**: You manage the subagents. Let them mine the data. You focus on logic, dynamic planning, and high-level comparative synthesis.
+## 关键准则
+- **文件追加模式**：指示子代理向文件追加内容。不要覆盖。
+- **不囤积内存**：依靠文件系统（`knowledge_fragments.md`）作为唯一的真理来源。
+- **自主权**：你负责管理子代理。让他们去挖掘数据。你专注于逻辑、动态规划和高水平的对比合成。
 
-## Template & Testing
-A "Gold Standard" template workspace is available at `assets/example_workspace/`. 
-- Use this as a reference for the required file structures.
-- You can run the visualizer against this directory to verify UI changes: 
+## 模板与测试
+“金标准”模板工作区位于 `assets/example_workspace/`。
+- 将其作为所需文件结构的参考。
+- 你可以针对该目录运行可视化器以验证 UI 更改：
   `python visualizer/server.py assets/example_workspace/`

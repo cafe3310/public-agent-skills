@@ -1,11 +1,13 @@
 {
-  "task_name": "Market Size & Growth",
-  "goal": "Determine the Total Addressable Market (TAM) and Compound Annual Growth Rate (CAGR) for AI coding tools.",
+  "task_name": "市场规模与增长",
+  "goal": "确定 AI 编程工具的潜在市场总额 (TAM) 和复合年增长率 (CAGR)。",
   "keywords": [
     "market size",
     "TAM",
     "CAGR",
     "billion",
-    "revenue"
+    "revenue",
+    "市场规模",
+    "营收"
   ]
 }

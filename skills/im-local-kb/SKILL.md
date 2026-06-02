@@ -1,6 +1,6 @@
 ---
 name: im-local-kb
-description: IM 知识整理和分析技能，专注于从聊天记录中提取高价值的知识。
+description: IM 知识整理和分析技能，专注于从聊天记录中提取高价值的知识
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill: []

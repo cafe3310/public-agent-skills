@@ -1,0 +1,7 @@
+{
+  "project_name": "Example Research Project",
+  "goal": "Explain the goal of your research here.",
+  "max_search_depth": 3,
+  "max_subagents": 5,
+  "status": "In Progress"
+}

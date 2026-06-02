@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Research Visualizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: oklch(18% 0.01 260);
+            --panel-bg: oklch(22% 0.01 260);
+            --panel-bg-elevated: oklch(26% 0.02 260);
+            --border-color: oklch(30% 0.02 260);
+            --text-main: oklch(88% 0.01 260);
+            --text-muted: oklch(60% 0.01 260);
+            --primary: oklch(65% 0.15 255);
+            --success: oklch(70% 0.12 150);
+            --warning: oklch(60% 0.15 30);
+            --font-mono: "JetBrains Mono", "Fira Code", monospace;
+            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body { 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            font-family: var(--font-sans); 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            overflow: hidden;
+        }
+        
+        #header { 
+            height: 48px; 
+            background: var(--panel-bg); 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 16px; 
+        }
+
+        .stats-box { 
+            display: flex; 
+            gap: 16px; 
+            font-size: 0.8rem; 
+            font-family: var(--font-mono);
+        }
+        .stat-item { display: flex; align-items: center; gap: 4px; }
+        .stat-val { font-weight: 600; color: var(--primary); }
+        .stat-val.ongoing { color: var(--warning); }
+        
+        #main { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            background: var(--bg-color);
+        }
+        
+        .panel { 
+            padding: 20px; 
+            overflow-y: auto; 
+            box-sizing: border-box; 
+            background: var(--panel-bg); 
+        }
+        
+        #left { width: 45%; border-right: 1px solid var(--border-color); display: flex; flex-direction: column;}
+        #middle { width: 30%; border-right: 1px solid var(--border-color); }
+        #right { width: 25%; background: var(--bg-color); padding: 0; }
+        
+        h2 { 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+            margin: 0 0 16px 0; 
+            color: var(--text-muted); 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 8px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            font-family: var(--font-mono);
+        }
+
+        /* Flowchart Styles */
+        .step { 
+            margin-bottom: 20px; 
+            padding-left: 16px; 
+            border-left: 1px solid var(--border-color); 
+            position: relative; 
+        }
+        .step::before { 
+            content: ''; 
+            position: absolute; 
+            left: -4.5px; 
+            top: 4px; 
+            width: 8px; 
+            height: 8px; 
+            background: var(--bg-color); 
+            border: 1px solid var(--border-color); 
+            border-radius: 1px;
+        }
+        .step.active { border-left-color: var(--warning); }
+        .step.active::before { background: var(--warning); border-color: var(--warning); }
+        .step.done { border-left-color: var(--success); }
+        .step.done::before { background: var(--success); border-color: var(--success); }
+        
+        .step h3 { 
+            margin: 0 0 8px 0; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            color: var(--text-main);
+        }
+        
+        .step ul { 
+            margin: 0; 
+            padding-left: 12px; 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            line-height: 1.4; 
+        }
+        .step li { margin-bottom: 6px; }
+
+        /* Spinner */
+        .loader { 
+            border: 1px solid var(--border-color); 
+            border-top: 1px solid var(--warning); 
+            border-radius: 50%; 
+            width: 10px; 
+            height: 10px; 
+            animation: spin 0.8s linear infinite; 
+            display: inline-block; 
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Links List */
+        .link-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            transition: background 0.15s ease-out;
+        }
+        .link-item:hover { background: var(--panel-bg); }
+        
+        .link-pill { 
+            display: inline-block; 
+            color: var(--primary); 
+            font-size: 0.75rem; 
+            font-family: var(--font-mono);
+            text-decoration: none; 
+            margin-bottom: 4px; 
+        }
+        .link-pill:hover { text-decoration: underline; }
+        
+        .link-snippet { 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            line-height: 1.4; 
+            word-break: break-word;
+        }
+
+        /* Report Modal & UI Elements */
+        #report-btn { 
+            display: none; 
+            background: var(--primary); 
+            color: var(--bg-color); 
+            border: none; 
+            padding: 4px 12px; 
+            border-radius: 2px; 
+            font-weight: 600; 
+            font-size: 0.8rem;
+            cursor: pointer; 
+            transition: filter 0.15s ease-out;
+        }
+        #report-btn:hover { filter: brightness(1.1); }
+        
+        #modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        #modal-content { 
+            background: var(--panel-bg); 
+            width: 85%; 
+            max-width: 1000px; 
+            height: 90%; 
+            border-radius: 2px; 
+            padding: 32px; 
+            overflow-y: auto; 
+            position: relative; 
+            border: 1px solid var(--border-color);
+        }
+        .close-btn { position: absolute; top: 16px; right: 16px; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+        .close-btn:hover { color: var(--text-main); }
+        
+        .markdown-body { 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            color: var(--text-main); 
+        }
+        .markdown-body h1, .markdown-body h2 { 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 0.3em; 
+            font-family: var(--font-mono);
+        }
+
+        #toast { 
+            position: fixed; 
+            bottom: 24px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--primary); 
+            color: var(--bg-color); 
+            padding: 8px 24px; 
+            border-radius: 2px; 
+            font-weight: 600; 
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            display: none; 
+            z-index: 2000; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
+            animation: slideUp 0.3s ease-out-expo; 
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h3 style="margin:0; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Deep Research</h3>
+        <div class="stats-box">
+            <div class="stat-item">ONGOING: <span id="stat-ongoing" class="stat-val ongoing">0</span></div>
+            <div class="stat-item">COMPLETED: <span id="stat-completed" class="stat-val" style="color:var(--success)">0</span></div>
+            <div class="stat-item">SOURCES: <span id="stat-links" class="stat-val">0</span></div>
+            <div class="stat-item" style="border-left: 1px solid var(--border-color); padding-left: 12px; color: var(--text-muted); font-size: 0.75rem;">
+                SYNC: <span id="last-sync">--:--:--</span>
+            </div>
+        </div>
+        <button id="report-btn" onclick="openReport()">VIEW REPORT</button>
+    </div>
+    
+    <div id="main">
+        <div id="left" class="panel">
+            <h2>Knowledge Graph</h2>
+            <div id="graph-container" style="flex: 1; width: 100%;"></div>
+        </div>
+        
+        <div id="middle" class="panel">
+            <h2>Execution Flow</h2>
+            <div id="flow-container"><div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.8rem;">Initializing OS...</div></div>
+        </div>
+        
+        <div id="right">
+            <h2 style="padding: 20px 20px 8px 20px; background: var(--bg-color); margin-bottom: 0;">Extracted Sources</h2>
+            <div id="links-container" style="overflow-y: auto; height: calc(100vh - 100px);"></div>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div id="modal-content">
+            <div style="position: sticky; top: -32px; background: var(--panel-bg); z-index: 10; padding: 10px 0; display: flex; justify-content: flex-end; gap: 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <button id="autoscroll-btn" onclick="toggleAutoScroll()" style="background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 2px; font-size: 0.75rem; font-family: var(--font-mono); cursor: pointer;">AUTO-SCROLL: OFF</button>
+                <span class="close-btn" onclick="closeReport()" style="position: static; font-size: 1.2rem; line-height: 1;">&times;</span>
+            </div>
+            <div id="report-body" class="markdown-body"></div>
+        </div>
+    </div>
+
+    <div id="toast">RESEARCH COMPLETED</div>
+
+    <script>
+        const chart = echarts.init(document.getElementById('graph-container'));
+        let currentGraphData = null;
+        let lastGraphString = "";
+        let hasShownCompletion = false;
+        let scrollRequestId;
+        let isAutoScrolling = false;
+
+        async function fetchData() {
+            try {
+                const res = await fetch('/api/data');
+                const data = await res.json();
+                updateStats(data);
+                renderFlow(data.status_flow, data.has_final_report);
+                renderLinks(data.links);
+                
+                if(data.has_final_report) {
+                    document.getElementById('report-btn').style.display = 'block';
+                    if (!hasShownCompletion) {
+                        showToast("RESEARCH COMPLETED");
+                        hasShownCompletion = true;
+                    }
+                }
+
+                const graphString = JSON.stringify(data.graph);
+                if (graphString !== lastGraphString) {
+                    currentGraphData = data.graph;
+                    renderGraph();
+                    lastGraphString = graphString;
+                }
+
+                const now = new Date();
+                document.getElementById('last-sync').innerText = now.toTimeString().split(' ')[0];
+            } catch(e) { console.error("Error fetching data:", e); }
+        }
+
+        function updateStats(data) {
+            document.getElementById('stat-ongoing').innerText = data.global_stats.ongoing;
+            document.getElementById('stat-completed').innerText = data.global_stats.completed;
+            document.getElementById('stat-links').innerText = data.global_stats.total_links;
+        }
+
+        function renderGraph() {
+            if(!currentGraphData) return;
+
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: { 
+                    formatter: function(params) { return `<div style="max-width: 300px; white-space: normal; font-family: var(--font-sans);">${params.data.name}</div>`; },
+                    backgroundColor: 'oklch(22% 0.01 260)', textStyle: { color: 'oklch(88% 0.01 260)', fontSize: 11 }, borderWidth: 1, borderColor: 'oklch(30% 0.02 260)'
+                },
+                series: [{
+                    type: 'graph', layout: 'force',
+                    data: currentGraphData.nodes.map(n => {
+                        let style = {};
+                        if(n.category === 0) style = {color: 'oklch(60% 0.2 20)'};
+                        else if(n.category === 1) style = {color: 'oklch(75% 0.15 80)'};
+                        else if(n.category === 2) style = {color: 'oklch(65% 0.15 255)'};
+                        else if(n.category === 3) style = {color: 'oklch(70% 0.12 150)'};
+                        
+                        if(n.category === 2 && !n.is_completed) {
+                            style.borderColor = 'oklch(65% 0.15 255)';
+                            style.borderWidth = 1;
+                        }
+                        return {...n, value: n.name, itemStyle: style};
+                    }),
+                    links: currentGraphData.links,
+                    roam: true,
+                    label: {
+                        show: true, position: 'right', distance: 6, fontSize: 10, color: 'oklch(88% 0.01 260)', fontFamily: 'var(--font-mono)',
+                        formatter: function(params) {
+                            if(params.data.category === 3) return ''; 
+                            return params.data.name.length > 20 ? params.data.name.substring(0, 20) + '...' : params.data.name;
+                        }
+                    },
+                    lineStyle: { color: 'oklch(30% 0.02 260)', width: 1, curveness: 0.1 },
+                    force: { 
+                        repulsion: 80, 
+                        edgeLength: [40, 100], 
+                        gravity: 0.05,
+                        friction: 0.6,
+                        layoutAnimation: false
+                    },
+                    draggable: true
+                }]
+            };
+            chart.setOption(option, { notMerge: false, lazyUpdate: true });
+
+            // Auto-fit to view
+            setTimeout(() => {
+                const model = chart.getModel();
+                if (!model) return;
+                const series = model.getSeriesByIndex(0);
+                if (!series) return;
+                const data = series.getData();
+                let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                let found = false;
+                
+                for (let i = 0; i < data.count(); i++) {
+                    const layout = data.getItemLayout(i);
+                    if (layout && !isNaN(layout[0]) && !isNaN(layout[1])) {
+                        minX = Math.min(minX, layout[0]);
+                        maxX = Math.max(maxX, layout[0]);
+                        minY = Math.min(minY, layout[1]);
+                        maxY = Math.max(maxY, layout[1]);
+                        found = true;
+                    }
+                }
+
+                if (found) {
+                    const width = maxX - minX || 100;
+                    const height = maxY - minY || 100;
+                    const containerWidth = chart.getWidth();
+                    const containerHeight = chart.getHeight();
+                    const padding = 60;
+                    
+                    const zoom = Math.min(
+                        (containerWidth - padding * 2) / width,
+                        (containerHeight - padding * 2) / height,
+                        1.2 // Max zoom cap
+                    );
+                    
+                    chart.setOption({
+                        series: [{
+                            center: [(minX + maxX) / 2, (minY + maxY) / 2],
+                            zoom: zoom
+                        }]
+                    });
+                }
+            }, 200);
+        }
+
+        function renderFlow(flowData, hasReport) {
+            const container = document.getElementById('flow-container');
+            if (!flowData || flowData.length === 0) return;
+
+            container.innerHTML = flowData.map((step, i) => {
+                let isOngoing = (i === flowData.length - 1 && !hasReport);
+                let statusClass = isOngoing ? 'active' : 'done';
+                let icon = isOngoing ? '<div class="loader"></div>' : '';
+
+                return `
+                <div class="step ${statusClass}">
+                    <h3>${step.step.toUpperCase()} ${icon}</h3>
+                    <ul>${step.details.map(d => `<li>${d}</li>`).join('')}</ul>
+                </div>
+            `}).join('');
+        }
+
+        function renderLinks(linksData) {
+            const container = document.getElementById('links-container');
+            if (!linksData || linksData.length === 0) return;
+
+            container.innerHTML = linksData.map(link => {
+                const snippetHtml = link.snippet ? `<div class="link-snippet">${link.snippet}</div>` : '';
+                return `
+                    <div class="link-item">
+                        <a href="${link.url}" target="_blank" class="link-pill">${link.domain.toUpperCase()}</a>
+                        ${snippetHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleAutoScroll() {
+            const btn = document.getElementById('autoscroll-btn');
+            const container = document.getElementById('modal-content');
+            
+            isAutoScrolling = !isAutoScrolling;
+            if (isAutoScrolling) {
+                btn.innerText = "AUTO-SCROLL: ON";
+                btn.style.color = "var(--primary)";
+                
+                const scroll = () => {
+                    container.scrollTop += 2.5; // Restored smooth scrolling speed
+                    if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1) {
+                        toggleAutoScroll(); // Stop at bottom
+                    } else {
+                        scrollRequestId = requestAnimationFrame(scroll);
+                    }
+                };
+                scrollRequestId = requestAnimationFrame(scroll);
+            } else {
+                btn.innerText = "AUTO-SCROLL: OFF";
+                btn.style.color = "var(--text-main)";
+                cancelAnimationFrame(scrollRequestId);
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
+        }
+
+        async function openReport() {
+            const res = await fetch('/api/report');
+            const markdown = await res.text();
+            document.getElementById('report-body').innerHTML = marked.parse(markdown);
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeReport() { 
+            if (isAutoScrolling) toggleAutoScroll();
+            document.getElementById('modal').style.display = 'none'; 
+        }
+
+        fetchData();
+        setInterval(fetchData, 2000); 
+        window.addEventListener('resize', () => chart.resize());
+    </script>
+</body>
+</html>

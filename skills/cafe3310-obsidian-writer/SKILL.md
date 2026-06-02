@@ -1,6 +1,6 @@
 ---
 name: cafe3310-obsidian-writer
-description: 编写符合 cafe3310 的 Obsidian 仓库风格的文档。
+description: 编写符合 cafe3310 的 Obsidian 仓库风格的文档
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill: []

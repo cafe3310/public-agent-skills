@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: 编写或更新交接文档，以便拥有全新上下文的下一个 Agent 可以继续此项工作。
+description: 编写或更新交接文档，让全新上下文的下一个 Agent 可以继续工作
 argument-hint: "下一阶段的任务目标是什么？"
 license: Apache-2.0
 author: github/cafe3310

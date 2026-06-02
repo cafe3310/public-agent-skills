@@ -1,6 +1,6 @@
 ---
 name: doc-template-provider
-description: 此技能提供一系列文档模板，涵盖常见的文档类型，包括 Jira 需求。
+description: 提供文档模板，涵盖常见文档类型，包括 Jira 需求
 license: Apache-2.0
 author: github/cafe3310
 depends_on_skill: []

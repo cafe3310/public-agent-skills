@@ -16,21 +16,21 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 files = os.listdir(cwd)
             except:
-                files = ["Unable to list directory"]
+                files = ["无法列出目录内容"]
             error_html = f"""
             <html>
-            <head><title>404 Not Found</title></head>
+            <head><title>404 页面未找到</title></head>
             <body style="font-family: sans-serif; padding: 2rem; background: #f8f9fa;">
-                <h1 style="color: #dc3545;">404 Not Found</h1>
-                <p>The requested path <code>{self.path}</code> was not found.</p>
+                <h1 style="color: #dc3545;">404 页面未找到</h1>
+                <p>请求的路径 <code>{self.path}</code> 未找到。</p>
                 <hr>
-                <p><b>Diagnostic Info:</b></p>
+                <p><b>诊断信息：</b></p>
                 <ul>
-                    <li><b>Current Working Directory:</b> <code>{cwd}</code></li>
-                    <li><b>Files in CWD:</b> <code>{", ".join(files)}</code></li>
-                    <li><b>RESEARCH_DIR:</b> <code>{os.environ.get("RESEARCH_DIR", "Not Set")}</code></li>
+                    <li><b>当前工作目录：</b> <code>{cwd}</code></li>
+                    <li><b>当前目录下的文件：</b> <code>{", ".join(files)}</code></li>
+                    <li><b>研究目录 (RESEARCH_DIR)：</b> <code>{os.environ.get("RESEARCH_DIR", "未设置")}</code></li>
                 </ul>
-                <p>Make sure you are running the server from the directory containing <code>index.html</code>.</p>
+                <p>请确保您在包含 <code>index.html</code> 的目录下运行服务器。</p>
             </body>
             </html>
             """
@@ -55,7 +55,7 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
                 with open(report_path, 'r', encoding='utf-8') as f:
                     self.wfile.write(f.read().encode('utf-8'))
             else:
-                self.wfile.write(b"Report not yet generated.")
+                self.wfile.write("报告尚未生成。".encode('utf-8'))
         else:
             if self.path == '/':
                 self.path = '/index.html'
@@ -65,7 +65,7 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
         r_dir = os.environ.get("RESEARCH_DIR", ".")
         
         data = {
-            "theme": "Awaiting Project Manifest...",
+            "theme": "等待项目配置 (Awaiting Project Manifest...)",
             "graph": {"nodes": [], "links": []},
             "status_flow": [],
             "links": [],
@@ -85,7 +85,7 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
             with open(manifest_path, 'r', encoding='utf-8') as f:
                 try:
                     manifest = json.load(f)
-                    data["theme"] = manifest.get("project_name", "Unknown Theme")
+                    data["theme"] = manifest.get("project_name", "未知主题 (Unknown Theme)")
                 except:
                     pass
 
@@ -97,7 +97,7 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
         nodes.append({"id": theme_id, "name": data["theme"], "category": 0, "symbolSize": 60, "is_completed": True})
 
         meth_id = "meth_node"
-        nodes.append({"id": meth_id, "name": "Domain Methodology", "category": 1, "symbolSize": 45, "is_completed": True})
+        nodes.append({"id": meth_id, "name": "领域方法论 (Domain Methodology)", "category": 1, "symbolSize": 45, "is_completed": True})
         links.append({"source": meth_id, "target": theme_id})
 
         def extract_links_from_file(filepath, task_name_display):
@@ -159,7 +159,7 @@ class ResearchDataHandler(http.server.SimpleHTTPRequestHandler):
                     nodes.append({"id": info_id, "name": short_text, "category": 3, "symbolSize": 15, "is_completed": True})
 
         # Extract from initial context
-        extract_links_from_file(os.path.join(r_dir, "initial_context.md"), "Initial Search")
+        extract_links_from_file(os.path.join(r_dir, "initial_context.md"), "初始搜索 (Initial Search)")
         
         try: items = os.listdir(r_dir)
         except: items = []
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         os.environ["RESEARCH_DIR"] = os.path.abspath(sys.argv[1])
     else:
-        print("Usage: python server.py <path_to_research_workspace>")
+        print("用法: python server.py <path_to_research_workspace>")
         sys.exit(1)
         
     port = 8080

@@ -1,6 +1,6 @@
 ---
 name: twitter-watch
-description: 读取包含 Twitter 链接的文件，使用 agent-browser 访问每个链接，执行拟人化滚动，并提取互动数据（查看次数、回复、转发、喜欢、书签）。最后整合所有数据生成报告。
+description: 提取一系列 Twitter 推文的互动数据并整合生成报告
 license: MIT
 author: github/cafe3310
 depends_on_skill:

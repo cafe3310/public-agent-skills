@@ -3,16 +3,16 @@
   "evals": [
     {
       "id": "ai-coding-assistants",
-      "eval_name": "Market Research: AI Coding Assistants",
-      "prompt": "Conduct a deep research project on the current 'AI Coding Assistant' market. I need to know the estimated market size, the top 3 major players (like GitHub Copilot, Cursor, etc.), their core technical differences, and the general developer sentiment towards them. Please create the workspace in the current directory and run the full process.",
-      "expected_output": "A fully populated workspace with project_manifest.json, multiple task directories, knowledge_fragments.md in each, and a final_synthesis.md summarizing the findings.",
+      "eval_name": "市场研究：AI 编程助手",
+      "prompt": "对当前的 'AI 编程助手' 市场进行一次深度研究。我需要了解估计的市场规模、前三大主要参与者（例如 GitHub Copilot、Cursor 等）、它们的核心技术差异，以及开发者对它们的普遍看法。请在当前目录下创建工作区并运行完整流程。",
+      "expected_output": "一个完全填充的工作区，其中包含 project_manifest.json、多个任务目录、每个目录下的 knowledge_fragments.md 以及总结研究结果的 final_synthesis.md。",
       "files": []
     },
     {
       "id": "spatial-computing-hardware",
-      "eval_name": "Hardware Comparison: Spatial Computing",
-      "prompt": "I need a deep research report on the current state of Spatial Computing hardware, specifically comparing the Apple Vision Pro and the Meta Quest 3. Look into their display specs, weight, battery life, ecosystem lock-in, and target audience. Manage the research using subagents and synthesize the results.",
-      "expected_output": "A fully populated workspace with task directories containing atomic facts and a final_synthesis.md with precise citations.",
+      "eval_name": "硬件对比：空间计算",
+      "prompt": "我需要一份关于空间计算硬件现状的深度研究报告，具体对比 Apple Vision Pro 和 Meta Quest 3。调查它们的显示规格、重量、电池寿命、生态系统锁定以及目标受众。使用子代理管理研究过程并合成结果。",
+      "expected_output": "一个完全填充的工作区，其中的任务目录包含原子事实，以及一份带有精确引用的 final_synthesis.md。",
       "files": []
     }
   ]
