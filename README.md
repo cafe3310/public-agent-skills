@@ -20,7 +20,7 @@ Agent Skill 可能非常个性化，很多都是用户个人最佳实践的提�
 
 工作和生活中自己不想做的麻烦事情基本会做成 Agent Skill 放在这里。
 
-有计划认真给我猫制作 [咩咩和啾啾相册](https://github.com/cafe3310/miemie-jiujiu-album) ...
+有计划认真给我猫制作 [咩咩和啾啾相册]([https://github.com/cafe3310/miemie-jiujiu-album](https://cafe3310.github.io/chocho-miemie-album/posts/cat-oc-design.html) ...
 
 ### 安装
 
