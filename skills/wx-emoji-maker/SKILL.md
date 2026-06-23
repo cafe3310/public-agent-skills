@@ -44,3 +44,5 @@ depends_on_binary:
 
 *   **依赖缺失**: 未安装 `ImageMagick` 会导致脚本执行失败。
 *   **路径错误**: 提供的目录路径不正确或不包含 PNG 文件将导致错误。
+
+> 一个典型的例子，可以参考 https://cafe3310.github.io/chocho-miemie-album/posts/chocho-stickers.html 。
