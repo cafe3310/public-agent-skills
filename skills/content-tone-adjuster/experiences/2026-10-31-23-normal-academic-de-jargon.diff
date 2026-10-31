@@ -1,0 +1,27 @@
+---
+date: 2026-10-31 23:43
+user_instruction: 这 html 的语气太难懂了。帮我改成相对易懂的学术风格！不要搞出那么多复杂的数学符号公式，用类似 FFT(a, b) 或者 IFFT(x, y) 这类类似函数的表达就好。减少常见名词的英文叙述，将引号 “” 改成直引号 「」。
+style: 学术研究风（去公司战役感） + 移除大词风格（直白平实） + 函数式伪代码表达
+---
+diff --git a/paper.html b/paper.html
+--- a/paper.html
++++ b/paper.html
+@@ -1,19 +1,19 @@
+-大语言模型（LLM）在默认超参数与常规对齐训练（RLHF）下生成的文本，普遍呈现出显著的统计同质性——民间常将其统称为“AI 味”。传统提示词工程多依赖直觉式负向约束（如“少用短句、不要用破折号、写得像人一点”）或不断向单层 Prompt 塞入修辞学百科，导致指令注意力稀释、上下文污染与维度正交性崩塌。本文基于作者团队的跨学科讨论与实验，系统提出文风傅里叶变换（Stylistic Fast Fourier Transform, 文风 FFT）理论框架。我们将任意自然语言文本 $\mathcal{T}$ 形式化分解为基带语义骨架 $\mathbf{C}_{\text{skeleton}} = (\mathcal{F}_{\text{fact}}, \mathcal{A}_{\text{attitude}}, \mathcal{L}_{\text{logic}})$ 与频域表现层调制 $\mathbf{S}_{\text{modulation}} = \operatorname{IFFT}(\sum_k w_k \vec{e}_k(\omega))$ 的张量合成。
++大语言模型在默认设置下生成的文本，常表现出特定句式重复、节奏单一或过渡生硬等固定腔调。在日常提示词编写中，仅靠模糊的口语要求或堆砌大量零散规则，往往难以稳定控制生成文风。本文整理并提出一种分析与合成文风的方法——文风傅里叶变换（文风 FFT）。该方法将任意文章拆解为底层的「内容骨架」（包含事实、观点和逻辑推理）与外层的「文风调制」（通过逆 FFT 组合不同粒度的写作风格元素）。
+ 
+-$$\mathcal{T} \;\cong\; \underbrace{\bigl(\mathcal{F}_{\text{fact}},\, \mathcal{A}_{\text{attitude}},\, \mathcal{L}_{\text{logic}}\bigr)}_{\mathbf{C}_{\text{skeleton}}} \;\otimes\; \underbrace{\operatorname{IFFT}\!\Bigl(\sum_{k=1}^{K} w_k \cdot \vec{e}_k(\omega)\Bigr)}_{\mathbf{S}_{\text{modulation}}}$$
++Article = Content(事实, 观点, 逻辑推理) + IFFT(长波风格, 中波风格, 短波风格)
+ 
+-$$\mathbf{v}_{\text{prefill}} = \operatorname{PCA}_{k}\!\bigl(\mathcal{V}_{\text{rhetoric}}\bigr) = \bigl[\text{Term}_1,\, \text{Term}_2,\, \dots,\, \text{Term}_k\bigr], \quad \det(\mathbf{A}_{\text{style}}) \neq 0$$
++Style_Skeleton = PCA(全部风格特征) => 挑选 2~3 个互不冲突的主成分术语
++Target_Text = Apply_Style(Content_X, Style_Skeleton, 次要微调项)
+ 
+-<ul>
+-  <li><strong>词汇层（Lexical Layer）</strong>：用词偏好、高频口头禅、特定介词/连词密度、领域黑话。这是人类最易察觉的表层特征，但仅占文风的一小部分。</li>
+-  <li><strong>句法层（Syntactic Layer）</strong>：句子的构造方式（短句并列 Parataxis vs. 从句嵌套 Hypotaxis；主谓宾 SVO 常态语序 vs. 宾动 OSV 倒装）。</li>
+-</ul>
++<ul>
++  <li>词汇层：用词偏好、口头禅、介词与连词的使用频率、专业术语密度。这一层最容易被注意到，但只占风格的一小部分。</li>
++  <li>句法层：造句习惯，比如习惯写短句并列还是长句嵌套，习惯正常的主谓宾语序还是把宾语提前。</li>
++</ul>

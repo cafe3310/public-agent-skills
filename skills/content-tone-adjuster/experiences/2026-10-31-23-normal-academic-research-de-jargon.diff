@@ -1,0 +1,65 @@
+---
+date: 2026-10-31 23:28
+user_instruction: "对 public-agent-skills 下的 aop-product-planner 技能规范与模板，做去企业 jargon、去比喻戏剧化修辞、朝向 research 风格的精确调整"
+style: "学术研究风（去公司战役感）"
+---
+diff --git a/skills/aop-product-planner/SKILL.md b/skills/aop-product-planner/SKILL.md
+--- a/skills/aop-product-planner/SKILL.md
++++ b/skills/aop-product-planner/SKILL.md
+@@ -15,3 +15,3 @@
+-本技能提供了一套结构化、泛化、可复用的产品工程策划与需求沉淀范式。适用于大模型应用、复杂 AI 平台及软件系统的前期架构策划与需求拆解。
+-核心解决产品设计中“目标模糊、功能混杂、大词滥用、依赖不清”的工程痛点。通过**“目标叙事 -> AOP 切面划分 -> Idea 归流与边界确定 -> 需求 Tickets 与依赖拓扑 -> 优先级 Roadmap”**的 5 阶段管道，将模糊的想法演进为高保真的研发实施方案。
++本技能提供了一套结构化、泛化、可复用的产品工程策划与需求整理范式。适用于复杂系统、软件产品及数字化平台的平台级架构策划与需求拆解。
++核心解决产品设计中“目标模糊、功能混杂、大词滥用、依赖不清”的常见问题。通过**“目标叙事 -> AOP 切面划分 -> Idea 归流与边界确定 -> 需求 Tickets 与依赖拓扑 -> 优先级 Roadmap”**的 5 个阶段流程，将模糊的想法演进为明确的研发实施方案。
+@@ -49,3 +49,3 Serr
+-    目标：持续吸收乱序想法，锁定包含/排除界限，拆解需求并更新 Roadmap
++    目标：持续吸收乱序想法，明确包含/排除界限，拆解需求并更新 Roadmap
+@@ -63,3 +63,3 Serr
+-  * **作用**：吸收用户的乱序想法与竞品观察 (D00-inbox)，映射至对应切面，通过「包含/不包含」与 `/roast-me` 交互确定高保真界限。
++  * **作用**：吸收用户的乱序想法与参考产品观察 (D00-inbox)，映射至对应切面，通过「包含/不包含」与 `/roast-me` 交互确定确切界限。
+@@ -75,3 +75,3 Serr
+-遵循本 Skill 策划产出的典型规范化项目目录树与层级约定，详见单一真相源规范文档：
++遵循本 Skill 策划产出的典型规范化项目目录树与层级约定，详见权威基准规范文档：
+@@ -97,3 +97,3 Serr
+-3. **高保真边界与逆向审视 (In/Out Bounds & /roast-me)**：对每个切面定义「包含什么」「不包含什么」，并通过 /roast-me 交互逆向逼问锁定边界。
++3. **明确边界与交互审视 (In/Out Bounds & /roast-me)**：对每个切面定义「包含什么」「不包含什么」，并通过 /roast-me 交互反向质询确定边界。
+diff --git a/skills/aop-product-planner/references/02-aop-aspect-categorization.md b/skills/aop-product-planner/references/02-aop-aspect-categorization.md
+--- a/skills/aop-product-planner/references/02-aop-aspect-categorization.md
++++ b/skills/aop-product-planner/references/02-aop-aspect-categorization.md
+@@ -20,7 +20,7 @@
+-  前台用户可直接感知、把玩调试、操作场景、试用多模态及运营宣发引流的功能集合。
+-  完全隐匿于底层，服务于声明式 spec 模板解析、沙箱隔离环境及数据沉淀与系统演进的基础设施管道。
++  前台用户可直接感知、操作调试、使用场景、试用多模态及运营宣发引流的功能集合。
++  完全隐匿于底层，服务于声明式 spec 模板解析、沙箱隔离环境及数据积累与系统演进的基础设施管道。
+diff --git a/skills/aop-product-planner/references/03-inbox-harvesting-and-aspect-bounds.md b/skills/aop-product-planner/references/03-inbox-harvesting-and-aspect-bounds.md
+--- a/skills/aop-product-planner/references/03-inbox-harvesting-and-aspect-bounds.md
++++ b/skills/aop-product-planner/references/03-inbox-harvesting-and-aspect-bounds.md
+@@ -14,13 +14,13 @@
+-阶段三的目的是**吸收乱序的想法与竞品观察，并将其精密归流收敛至确切的切面边界中**。
+-2. **高保真边界界定 (In/Out Bounds)**：
+-3. **逆向逼问与交互审核 (/roast-me Interaction)**：
+-   * Agent 主动针对切面的混淆点发起 `/roast-me` 式的逼问与逆向质疑（如提示词控制范围、解耦运营与二方交付、零强制输入反馈），由用户确认最终结论。
++阶段三的目的是**吸收乱序的想法与参考产品观察，并将其精密归流收敛至确切的切面边界中**。
++2. **明确边界界定 (In/Out Bounds)**：
++3. **反向质询与交互审核 (/roast-me Interaction)**：
++   * Agent 主动针对切面的混淆点发起 `/roast-me` 式的反向质询与审视（如提示词控制范围、解耦运营与二方交付、零强制输入反馈），由用户确认最终结论。
+diff --git a/skills/aop-product-planner/references/05-prioritization-and-roadmap.md b/skills/aop-product-planner/references/05-prioritization-and-roadmap.md
+--- a/skills/aop-product-planner/references/05-prioritization-and-roadmap.md
++++ b/skills/aop-product-planner/references/05-prioritization-and-roadmap.md
+@@ -25,7 +25,7 @@
+-2. **用户的职责**：向 Agent 显式提供优先级的决策输入（例如指定“先保证核心闭环”、“优先打通外部接入”或“优先完成特定关键切面”）。
++2. **用户的职责**：向 Agent 显式提供优先级的决策输入（例如指定“优先实现核心流程”、“优先接入外部接口”或“优先完成特定关键切面”）。
+-  * **定义**：用户指定的构成系统最小业务闭环的基础设施，或解决核心痛点、高频使用的关键功能。
++  * **定义**：用户指定的构成系统基础体验的核心设施，或解决核心问题、高频使用的关键功能。
+diff --git a/skills/aop-product-planner/templates/D50-benchmark-analysis-template.md b/skills/aop-product-planner/templates/D50-benchmark-analysis-template.md
+--- a/skills/aop-product-planner/templates/D50-benchmark-analysis-template.md
++++ b/skills/aop-product-planner/templates/D50-benchmark-analysis-template.md
+@@ -1,8 +1,8 @@
+-title: "D51-{竞品标杆名称} AOP 切面拆解概览"
+-background: 对标行业成熟竞品/标杆产品，按 AOP 视角拆解其切面架构与功能设计，作为自研参考。
++title: "D51-{参考产品名称} AOP 切面拆解概览"
++background: 对标行业成熟参考产品，按 AOP 视角拆解其切面架构与功能设计，作为自研参考。
+-## 1. 竞品定位与架构概览
+-## 2. 竞品 AOP 切面拆解表
++## 1. 对标产品定位与架构概览
++## 2. 参考产品 AOP 切面拆解表

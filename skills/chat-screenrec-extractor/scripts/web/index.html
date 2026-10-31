@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>群聊录屏提取标定工具 - Chat Screenrec Extractor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="icon">💬</span>
+      <h1>群聊录屏提取标定与预览</h1>
+    </div>
+    <div class="header-actions">
+      <span id="status-badge" class="badge">准备就绪</span>
+      <button id="save-config-btn" class="btn btn-primary">💾 保存配置 (Save Config)</button>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <!-- Left Sidebar: Controls -->
+    <aside class="sidebar">
+      <section class="control-group">
+        <h3>1. 选择录屏视频</h3>
+        <select id="video-select" class="form-control">
+          <option value="">加载中...</option>
+        </select>
+        <div id="video-meta" class="meta-info">分辨率: -- | 时长: --</div>
+      </section>
+
+      <section class="control-group">
+        <h3>2. 调整切帧采样周期</h3>
+        <div class="slider-row">
+          <label for="interval-slider">采样间隔:</label>
+          <input type="range" id="interval-slider" min="0.2" max="3.0" step="0.1" value="0.8">
+          <span id="interval-val" class="val-tag">0.8s</span>
+        </div>
+        <div class="meta-hint" id="frame-estimate">预计单视频抽帧: -- 张</div>
+      </section>
+
+      <section class="control-group">
+        <h3>3. 时间轴与逐帧微调</h3>
+        <div class="timeline-row">
+          <input type="range" id="timeline-slider" min="0" max="100" step="0.1" value="0">
+        </div>
+        <div class="time-display">
+          <span id="current-time">00:00.0</span> / <span id="total-time">00:00.0</span>
+        </div>
+        <div class="btn-group">
+          <button id="prev-frame-btn" class="btn btn-sm">⏪ 上一帧 (-0.8s)</button>
+          <button id="next-frame-btn" class="btn btn-sm">⏩ 下一帧 (+0.8s)</button>
+        </div>
+      </section>
+
+      <section class="control-group">
+        <h3>4. 标定框选模式</h3>
+        <div class="roi-mode-selector">
+          <button id="mode-title-btn" class="btn btn-mode active" data-mode="title">
+            <span class="dot dot-red"></span> 🔴 群聊标题栏 (Title ROI)
+          </button>
+          <button id="mode-body-btn" class="btn btn-mode" data-mode="body">
+            <span class="dot dot-blue"></span> 🔵 聊天消息区 (Body ROI)
+          </button>
+        </div>
+        <div class="roi-tools">
+          <button id="reset-roi-btn" class="btn btn-text">重置当前选框</button>
+          <button id="apply-preset-btn" class="btn btn-text">应用手机常规预设</button>
+        </div>
+      </section>
+
+      <section class="control-group roi-readout">
+        <h3>5. 选区坐标 (归一化 0..1)</h3>
+        <div class="readout-box title-box">
+          <div class="title-tag">群聊标题 ROI:</div>
+          <div id="title-coords" class="coord-text">未设置 (默认顶部 0..12%)</div>
+        </div>
+        <div class="readout-box body-box">
+          <div class="title-tag">聊天消息 ROI:</div>
+          <div id="body-coords" class="coord-text">未设置 (默认中间 12%..90%)</div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Center: Main Canvas Area -->
+    <section class="canvas-panel">
+      <div class="canvas-wrapper" id="canvas-wrapper">
+        <div id="loading-overlay" class="loading-overlay" style="display: none;">
+          <div class="spinner"></div>
+          <span>抽取画面中...</span>
+        </div>
+        <canvas id="main-canvas"></canvas>
+      </div>
+      <div class="canvas-footer">
+        <span class="hint-text">💡 提示：在画面上直接按住鼠标左键拖拽即可绘制框选。顶部避开电量栏，底部避开输入框。</span>
+      </div>
+    </section>
+
+    <!-- Right Drawer: Live Crop Previews -->
+    <aside class="preview-panel">
+      <h3>实时裁剪效果预览</h3>
+      <div class="crop-card">
+        <h4>群聊标题栏预览</h4>
+        <div class="crop-view" id="title-crop-container">
+          <canvas id="title-crop-canvas"></canvas>
+        </div>
+        <span class="crop-hint">用于识别群名及检测群切换</span>
+      </div>
+
+      <div class="crop-card">
+        <h4>聊天消息区预览</h4>
+        <div class="crop-view" id="body-crop-container">
+          <canvas id="body-crop-canvas"></canvas>
+        </div>
+        <span class="crop-hint">用于提取并去重消息文本与时间</span>
+      </div>
+
+      <div class="tips-card">
+        <h4>标定要点</h4>
+        <ul>
+          <li><strong>标题栏</strong>：只需圈中包含群名的一行，避开返回箭头与右上角菜单。</li>
+          <li><strong>消息区</strong>：必须排除底部常驻的打字输入栏和键盘，避免造成无效循环去重。</li>
+          <li><strong>抽帧周期</strong>：滑动较快选 0.5s~0.8s，滑动平缓选 1.0s~1.5s。</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

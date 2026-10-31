@@ -59,8 +59,8 @@ choose_base_dir() {
 
 # 1. 基础配置与路径选择
 echo "--- 配置安装路径 ---"
-# skills 优先顺序: ~/.agents ~/.claude ~/.gemini
-SKILLS_BASE=$(choose_base_dir "Skills" "~/.agents" "~/.claude" "~/.gemini")
+# skills 优先顺序: ~/.agents ~/.claude ~/.gemini/config
+SKILLS_BASE=$(choose_base_dir "Skills" "~/.agents" "~/.claude" "~/.gemini/config")
 TARGET_BASE_DIR="$SKILLS_BASE/skills"
 
 REPO_URL="https://github.com/cafe3310/public-agent-skills.git"

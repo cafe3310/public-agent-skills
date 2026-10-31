@@ -16,10 +16,7 @@ SOURCE_PARKED = os.path.join(SCRIPT_DIR, "skills_parked")
 SOURCE_AGENTS_MD = os.path.join(SCRIPT_DIR, "GLOBAL_AGENTS.md")
 
 GLOBAL_AGENTS_MAPPING = {
-    "~/.agents": "AGENTS.md",
-    "~/.claude": "CLAUDE.md",
-    "~/.gemini/antigravity-cli": "GEMINI.md",
-    "~/.gemini": "GEMINI.md"
+    "~/.gemini/config": "GEMINI.md"
 }
 
 # ------------------------------------------------
@@ -281,13 +278,13 @@ def main():
     # --------------------------------------------
     print("\n--- 步骤 2: 目标路径探测与 Skills 同步 ---")
     targets_detected = []
-    for raw_path in ["~/.agents", "~/.claude", "~/.gemini/antigravity-cli", "~/.gemini"]:
+    for raw_path in ["~/.gemini/config"]:
         expanded = os.path.expanduser(raw_path)
         if os.path.isdir(expanded):
             targets_detected.append(expanded)
             
     if not targets_detected:
-        targets_detected = [os.path.expanduser("~/.agents"), os.path.expanduser("~/.gemini/antigravity-cli")]
+        targets_detected = [os.path.expanduser("~/.gemini/config")]
         
     print(f"已探测到的目标配置路径：")
     for t in targets_detected:
@@ -302,12 +299,14 @@ def main():
         
     # 交互式选择 Parked Skills
     selected_parked = []
-    if parked_skills:
+    if parked_skills and sys.stdin.isatty():
         try:
             selected_parked = select_parked_skills(parked_skills)
         except (KeyboardInterrupt, SystemExit):
             print("\n已取消选择 Parked Skills。")
             sys.exit(0)
+    elif parked_skills:
+        print("检测到非交互式环境 (Non-TTY)，跳过选择 Parked Skills。")
     skipped_parked = [p for p in parked_skills if p not in selected_parked]
     
     # 逐个目标目录进行处理
@@ -468,6 +467,12 @@ def main():
                         report_details["cleaned"].append(cl_sk)
                         
         # 5. 更新并写回 JSON 状态
+        skills_source_paths = {}
+        for sk in active_skills:
+            skills_source_paths[sk] = os.path.abspath(os.path.join(SOURCE_BASE, sk))
+        for sk in selected_parked:
+            skills_source_paths[sk] = os.path.abspath(os.path.join(SOURCE_PARKED, sk))
+
         repo_records[remote_url] = {
             "commit": {
                 "hash": commit_hash,
@@ -475,7 +480,8 @@ def main():
             },
             "skills": active_skills,
             "selected-parked-skills": selected_parked,
-            "skipped-parked-skills": skipped_parked
+            "skipped-parked-skills": skipped_parked,
+            "skills-source-paths": skills_source_paths
         }
         managed_data["repositories"] = repo_records
         

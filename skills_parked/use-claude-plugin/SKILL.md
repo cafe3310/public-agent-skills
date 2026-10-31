@@ -89,7 +89,7 @@ depends_on_binary: []
 - **roadmap-management**: 使用 RICE/MoSCoW 等框架管理路线图和优先级。
 - **stakeholder-comms**: 生成针对不同受众（高管、工程等）的状态更新。
 - **synthesize-research**: 将调研笔记和反馈转化为结构化洞察。
-- **competitive-analysis**: 竞品功能对比、定位分析和战略建议。
+- **competitive-analysis**: 竞品功能对比、定位分析和应对建议。
 - **metrics-tracking**: 设定目标 (OKRs)、设计指标层次和仪表板。
 - **product-brainstorming**: 探索问题空间、生成点子并压力测试产品设想。
 

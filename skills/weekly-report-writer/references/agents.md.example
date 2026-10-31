@@ -14,16 +14,16 @@ This document provides AI agents with the necessary knowledge and rules for unde
 
 ## File Naming Convention
 
-- Standard documents: `YYYY-MM-DD-{short-description}.md`
-- Daily summaries: `YYYY-MM-DD 📅️ 摘要.md`
-- Weekly summaries: `YYYY-MM-DD 📅️ 本周摘要.md`
+- Standard documents: `YYYY-MM-DD-hh 分类 - 标题.md`
+- Daily summaries: `YYYY-MM-DD-hh 📅 摘要.md`
+- Weekly summaries: `YYYY-MM-DD-hh 📅 本周摘要 YYYY-MM-DD - YYYY-MM-DD.md`
 
 ## Special Symbol Definition
 
-- `🟥`: Represents a TODO, an unfinished item, or information that needs to be added.
+- `🟥`: Represents a TODO, an unfinished item, a shelved/postponed item, or information that needs to be added.
 - `🟩`: Represents a DONE item or completed information.
 - `🟨`: Represents an item in progress.
-- `⬜️`: Represents a shelved or postponed item.
+- `❇️`: Represents work reflected only in code/Agent sessions (Gemini-cli / Antigravity), not in Obsidian notes.
 - `💡`: Represents a new idea.
 - `📅️`: Represents a periodic summary.
 
@@ -49,5 +49,5 @@ At the end of the work week.
 5.  Pay special attention to items marked with `🟥` (TODOs).
 
 #### Output Document
-- **Title**: `{YYYY-MM-DD} 📅️ 本周摘要.md`
+- **Title**: `{YYYY-MM-DD-hh} 📅 本周摘要 {YYYY-MM-DD} - {YYYY-MM-DD}.md`
 - **Content**: A summary of the week's progress, structured according to the template.

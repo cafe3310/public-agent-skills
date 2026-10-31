@@ -29,8 +29,8 @@ if [ "$#" -lt 2 ]; then
     echo -e "  模型示例: $0 model google-bert/bert-base-uncased"
     echo -e "  数据集示例: $0 dataset clin-re/medical_reports"
     echo -e "  Space示例: $0 space multimodalart/flux-tarot"
-    echo -e "  组织示例 (按下载量排序): $0 org inclusionAI"
-    echo -e "  组织示例 (按发布时间排序): $0 org_new inclusionAI"
+    echo -e "  组织示例 (按下载量排序): $0 org meta-llama"
+    echo -e "  组织示例 (按发布时间排序): $0 org_new meta-llama"
     exit 1
 fi
 

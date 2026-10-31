@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网络收藏看版 - 收藏预览</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="brand-section">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-primary);">
+          <rect x="3" y="3" width="18" height="18" rx="0"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+          <line x1="15" y1="3" x2="15" y2="21"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+        </svg>
+        收藏预览
+      </h1>
+      <div class="stats-container">
+        <span class="stat-pill" id="stat-total"><strong>0</strong> 收藏</span>
+        <span class="stat-pill" id="stat-videos"><strong>0</strong> 视频</span>
+        <span class="stat-pill" id="stat-images"><strong>0</strong> 图片</span>
+      </div>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls-panel">
+      <div class="search-filter-row">
+        <!-- Search bar -->
+        <div class="search-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" id="search-input" class="search-input" placeholder="搜索标题、描述、作者或分类...">
+          <button id="search-clear" class="search-clear" title="清空搜索">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="filter-tags-wrapper">
+          <button class="tag-btn active" data-category="all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            全部
+          </button>
+          <button class="tag-btn" data-category="文字">文字</button>
+          <button class="tag-btn" data-category="图片">图片</button>
+          <button class="tag-btn" data-category="视频">视频</button>
+        </div>
+      </div>
+
+      <div class="options-row">
+        <!-- Sort Select -->
+        <div class="sort-wrapper">
+          <span class="sort-label">SORT:</span>
+          <select id="sort-select" class="sort-select">
+            <option value="date-desc">最近采集 (DATE DESC)</option>
+            <option value="date-asc">最早采集 (DATE ASC)</option>
+            <option value="likes-desc">最多点赞 (LIKES DESC)</option>
+            <option value="random">随机探索 (RANDOM)</option>
+          </select>
+        </div>
+
+        <!-- Layout switcher -->
+        <div class="layout-switch-wrapper">
+          <button id="layout-grid" class="layout-btn active" title="网格视图">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </button>
+          <button id="layout-masonry" class="layout-btn" title="瀑布流视图">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Area -->
+  <main>
+    <div id="cards-container" class="cards-container grid-view">
+      <!-- Cards will be dynamically rendered here -->
+      <div class="loader">
+        <div class="spinner"></div>
+        <p style="color: var(--text-secondary); font-size: 0.8rem; font-family: var(--font-mono);">LOADING BOARD DATA...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lightbox Modal Details Viewer -->
+  <div id="detail-modal" class="modal">
+    <button id="modal-close" class="modal-close-btn" title="CLOSE (Esc)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="modal-container" onclick="event.stopPropagation();">
+      <!-- Media Side -->
+      <div id="modal-media-side" class="modal-media-side">
+        <!-- Rendered dynamically -->
+      </div>
+      <!-- Content Details Side -->
+      <div id="modal-content-side" class="modal-content-side">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Scroll Indicator -->
+  <div id="timeline-indicator" class="timeline-indicator-wrapper">
+    <div class="timeline-track"></div>
+    <div id="timeline-thumb" class="timeline-thumb">
+      <div id="timeline-tooltip" class="timeline-tooltip">0%</div>
+    </div>
+  </div>
+
+  <!-- Load Data and Application Script -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

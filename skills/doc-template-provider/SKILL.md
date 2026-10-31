@@ -15,4 +15,4 @@ depends_on_binary: []
 -   `templates/todo.md.template`: 用于创建待办事项列表的模板。
 -   `templates/main-spec.md.template`: 用于创建项目整体产品规格说明的模板。
 -   `templates/feature-spec.md.template`: 用于创建项目子功能产品规格说明的模板。
--   `templates/jira-ticket.md.template`: 用于创建 Jira (或公司内同等概念 Dima) 需求单的模板。
+-   `templates/jira-ticket.md.template`: 用于创建 Jira 需求单的模板。

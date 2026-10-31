@@ -1,0 +1,43 @@
+---
+date: 2026-10-31 23:29
+user_instruction: "对 aop-product-planner 复杂度建模与网页预览规范进行长句拆短句、去概念堆叠、去数字口号与去落地隐喻修饰"
+style: "学术研究风（去公司战役感）"
+---
+diff --git a/skills/aop-product-planner/references/06-complexity-modeling-and-cost-estimation.md b/skills/aop-product-planner/references/06-complexity-modeling-and-cost-estimation.md
+--- a/skills/aop-product-planner/references/06-complexity-modeling-and-cost-estimation.md
++++ b/skills/aop-product-planner/references/06-complexity-modeling-and-cost-estimation.md
+@@ -10,13 +10,13 @@
+-### 算子一：单需求实际执行工时算子 f(...) (输出：真实人天)
+-当前需求 `i` 在系统当前状态 `(C_{k-1}, M_{k-1})` 下实际消耗的物理人天 `Cost_i`：
+-#### 代数逻辑与工程物理机制拆解：
++### 算子一：实际执行工时 f(...)
++在当前系统状态 `(C_{k-1}, M_{k-1})` 下，完成需求 `i` 需要的工时 `Cost_i`（单位：人天）：
++#### 计算逻辑说明：
+
+-### 算子二：系统复杂度状态更新算子 f2(...) (输出：全新无量纲复杂度 C_k)
+-需求 `i` 完成后，系统的全新无量纲复杂度状态 `C_k`：
++### 算子二：更新系统复杂度 f2(...)
++完成需求 `i` 后，系统新的复杂度为 `C_k`：
+
+-### 算子三：系统总维护负担状态更新算子 f3(...) (输出：全新无量纲维护负担 M_k)
+-需求 `i` 完成后，系统的全新无量纲维护负担状态 `M_k`：
++### 算子三：更新维护负担 f3(...)
++完成需求 `i` 后，系统新的维护负担为 `M_k`：
+
+diff --git a/skills/aop-product-planner/references/07-web-dashboard-and-interactive-preview.md b/skills/aop-product-planner/references/07-web-dashboard-and-interactive-preview.md
+--- a/skills/aop-product-planner/references/07-web-dashboard-and-interactive-preview.md
++++ b/skills/aop-product-planner/references/07-web-dashboard-and-interactive-preview.md
+@@ -12,8 +12,8 @@
+-1. **愿景与目标板块 (Vision & Goals Panel)**：
+-2. **AOP 三层切面全景板块 (AOP Aspect Network Panel)**：
++1. **愿景与目标板块**：
++2. **AOP 切面全景板块**：
+
+diff --git a/skills/aop-product-planner/templates/D40-ticket-template.md b/skills/aop-product-planner/templates/D40-ticket-template.md
+--- a/skills/aop-product-planner/templates/D40-ticket-template.md
++++ b/skills/aop-product-planner/templates/D40-ticket-template.md
+@@ -34,7 +34,7 @@
+-## 2. 基础成本、可并行度与 4 大无量纲交互维度参数 (Phase 6 Metrics)
+-| **内部复杂度 (`internal_complexity`)** | **{N1} 无量纲数** | 落地后叠加到 $C_0$...
++## 2. 成本、可并行度与系统交互参数 (Phase 6 Metrics)
++| **内部复杂度 (`internal_complexity`)** | **{N1}** | 生效后累加到 $C_0$...

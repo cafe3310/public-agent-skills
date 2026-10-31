@@ -1,31 +1,54 @@
 ---
-title: {YYYY-MM-DD} 📅️ 本周摘要
-date created: {YYYY-MM-DD}
-date modified: {YYYY-MM-DD}
+title: {YYYY-MM-DD-hh} 📅 本周摘要 {YYYY-MM-DD} - {YYYY-MM-DD}
+date created: {YYYY-MM-DD dddd HH:mm}
+creator: cafe3310 与 Coding Agent (Antigravity) 协作生成
+background: 汇总 {YYYY-MM-DD} 至 {YYYY-MM-DD} 周期的工作进展，严格对照继承上一期周报 [[{PREVIOUS_REPORT_TITLE}]] 的待办事项。重点聚焦在{SUMMARY_OF_FOCUS}。
+references:
+  - "[[{PREVIOUS_REPORT_TITLE}]]"
+  - "{ADDITIONAL_REFERENCES}"
+tags:
+  - Type-规划
+  - {PROJECT_TAGS}
+date modified: {YYYY-MM-DD dddd HH:mm}
 ---
 
-## **当前感知的目标路线**
+## 01. 文档生成说明
 
-同前，略
+本文档由 weekly-report-writer 与 Antigravity 协作生成。汇总 {YYYY-MM-DD} 至 {YYYY-MM-DD} 周期的工作进展，对照继承上一期周报 [^1] 的待办事项，文中所涉具体方案与交付文档见文末引用列表。
 
-## **事项**
+---
 
-### 基本完成
+## 02. 状态同步
 
-{Completed items here}
+### 1. {业务主线 A}
+* 继承状态与进展：
+  * 🟩 做了什么：
+    * **{核心产出标题}**：{平实描述动作与结果，技术细节与交付成果}[^2]。
+    * **{次要产出/算法反馈}**：{具体结论、实测问题或反馈意见}[^3] [^4]。
+    * ❇️ **{简明事项标题}**（{所属仓库/模块}）：{动作 + 成果 + 关键技术参数/避坑细节（commit SHA / 关联会话）}。
+  * 🟨 还要做什么 / 待办继承：
+    * 🟨 {下一步动作说明，承接上期未完结项，说明当前阻碍、依赖方或排期变化}。
 
-### 进行中
+### 2. {业务主线 B}
+* 继承状态与进展：
+  * 🟩 做了什么：
+    * **{核心产出标题}**：{平实描述动作与产出}[^5]。
+  * 🟨 还要做什么 / 待办继承：
+    * 🟨 {下一步动作说明}。
 
-{In-progress items here}
+### N. 💡 关注事项与待办承接
+* 继承状态与进展：
+  * 关注但暂不 Action 项：
+    * {事项说明}：{目前保持关注，暂不展开具体动作}[^N]。
+  * 🟥 待办承接：
+    * {积压待办}：{明确优先交由相关团队自行完成}[^M]。
 
-### 本周搁置
+---
 
-{Shelved items here}
+## 03. 参考文档与来源
 
-## **新 idea（文档总结的）**
+[^1]: [[{PREVIOUS_REPORT_TITLE}]]
+[^2]: [[{REFERENCE_DOC_A}]]
+[^3]: [[{REFERENCE_DOC_B}]]
 
-{New ideas here}
 
-## **关注中信息**
-
-{Open questions here}
